@@ -19,7 +19,7 @@ target_sources(
                 ./core/EventBus.hpp
                 ./core/Scheduler.hpp
                 ./report/IReport.hpp
-                ./storage/IStorage.hpp
+                ./storage/IRepository.hpp
                 ./utility/Assert.hpp
 )
 
