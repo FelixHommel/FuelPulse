@@ -1,0 +1,59 @@
+name: coverage
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+    - name: Checkout the Repository
+      uses: actions/checkout@v6
+
+    - name: Install Dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y lcov gcc-14 g++-14
+
+    - name: Install CMake and Ninja
+      uses: lukka/get-cmake@f176ccd3f28bda569c43aae4894f06b2435a3375 # v4.2.3
+      with:
+        cmakeVersion: 3.31.10
+        ninjaVersion: 1.11.1
+
+    - name: Setup vcpkg
+      uses: lukka/run-vcpkg@5e0cab206a5ea620130caf672fce3e4a6b5666a1 # v11.5
+
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version-file: ".python-version"
+
+    - name: Install uv
+      uses: astral-sh/setup-uv@803947b9bd8e9f986429fa0c5a41c367cd732b41 # v7.2.1
+      with:
+        enable-caching: true
+
+    - name: Install the Project
+      run: uv sync --locked --all-extras --dev
+
+    - name: Configure + Build
+      uses: lukka/run-cmake@af1be47fd7c933593f687731bc6fdbee024d3ff4 # v10.8
+      with:
+        configurePreset: code-coverage
+        configurePresetAdditionalArgs: "[`-DPEN_ENABLE_CLANG_TIDY=OFF`, `-DCMAKE_C_COMPILER=gcc-14`, `-DCMAKE_CXX_COMPILER=g++-14`]"
+        buildPreset: code-coverage
+
+    - name: Run Tests
+      run: |
+        ctest --preset test-coverage
+
+    - name: Analyze test data
+      run: uv run scripts/coverage.py
+
+    - name: Upload coverage to Codacy
+      run: |
+        bash <(curl -Ls https://coverage.codacy.com/get.sh) report -r ./build/code-coverage/coverage-data/coverage.filtered.info
+      env:
+        CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}

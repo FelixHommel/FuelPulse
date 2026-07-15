@@ -1,0 +1,7 @@
+[project]
+name = "GasWatch"
+version = "0.0.1"
+description = "Application to monitor and analyze gas station pricing"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = []

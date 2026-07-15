@@ -1,0 +1,22 @@
+blank_issues_enabled: false
+issue_templates:
+  - name: Job Story
+    description: Describe what Job need to be done. Good for a general overview of a broad Task.
+    title: "[Job] "
+    labels: [job-story]
+    file: job-story.md
+  - name: Problem Story
+    description: Document bugs, unsolved design issues and other problems.
+    title: "[Problem] "
+    labels: [problem]
+    file: problem-story.md
+  - name: Improvement Task
+    description: Minor cleanups, enhancements or refactorings,
+    title: "[Improve] "
+    labels: [improvement]
+    file: improvement-task.md
+  - name: FDD Feature
+    description: A fully described feature that drives the implementation.
+    title: "[Feature] "
+    labels: [feature]
+    file: fdd-feature.md
