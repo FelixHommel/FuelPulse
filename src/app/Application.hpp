@@ -1,12 +1,12 @@
-#ifndef GAS_SRC_APP_APPLICATION_HPP
-#define GAS_SRC_APP_APPLICATION_HPP
+#ifndef FUL_SRC_APP_APPLICATION_HPP
+#define FUL_SRC_APP_APPLICATION_HPP
 
 #include "analysis/IAnalysis.hpp"
 #include "collection/ICollector.hpp"
 
 #include <memory>
 
-namespace gas::app
+namespace ful::app
 {
 
 class Application
@@ -25,6 +25,6 @@ private:
     std::unique_ptr<IAnalysis> m_analyzer;
 };
 
-} // namespace gas::app
+} // namespace ful::app
 
-#endif // !GAS_SRC_APP_APPLICATION_HPP
+#endif // !FUL_SRC_APP_APPLICATION_HPP

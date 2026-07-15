@@ -6,7 +6,7 @@
 
 int main()
 {
-    using namespace gas::app;
+    using namespace ful::app;
 
     std::unique_ptr<Application> app;
 

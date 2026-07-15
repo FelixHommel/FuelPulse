@@ -1,4 +1,4 @@
-set(NAME "GasWatchLib")
+set(NAME "FuelPulseLib")
 include(${PROJECT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 
 add_library(

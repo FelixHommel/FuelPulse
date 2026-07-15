@@ -1,7 +1,7 @@
-#ifndef GAS_SRC_LIB_STORAGE_I_STORAGE_HPP
-#define GAS_SRC_LIB_STORAGE_I_STORAGE_HPP
+#ifndef FUL_SRC_LIB_STORAGE_I_STORAGE_HPP
+#define FUL_SRC_LIB_STORAGE_I_STORAGE_HPP
 
-namespace gas
+namespace ful
 {
 
 class IStorage
@@ -18,6 +18,6 @@ public:
     virtual void store() = 0;
 };
 
-} // namespace gas
+} // namespace ful
 
-#endif // !GAS_SRC_LIB_STORAGE_I_STORAGE_HPP
+#endif // !FUL_SRC_LIB_STORAGE_I_STORAGE_HPP

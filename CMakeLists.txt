@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.30)
 project(
-    GasWatch
-    DESCRIPTION "Track gas station prices"
+    FuelPulse
+    DESCRIPTION "Track gas station prices to analyze the gathered data"
     LANGUAGES CXX
     VERSION 0.1.0
 )
@@ -18,6 +18,6 @@ add_library(project_warnings INTERFACE)
 include(cmake/CompilerWarnings.cmake)
 set_project_warnings(project_warnings)
 
-add_compile_definitions(GAS_ROOT="${CMAKE_SOURCE_DIR}/")
+add_compile_definitions(FUL_ROOT="${CMAKE_SOURCE_DIR}/")
 
 add_subdirectory(src)

@@ -1,7 +1,7 @@
-#ifndef GAS_SRC_LIB_REPORT_I_REPORT_HPP
-#define GAS_SRC_LIB_REPORT_I_REPORT_HPP
+#ifndef FUL_SRC_LIB_REPORT_I_REPORT_HPP
+#define FUL_SRC_LIB_REPORT_I_REPORT_HPP
 
-namespace gas
+namespace ful
 {
 
 class IReport
@@ -18,6 +18,6 @@ public:
     virtual void report() = 0;
 };
 
-} // namespace gas
+} // namespace ful
 
-#endif // !GAS_SRC_LIB_REPORT_I_REPORT_HPP
+#endif // !FUL_SRC_LIB_REPORT_I_REPORT_HPP

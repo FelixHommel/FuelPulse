@@ -1,5 +1,5 @@
-#ifndef GAS_SRC_TEST_TEST_UTILITY_RANDOM_NUMBER_GENERATOR_HPP
-#define GAS_SRC_TEST_TEST_UTILITY_RANDOM_NUMBER_GENERATOR_HPP
+#ifndef FUL_SRC_TEST_TEST_UTILITY_RANDOM_NUMBER_GENERATOR_HPP
+#define FUL_SRC_TEST_TEST_UTILITY_RANDOM_NUMBER_GENERATOR_HPP
 
 #include <cstddef>
 #include <cstdint>
@@ -32,7 +32,7 @@ constexpr std::uint32_t DEFAULT_RNG_SEED{ 0xC0FFEEu };
 
 } // namespace
 
-namespace gas::testing
+namespace ful::testing
 {
 
 /// \brief Generate a random number in [min, max], can generate for integer and
@@ -116,6 +116,6 @@ std::vector<T> generateRandomVector(
     return vec;
 }
 
-} // namespace gas::testing
+} // namespace ful::testing
 
-#endif // !GAS_SRC_TEST_TEST_UTILITY_RANDOM_NUMBER_GENERATOR_HPP
+#endif // !FUL_SRC_TEST_TEST_UTILITY_RANDOM_NUMBER_GENERATOR_HPP

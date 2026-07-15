@@ -39,8 +39,8 @@ function(set_project_warnings project_name)
         -Wformat=2
     )
 
-    option(GAS_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" ON)
-    if(GAS_WARNINGS_AS_ERRORS)
+    option(FUL_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" ON)
+    if(FUL_WARNINGS_AS_ERRORS)
         message(STATUS "Compiling with warnings as errors")
         set(MSVC_WARNINGS ${MSVC_WARNINGS} /WX)
         set(CLANG_WARNINGS ${CLANG_WARNINGS} -Werror)

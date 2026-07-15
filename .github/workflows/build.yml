@@ -77,8 +77,8 @@ jobs:
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
-        -DGAS_ENABLE_ASSERTIONS=ON
-        -DGAS_ENABLE_CLANG_TIDY=OFF
+        -DFUL_ENABLE_ASSERTIONS=ON
+        -DFUL_ENABLE_CLANG_TIDY=OFF
         -DCMAKE_C_COMPILER=gcc-14
         -DCMAKE_CXX_COMPILER=g++-14
 
@@ -92,8 +92,8 @@ jobs:
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
-        -DGAS_ENABLE_ASSERTIONS=ON
-        -DGAS_ENABLE_CLANG_TIDY=OFF
+        -DFUL_ENABLE_ASSERTIONS=ON
+        -DFUL_ENABLE_CLANG_TIDY=OFF
 
     - name: Configure CMake Windows
       if: runner.os == 'Windows'
@@ -105,8 +105,8 @@ jobs:
         -DCMAKE_CXX_COMPILER_LAUNCHER=ccache
         -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
         -DCMAKE_TOOLCHAIN_FILE=${{ github.workspace }}/vcpkg/scripts/buildsystems/vcpkg.cmake
-        -DGAS_ENABLE_ASSERTIONS=ON
-        -DGAS_ENABLE_CLANG_TIDY=OFF
+        -DFUL_ENABLE_ASSERTIONS=ON
+        -DFUL_ENABLE_CLANG_TIDY=OFF
 
     - name: Build Linux and Mac
       if: runner.os != 'Windows'

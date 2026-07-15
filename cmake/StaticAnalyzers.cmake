@@ -1,7 +1,7 @@
 if(NOT CMAKE_BUILD_TYPE STREQUAL "Release")
-    option(GAS_ENABLE_CLANG_TIDY "Enable clang-tidy during compilation" ON)
+    option(FUL_ENABLE_CLANG_TIDY "Enable clang-tidy during compilation" ON)
 
-    if(GAS_ENABLE_CLANG_TIDY)
+    if(FUL_ENABLE_CLANG_TIDY)
         find_program(CLANGTIDY clang-tidy)
 
         if(CLANGTIDY)
@@ -21,16 +21,16 @@ if(NOT CMAKE_BUILD_TYPE STREQUAL "Release")
     endif()
 
     option(
-        GAS_ENABLE_ADDRESS_SANITIZER
+        FUL_ENABLE_ADDRESS_SANITIZER
         "Prepare the build to compile with address sanitizer"
         ON
     )
-    option(GAS_ENABLE_VALGRIND "Prepare the build to be used with valgrind" OFF)
-    if(NOT (GAS_ENABLE_ADDRESS_SANITIZER AND GAS_ENABLE_VALGRIND))
-        if((NOT WIN32) AND GAS_ENABLE_ADDRESS_SANITIZER)
+    option(FUL_ENABLE_VALGRIND "Prepare the build to be used with valgrind" OFF)
+    if(NOT (FUL_ENABLE_ADDRESS_SANITIZER AND FUL_ENABLE_VALGRIND))
+        if((NOT WIN32) AND FUL_ENABLE_ADDRESS_SANITIZER)
             message(STATUS "configuring asan build")
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g -fsanitize=address")
-        elseif((NOT WIN32) AND GAS_ENABLE_VALGRIND)
+        elseif((NOT WIN32) AND FUL_ENABLE_VALGRIND)
             message(STATUS "configuring valgrind build")
             set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g")
         endif()

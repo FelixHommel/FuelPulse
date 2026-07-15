@@ -1,7 +1,7 @@
-#ifndef GAS_SRC_LIB_COLLECTOR_I_COLLECTOR_HPP
-#define GAS_SRC_LIB_COLLECTOR_I_COLLECTOR_HPP
+#ifndef FUL_SRC_LIB_COLLECTOR_I_COLLECTOR_HPP
+#define FUL_SRC_LIB_COLLECTOR_I_COLLECTOR_HPP
 
-namespace gas
+namespace ful
 {
 
 class ICollector
@@ -18,6 +18,6 @@ public:
     virtual void collect() = 0;
 };
 
-} // namespace gas
+} // namespace ful
 
-#endif // !GAS_SRC_LIB_COLLECTOR_I_COLLECTOR_HPP
+#endif // !FUL_SRC_LIB_COLLECTOR_I_COLLECTOR_HPP

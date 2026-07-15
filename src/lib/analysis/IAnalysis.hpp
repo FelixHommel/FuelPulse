@@ -1,7 +1,7 @@
-#ifndef GAS_SRC_LIB_ANALYSIS_I_ANALYSIS_HPP
-#define GAS_SRC_LIB_ANALYSIS_I_ANALYSIS_HPP
+#ifndef FUL_SRC_LIB_ANALYSIS_I_ANALYSIS_HPP
+#define FUL_SRC_LIB_ANALYSIS_I_ANALYSIS_HPP
 
-namespace gas
+namespace ful
 {
 
 class IAnalysis
@@ -18,6 +18,6 @@ public:
     virtual void analyze() = 0;
 };
 
-} // namespace gas
+} // namespace ful
 
-#endif // !GAS_SRC_LIB_ANALYSIS_I_ANALYSIS_HPP
+#endif // !FUL_SRC_LIB_ANALYSIS_I_ANALYSIS_HPP

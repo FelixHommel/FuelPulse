@@ -1,5 +1,5 @@
 [project]
-name = "GasWatch"
+name = "FuelPulse"
 version = "0.0.1"
 description = "Application to monitor and analyze gas station pricing"
 readme = "README.md"

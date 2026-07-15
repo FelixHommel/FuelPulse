@@ -109,7 +109,7 @@
             "inherits": "gcc-debug",
             "binaryDir": "${sourceDir}/build/code-coverage",
             "cacheVariables": {
-                "PEN_ENABLE_CODE_COVERAGE": "ON"
+                "FUL_ENABLE_CODE_COVERAGE": "ON"
             }
         }
     ],
