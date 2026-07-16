@@ -1,9 +1,12 @@
 #ifndef FUL_SRC_ENGINE_LIB_CORE_EVENT_BUS_HPP
 #define FUL_SRC_ENGINE_LIB_CORE_EVENT_BUS_HPP
 
+#include <spdlog/logger.h>
+
 #include <atomic>
 #include <cstdint>
 #include <functional>
+#include <memory>
 #include <mutex>
 #include <typeindex>
 #include <unordered_map>
@@ -21,6 +24,14 @@ class EventBus
 {
 public:
     using SubscriptionId = std::uint64_t;
+
+    EventBus();
+    ~EventBus() = default;
+
+    EventBus(const EventBus&) = delete;
+    EventBus& operator=(const EventBus&) = delete;
+    EventBus(EventBus&&) = delete;
+    EventBus& operator=(EventBus&&) = delete;
 
     /// \brief Subscribe a listener for \p EventT to the bus.
     ///
@@ -60,13 +71,15 @@ private:
     using Subscriber = std::pair<SubscriptionId, std::function<void(const void*)>>;
     using SubscriberList = std::vector<Subscriber>;
 
-    SubscriptionId subscribeImpl(std::type_index type, std::function<void(const void*)> handler);
-    void unsubscribeImpl(std::type_index type, SubscriptionId id);
-    void publishImpl(std::type_index type, const void* pEvent);
+    std::unique_ptr<spdlog::logger> m_logger;
 
     std::mutex m_mutex;
     std::unordered_map<std::type_index, SubscriberList> m_subscribers;
     std::atomic<SubscriptionId> m_nextId{ 0 };
+
+    SubscriptionId subscribeImpl(std::type_index type, std::function<void(const void*)> handler);
+    void unsubscribeImpl(std::type_index type, SubscriptionId id);
+    void publishImpl(std::type_index type, const void* pEvent);
 };
 
 } // namespace ful

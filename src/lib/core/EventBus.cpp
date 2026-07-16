@@ -1,6 +1,9 @@
 #include "EventBus.hpp"
 
-#include <spdlog/spdlog.h>
+#include "utility/LoggerFactory.hpp"
+
+#include <spdlog/logger.h>
+#include <spdlog/sinks/stdout_color_sinks.h>
 
 #include <algorithm>
 #include <exception>
@@ -12,6 +15,12 @@
 
 namespace ful
 {
+
+EventBus::EventBus()
+{
+    LoggerFactory factory{};
+    m_logger = factory.create("EventBus", LoggerProfile::Console);
+}
 
 /// \brief Implement the subscription behavior.
 ///
@@ -65,18 +74,18 @@ void EventBus::publishImpl(std::type_index type, const void* pEvent)
             copyOfSubs = it->second;
     }
 
-    std::ranges::for_each(copyOfSubs, [event = pEvent](const auto& sub) {
+    std::ranges::for_each(copyOfSubs, [&logger = m_logger, event = pEvent](const auto& sub) {
         try
         {
             sub.second(event);
         }
         catch(const std::exception& e)
         {
-            spdlog::error("EventBus: handler threw: {}", e.what());
+            logger->error("handler threw: {}", e.what());
         }
         catch(...)
         {
-            spdlog::error("EventBus: handler threw a non-std::exception");
+            logger->error("handler threw a non-std::exception");
         }
     });
 }
