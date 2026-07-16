@@ -44,7 +44,7 @@ public:
     EventBusTest& operator=(EventBusTest&&) = delete;
 
 protected:
-    EventBus bus{};
+    EventBus bus;
 };
 
 using EventBusPubSubTest = EventBusTest;
