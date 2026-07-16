@@ -20,4 +20,5 @@ set_project_warnings(project_warnings)
 
 add_compile_definitions(FUL_ROOT="${CMAKE_SOURCE_DIR}/")
 
+enable_testing()
 add_subdirectory(src)
