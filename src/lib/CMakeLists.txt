@@ -6,6 +6,7 @@ add_library(
     ./core/CommandInterpreter.cpp
     ./core/EventBus.cpp
     ./core/Scheduler.cpp
+    ./utility/LoggerFactory.cpp
 )
 
 target_sources(
@@ -21,6 +22,7 @@ target_sources(
                 ./report/IReport.hpp
                 ./storage/IRepository.hpp
                 ./utility/Assert.hpp
+                ./utility/LoggerFactory.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)
