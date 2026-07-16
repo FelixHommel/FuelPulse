@@ -49,9 +49,9 @@ public:
     /// \brief Publish a new \p EventT.
     ///
     /// \tparam EventT The type of the event that is being published
-    /// \param event The \p EventT that is published
+    /// \param event (optional) The \p EventT that is published
     template<typename EventT>
-    void publish(const EventT& event)
+    void publish(const EventT& event = {})
     {
         publishImpl(std::type_index(typeid(EventT)), &event);
     }
