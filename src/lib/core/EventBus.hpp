@@ -18,6 +18,8 @@ namespace ful
 
 /// \brief The event bus is a system that is used for inter-system communication and coordination.
 ///
+/// The \ref EventBus operations are implemented thread-safe using a mutex.
+///
 /// \author Felix Hommel
 /// \date 7/16/2026
 class EventBus
@@ -68,8 +70,11 @@ public:
     }
 
 private:
+    /// \brief The handler function is a simple function that takes a void* (event object) and returns nothing.
     using HandlerFn = std::function<void(const void*)>;
+    /// \brief Store handlers as std::shared_ptr for easier copying during the publish operation.
     using Subscriber = std::pair<SubscriptionId, std::shared_ptr<HandlerFn>>;
+    /// \brief The subscriber list is simply a vector of \ref Subscriber
     using SubscriberList = std::vector<Subscriber>;
 
     std::unique_ptr<spdlog::logger> m_logger;

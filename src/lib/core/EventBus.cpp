@@ -3,7 +3,6 @@
 #include "utility/LoggerFactory.hpp"
 
 #include <spdlog/logger.h>
-#include <spdlog/sinks/stdout_color_sinks.h>
 
 #include <algorithm>
 #include <exception>
@@ -37,6 +36,7 @@ EventBus::SubscriptionId EventBus::subscribeImpl(std::type_index type, HandlerFn
 
     // NOTE: Needs to use operator[] to create empty pair if \p type is not in the map yet.
     m_subscribers[type].emplace_back(std::make_pair(id, std::make_shared<HandlerFn>(std::move(handler))));
+    m_logger->info("New subscriber with ID '{}' for events of type '{}'", id, type.name());
 
     return id;
 }
@@ -55,7 +55,10 @@ void EventBus::unsubscribeImpl(std::type_index type, SubscriptionId id)
 
     auto& subs{ mapIt->second };
     if(const auto it{ std::ranges::find(subs, id, &Subscriber::first) }; it != subs.cend())
+    {
         subs.erase(it);
+        m_logger->info("Subscriber with ID '{}' unsubscribed from events of type '{}'", id, type.name());
+    }
 }
 
 /// \brief Implement the publishing behavior.
@@ -82,11 +85,11 @@ void EventBus::publishImpl(std::type_index type, const void* pEvent)
         }
         catch(const std::exception& e)
         {
-            logger->error("handler threw: {}", e.what());
+            logger->error("Handler threw: {}", e.what());
         }
         catch(...)
         {
-            logger->error("handler threw a non-std::exception");
+            logger->error("Handler threw a non-std::exception");
         }
     });
 }
