@@ -68,7 +68,8 @@ public:
     }
 
 private:
-    using Subscriber = std::pair<SubscriptionId, std::function<void(const void*)>>;
+    using HandlerFn = std::function<void(const void*)>;
+    using Subscriber = std::pair<SubscriptionId, std::shared_ptr<HandlerFn>>;
     using SubscriberList = std::vector<Subscriber>;
 
     std::unique_ptr<spdlog::logger> m_logger;
@@ -77,7 +78,7 @@ private:
     std::unordered_map<std::type_index, SubscriberList> m_subscribers;
     std::atomic<SubscriptionId> m_nextId{ 0 };
 
-    SubscriptionId subscribeImpl(std::type_index type, std::function<void(const void*)> handler);
+    SubscriptionId subscribeImpl(std::type_index type, HandlerFn handler);
     void unsubscribeImpl(std::type_index type, SubscriptionId id);
     void publishImpl(std::type_index type, const void* pEvent);
 };

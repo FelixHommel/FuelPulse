@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <exception>
 #include <functional>
+#include <memory>
 #include <mutex>
 #include <typeindex>
 #include <utility>
@@ -28,14 +29,14 @@ EventBus::EventBus()
 /// \param handler The function that deals with new incoming events of \p type
 ///
 /// \returns The ID of the new subscriber
-EventBus::SubscriptionId EventBus::subscribeImpl(std::type_index type, std::function<void(const void*)> handler)
+EventBus::SubscriptionId EventBus::subscribeImpl(std::type_index type, HandlerFn handler)
 {
     std::scoped_lock lock(m_mutex);
 
     const auto id{ m_nextId++ };
 
     // NOTE: Needs to use operator[] to create empty pair if \p type is not in the map yet.
-    m_subscribers[type].emplace_back(std::make_pair(id, std::move(handler)));
+    m_subscribers[type].emplace_back(std::make_pair(id, std::make_shared<HandlerFn>(std::move(handler))));
 
     return id;
 }
@@ -74,10 +75,10 @@ void EventBus::publishImpl(std::type_index type, const void* pEvent)
             copyOfSubs = it->second;
     }
 
-    std::ranges::for_each(copyOfSubs, [&logger = m_logger, event = pEvent](const auto& sub) {
+    std::ranges::for_each(copyOfSubs, [&logger = m_logger, event = pEvent](const Subscriber& sub) {
         try
         {
-            sub.second(event);
+            (*sub.second)(event);
         }
         catch(const std::exception& e)
         {
