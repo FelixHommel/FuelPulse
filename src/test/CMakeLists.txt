@@ -2,7 +2,7 @@ set(NAME "FuelPulseTests")
 
 include(${PROJECT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 
-add_executable(${NAME} ./testMain.cpp)
+add_executable(${NAME} ./testMain.cpp ./core/EventBusTest.cpp)
 
 target_sources(
     ${NAME}
