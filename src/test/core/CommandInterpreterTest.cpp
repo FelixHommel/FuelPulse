@@ -6,17 +6,14 @@
 
 #include <gtest/gtest.h>
 
-#include <chrono>
 #include <cstddef>
 #include <memory>
 #include <ranges>
 #include <sstream>
 #include <string>
-#include <thread>
-#include <utility>
 #include <vector>
 
-namespace ful
+namespace ful::testing
 {
 
 // NOLINTBEGIN(bugprone-unchecked-optional-access): Even though this is technically checked access, clang-tidy can't
@@ -114,4 +111,4 @@ protected:
     std::unique_ptr<CommandInterpreter> interpreter;
 };
 
-} // namespace ful
+} // namespace ful::testing

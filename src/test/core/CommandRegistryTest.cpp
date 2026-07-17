@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 
-namespace ful
+namespace ful::testing
 {
 
 /// \brief Test the functionality of the \ref CommandRegistry.
@@ -88,4 +88,4 @@ TEST_F(CommandRegistryTest, FindCommandThatWasNotRegistered)
 
 // NOLINTEND(bugprone-unchecked-optional-access)
 
-} // namespace ful
+} // namespace ful::testing
