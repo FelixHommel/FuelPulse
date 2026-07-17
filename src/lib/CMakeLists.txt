@@ -4,6 +4,7 @@ include(${PROJECT_SOURCE_DIR}/cmake/StaticAnalyzers.cmake)
 add_library(
     ${NAME}
     ./core/CommandInterpreter.cpp
+    ./core/CommandRegistry.cpp
     ./core/EventBus.cpp
     ./core/Scheduler.cpp
     ./utility/LoggerFactory.cpp
@@ -17,6 +18,7 @@ target_sources(
                 ./analysis/IAnalysis.hpp
                 ./collection/ICollector.hpp
                 ./core/CommandInterpreter.hpp
+                ./core/CommandRegistry.hpp
                 ./core/EventBus.hpp
                 ./core/Scheduler.hpp
                 ./report/IReport.hpp
