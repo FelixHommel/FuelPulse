@@ -80,7 +80,8 @@ void CommandInterpreter::run(threading::stop_token_t token) const
     std::string line{};
     while(!token.stop_requested())
     {
-        std::getline(m_input, line);
+        if(!std::getline(m_input, line))
+            break;
 
         if(const auto parsedCommand{ CommandInterpreter::parse(line) }; parsedCommand.has_value())
             dispatch(*parsedCommand);
