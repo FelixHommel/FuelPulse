@@ -6,6 +6,7 @@ add_executable(
     ${NAME}
     ./testMain.cpp
     ./core/CommandRegistryTest.cpp
+    ./core/CommandInterpreterTest.cpp
     ./core/EventBusTest.cpp
 )
 
