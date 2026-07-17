@@ -23,6 +23,7 @@ target_sources(
                 ./storage/IRepository.hpp
                 ./utility/Assert.hpp
                 ./utility/LoggerFactory.hpp
+                ./utility/Threading.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)
