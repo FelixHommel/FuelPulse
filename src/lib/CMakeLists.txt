@@ -27,6 +27,7 @@ target_sources(
                 ./utility/LoggerFactory.hpp
                 ./utility/StringOperations.hpp
                 ./utility/Threading.hpp
+                ./utility/ThreadingDetail.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)
