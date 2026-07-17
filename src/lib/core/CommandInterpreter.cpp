@@ -31,6 +31,12 @@ CommandInterpreter::CommandInterpreter(CommandRegistry registry, EventBus& bus, 
 
 void CommandInterpreter::start()
 {
+    if(m_thread.joinable())
+    {
+        m_logger->warn("start() called even though interpreter is already running");
+        return;
+    }
+
     // NOTE: From: https://stackoverflow.com/a/65701431
     m_thread = threading::thread_t(std::bind_front(&CommandInterpreter::run, this));
     m_logger->info("Starting background thread");
