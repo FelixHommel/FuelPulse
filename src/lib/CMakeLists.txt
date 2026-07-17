@@ -23,6 +23,7 @@ target_sources(
                 ./storage/IRepository.hpp
                 ./utility/Assert.hpp
                 ./utility/LoggerFactory.hpp
+                ./utility/StringOperations.hpp
                 ./utility/Threading.hpp
 )
 
