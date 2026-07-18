@@ -8,6 +8,7 @@ add_executable(
     ./core/CommandRegistryTest.cpp
     ./core/CommandInterpreterTest.cpp
     ./core/EventBusTest.cpp
+    ./utility/StringOperationsTest.cpp
 )
 
 target_sources(
