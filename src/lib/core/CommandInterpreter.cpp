@@ -42,10 +42,21 @@ void CommandInterpreter::start()
     m_logger->info("Starting background thread");
 }
 
-void CommandInterpreter::stop()
+void CommandInterpreter::requestStop(bool waitForStop)
 {
     m_thread.request_stop();
     m_logger->info("Requested to stop background thread");
+
+    if(waitForStop)
+        waitUntilStopped();
+}
+
+void CommandInterpreter::waitUntilStopped()
+{
+    if(!m_thread.joinable())
+        return;
+
+    m_thread.join();
 }
 
 std::optional<ParsedCommand> CommandInterpreter::parse(std::string line)

@@ -57,7 +57,14 @@ public:
     /// \brief Request the background read loop to stop.
     ///
     /// This does not guarantee immediate exit. I.e., std::getline blocks on the input stream it is reading from.
-    void stop();
+    ///
+    /// \param waitForStop (optional) If true, equivavlent to calling \ref CommandInterpreter::waitUntilStopped() right
+    ///     after
+    void requestStop(bool waitForStop = false);
+    /// \brief Wait until the background thread actually finishes.
+    ///
+    /// This should only be called after \ref CommandInterpreter::stop() was called.
+    void waitUntilStopped();
 
     /// \brief Parse one line of input into a command + args.
     ///
