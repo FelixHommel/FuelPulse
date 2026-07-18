@@ -8,6 +8,7 @@ add_executable(
     ./core/CommandRegistryTest.cpp
     ./core/CommandInterpreterTest.cpp
     ./core/EventBusTest.cpp
+    ./utility/ThreadingTest.cpp
     ./utility/StringOperationsTest.cpp
 )
 
