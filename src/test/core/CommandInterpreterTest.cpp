@@ -10,9 +10,10 @@
 #include <chrono>
 #include <cstddef>
 #include <functional>
+#include <iterator>
 #include <memory>
 #include <mutex>
-#include <ranges>
+#include <numeric>
 #include <sstream>
 #include <stdexcept>
 #include <string>
@@ -74,9 +75,13 @@ TEST(CommandInterpreterParserTest, ParseLineOfInputNoArgs)
 TEST(CommandInterpreterParserTest, ParseLineOfInputWithArgs)
 {
     const std::vector<std::string> COMMAND{ "commandName", "arg1", "arg2" };
-    const auto parseOutput{
-        CommandInterpreter::parse(COMMAND | std::views::join_with(' ') | std::ranges::to<std::string>())
-    };
+    const auto parseOutput{ CommandInterpreter::parse(
+        std::accumulate(
+            std::next(std::begin(COMMAND)), std::end(COMMAND), COMMAND[0], [](std::string a, std::string b) {
+                return a + " " + b;
+            }
+        )
+    ) };
 
     ASSERT_TRUE(parseOutput.has_value());
 
@@ -93,9 +98,13 @@ TEST(CommandInterpreterParserTest, ParseLineOfInputWithArgs)
 TEST(CommandInterpreterParserTest, ParseLineOfInputWithExtraWhitespaces)
 {
     const std::vector<std::string> COMMAND{ " commandName", "arg1", "arg2 " };
-    const auto parseOutput{
-        CommandInterpreter::parse(COMMAND | std::views::join_with(' ') | std::ranges::to<std::string>())
-    };
+    const auto parseOutput{ CommandInterpreter::parse(
+        std::accumulate(
+            std::next(std::begin(COMMAND)), std::end(COMMAND), COMMAND[0], [](std::string a, std::string b) {
+                return a + " " + b;
+            }
+        )
+    ) };
 
     ASSERT_TRUE(parseOutput.has_value());
 
