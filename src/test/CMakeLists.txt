@@ -14,7 +14,11 @@ add_executable(
 
 target_sources(
     ${NAME}
-    PRIVATE FILE_SET HEADERS FILES ./testUtility/RandomNumberGenerator.hpp
+    PRIVATE
+        FILE_SET HEADERS
+            FILES
+                ./testUtility/RandomNumberGenerator.hpp
+                ./testUtility/ConcurrenyTest.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)

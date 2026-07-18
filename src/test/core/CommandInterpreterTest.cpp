@@ -2,6 +2,7 @@
 
 #include "core/CommandRegistry.hpp"
 #include "core/EventBus.hpp"
+#include "testUtility/ConcurrenyTest.hpp"
 #include "utility/StringOperations.hpp"
 
 #include <gtest/gtest.h>
@@ -9,7 +10,6 @@
 #include <atomic>
 #include <chrono>
 #include <cstddef>
-#include <functional>
 #include <iterator>
 #include <memory>
 #include <mutex>
@@ -25,26 +25,6 @@ namespace
 {
 
 constexpr auto DELAY_20_MS{ std::chrono::milliseconds(20) };
-constexpr auto DEFAULT_TIMEOUT{ std::chrono::milliseconds(2000) };
-
-/// \brief Poll \p pred until it returns true or \p timeout elapses.
-///
-/// \param pred The predicate function
-/// \param timeout (optional) Timeout after which to abort in case the predicate still has not evaluated to true
-bool waitOn(std::function<bool()> pred, std::chrono::milliseconds timeout = ::DEFAULT_TIMEOUT)
-{
-    const auto deadline{ std::chrono::steady_clock::now() + timeout };
-
-    while(std::chrono::steady_clock::now() < deadline)
-    {
-        if(pred())
-            return true;
-
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
-    }
-
-    return pred();
-}
 
 } // namespace
 
@@ -185,7 +165,7 @@ TEST_F(CommandInterpreterRunTest, SingleCommandIsDispatched)
     input << "test\n";
     interpreter = std::make_unique<CommandInterpreter>(std::move(registry), bus, input, true);
 
-    EXPECT_TRUE(::waitOn([&called]() { return called.load(std::memory_order_acquire); }));
+    EXPECT_TRUE(waitOn([&called]() { return called.load(std::memory_order_acquire); }));
 
     interpreter->requestStop();
 }
@@ -208,7 +188,7 @@ TEST_F(CommandInterpreterRunTest, MultipleCommandsAreDispatchedInOrder)
     input << "first\nsecond\n";
     interpreter = std::make_unique<CommandInterpreter>(std::move(registry), bus, input, true);
 
-    EXPECT_TRUE(::waitOn([&order, &orderMutex]() {
+    EXPECT_TRUE(waitOn([&order, &orderMutex]() {
         std::scoped_lock lock(orderMutex);
         return order.size() == 2;
     }));
@@ -236,7 +216,7 @@ TEST_F(CommandInterpreterRunTest, UnknownCommandIsIgnoredWithoutCrashing)
     input << "unknown\nknown\n";
     interpreter = std::make_unique<CommandInterpreter>(std::move(registry), bus, input, true);
 
-    EXPECT_TRUE(::waitOn([&knownCalled]() { return knownCalled.load(std::memory_order_acquire); }));
+    EXPECT_TRUE(waitOn([&knownCalled]() { return knownCalled.load(std::memory_order_acquire); }));
 
     interpreter->requestStop();
 }
@@ -255,7 +235,7 @@ TEST_F(CommandInterpreterRunTest, HandlerThrowingStdExceptionDoesNotStopProcessi
     input << "throw\nafter\n";
     interpreter = std::make_unique<CommandInterpreter>(std::move(registry), bus, input, true);
 
-    EXPECT_TRUE(::waitOn([&secondCalled]() { return secondCalled.load(std::memory_order_acquire); }));
+    EXPECT_TRUE(waitOn([&secondCalled]() { return secondCalled.load(std::memory_order_acquire); }));
 
     interpreter->requestStop();
 }
@@ -274,7 +254,7 @@ TEST_F(CommandInterpreterRunTest, HandlerThrowingNonStdExceptionDoesNotStopProce
     input << "throw\nafter\n";
     interpreter = std::make_unique<CommandInterpreter>(std::move(registry), bus, input, true);
 
-    EXPECT_TRUE(::waitOn([&secondCalled]() { return secondCalled.load(std::memory_order_acquire); }));
+    EXPECT_TRUE(waitOn([&secondCalled]() { return secondCalled.load(std::memory_order_acquire); }));
 
     interpreter->requestStop();
 }
@@ -334,7 +314,7 @@ TEST_F(CommandInterpreterRunDeathTest, DoubleStartIsSafeAndDoesNotDeadlock)
     input << "test\n";
     interpreter = std::make_unique<CommandInterpreter>(std::move(registry), bus, input, true);
 
-    EXPECT_TRUE(::waitOn([&callCount]() { return callCount.load(std::memory_order_relaxed) >= 1; }));
+    EXPECT_TRUE(waitOn([&callCount]() { return callCount.load(std::memory_order_relaxed) >= 1; }));
 
     EXPECT_NO_FATAL_FAILURE(interpreter->start());
 
