@@ -6,7 +6,6 @@ add_library(
     ./core/CommandInterpreter.cpp
     ./core/CommandRegistry.cpp
     ./core/EventBus.cpp
-    ./core/Scheduler.cpp
     ./utility/LoggerFactory.cpp
 )
 
