@@ -48,12 +48,12 @@ public:
     ///
     /// \param name The name of the command
     ///
-    /// \returns const-pointer to the \ref CommandHandler, nullptr if no command with \p name was registered before.
-    [[nodiscard]] std::optional<const CommandHandler*> find(std::string_view name) const;
+    /// \returns \ref std::shared_ptr to the \ref CommandHandler, nullopt if no command with \p name was registered before.
+    [[nodiscard]] std::optional<std::shared_ptr<CommandHandler>> find(std::string_view name) const;
 
 private:
     std::unique_ptr<spdlog::logger> m_logger;
-    std::unordered_map<std::string, CommandHandler> m_commands;
+    std::unordered_map<std::string, std::shared_ptr<CommandHandler>> m_commands;
 };
 
 } // namespace ful

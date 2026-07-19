@@ -2,6 +2,7 @@
 
 #include "utility/LoggerFactory.hpp"
 
+#include <memory>
 #include <optional>
 #include <string>
 #include <string_view>
@@ -18,16 +19,20 @@ CommandRegistry::CommandRegistry()
 
 void CommandRegistry::registerCommand(std::string name, CommandHandler handler)
 {
-    if(const auto [it, result] = m_commands.insert_or_assign(std::move(name), std::move(handler)); !result)
+    if(const auto [it, result]
+       = m_commands.insert_or_assign(std::move(name), std::make_unique<CommandHandler>(std::move(handler)));
+       !result)
+    {
         m_logger->warn(
             "Registered command with name '{}' replaced a previously registered command with the same name", it->first
         );
+    }
 }
 
-std::optional<const CommandRegistry::CommandHandler*> CommandRegistry::find(std::string_view name) const
+std::optional<std::shared_ptr<CommandRegistry::CommandHandler>> CommandRegistry::find(std::string_view name) const
 {
     if(const auto it{ m_commands.find(std::string(name)) }; it != m_commands.cend())
-        return std::make_optional(&it->second);
+        return std::make_optional(it->second);
 
     m_logger->error("Could not find a command registered under the name '{}'", name);
     return std::nullopt;
