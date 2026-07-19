@@ -34,7 +34,7 @@ std::optional<std::shared_ptr<CommandRegistry::CommandHandler>> CommandRegistry:
     if(const auto it{ m_commands.find(std::string(name)) }; it != m_commands.cend())
         return std::make_optional(it->second);
 
-    m_logger->error("Could not find a command registered under the name '{}'", name);
+    m_logger->warn("Could not find a command registered under the name '{}'", name);
     return std::nullopt;
 }
 
