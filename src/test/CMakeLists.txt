@@ -10,6 +10,7 @@ add_executable(
     ./core/EventBusTest.cpp
     ./utility/ThreadingTest.cpp
     ./utility/StringOperationsTest.cpp
+    ./testUtility/ConcurrenyTest.cpp
 )
 
 target_sources(
