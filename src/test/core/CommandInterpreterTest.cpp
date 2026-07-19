@@ -2,7 +2,7 @@
 
 #include "core/CommandRegistry.hpp"
 #include "core/EventBus.hpp"
-#include "testUtility/ConcurrenyTest.hpp"
+#include "testUtility/ConcurrencyTest.hpp"
 #include "utility/StringOperations.hpp"
 
 #include <gtest/gtest.h>

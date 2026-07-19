@@ -1,5 +1,5 @@
 #include "core/Scheduler.hpp"
-#include "testUtility/ConcurrenyTest.hpp"
+#include "testUtility/ConcurrencyTest.hpp"
 #include "testUtility/RandomNumberGenerator.hpp"
 
 #include <gtest/gtest.h>

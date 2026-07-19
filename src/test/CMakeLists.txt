@@ -12,7 +12,7 @@ add_executable(
     ./integration/CoreIntegrationTest.cpp
     ./utility/ThreadingTest.cpp
     ./utility/StringOperationsTest.cpp
-    ./testUtility/ConcurrenyTest.cpp
+    ./testUtility/ConcurrencyTest.cpp
 )
 
 target_sources(
@@ -21,7 +21,7 @@ target_sources(
         FILE_SET HEADERS
             FILES
                 ./testUtility/RandomNumberGenerator.hpp
-                ./testUtility/ConcurrenyTest.hpp
+                ./testUtility/ConcurrencyTest.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)
