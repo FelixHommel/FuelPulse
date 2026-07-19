@@ -1,5 +1,5 @@
-#ifndef FUL_SRC_LIB_CORE_UTILITY_HPP
-#define FUL_SRC_LIB_CORE_UTILITY_HPP
+#ifndef FUL_SRC_LIB_UTILITY_ASSERT_HPP
+#define FUL_SRC_LIB_UTILITY_ASSERT_HPP
 
 #include <cstdio>
 #include <cstdlib>
@@ -81,4 +81,4 @@ constexpr const char* msgOrNull(const char* pMsg) noexcept
 #endif
 // NOLINTEND(cppcoreguidelines-macro-usage, cppcoreguidelines-avoid-do-while)
 
-#endif // !FUL_SRC_LIB_CORE_UTILITY_HPP
+#endif // !FUL_SRC_LIB_UTILITY_ASSERT_HPP

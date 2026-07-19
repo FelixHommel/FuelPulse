@@ -16,7 +16,7 @@ namespace ful
 
 LoggerFactory::LoggerFactory()
     : m_consoleSink{ std::make_shared<spdlog::sinks::stdout_color_sink_mt>() }
-    , m_fileSink{ std::make_shared<spdlog::sinks::basic_file_sink_mt>("FuelPulse.log", true) }
+    , m_fileSink{ std::make_shared<spdlog::sinks::basic_file_sink_mt>("FuelPulse.log", false) }
 {}
 
 std::unique_ptr<spdlog::logger> LoggerFactory::create(std::string name, LoggerProfile profile)

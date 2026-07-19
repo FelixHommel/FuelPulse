@@ -1,5 +1,5 @@
-#ifndef FUL_SRC_ENGINE_LIB_CORE_EVENT_BUS_HPP
-#define FUL_SRC_ENGINE_LIB_CORE_EVENT_BUS_HPP
+#ifndef FUL_SRC_LIB_LIB_CORE_EVENT_BUS_HPP
+#define FUL_SRC_LIB_LIB_CORE_EVENT_BUS_HPP
 
 #include <spdlog/logger.h>
 
@@ -90,4 +90,4 @@ private:
 
 } // namespace ful
 
-#endif // !FUL_SRC_ENGINE_LIB_CORE_EVENT_BUS_HPP
+#endif // !FUL_SRC_LIB_LIB_CORE_EVENT_BUS_HPP
