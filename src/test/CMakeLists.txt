@@ -9,6 +9,7 @@ add_executable(
     ./core/CommandInterpreterTest.cpp
     ./core/EventBusTest.cpp
     ./core/SchedulerTest.cpp
+    ./integration/CoreIntegrationTest.cpp
     ./utility/ThreadingTest.cpp
     ./utility/StringOperationsTest.cpp
     ./testUtility/ConcurrenyTest.cpp
