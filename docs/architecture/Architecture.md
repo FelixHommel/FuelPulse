@@ -65,27 +65,29 @@ classDiagram
     class Application{
       +run()
       +shutdown()
-      +registerModule()
     }
 
     class Scheduler{
-      +schedule(Task)
+      +schedule(TimePoint, Task)
+      +schedule(Interval, Task)
     }
 
     class EventBus{
       +publish(Event)
-      +subscribe()
+      +subscribe() EventId
+      +unsubscribe(EventId)
     }
 
     class CommandRegistry{
       +registerCommand()
+      +find() Command
     }
   }
 
   namespace Interfaces{
     class IModule{
       <<interface>>
-      +register(Application&)
+      +registerWith(Application&)
     }
 
     class ICollector{
@@ -173,7 +175,7 @@ This diagram shows the process of a User entering a command via the CLI which th
 
 ```mermaid
 sequenceDiagram
-  participant User
+  actor User
   participant CLI
   participant CommandRegistry
   participant EventBus
