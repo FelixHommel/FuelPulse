@@ -43,5 +43,9 @@ target_compile_options(
     INTERFACE $<$<COMPILE_LANGUAGE:CXX>:${PROJECT_WARNINGS}>
 )
 
-target_link_libraries(${NAME} PUBLIC spdlog::spdlog)
+target_link_libraries(
+    ${NAME}
+    PUBLIC spdlog::spdlog
+    PRIVATE nlohmann_json::nlohmann_json
+)
 target_include_directories(${NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
