@@ -99,7 +99,7 @@ classDiagram
 
     class TankerKoenigCollector {
       -string apiKey
-      -IRepository& repository
+      -IFuelRepository& repository
       -List~Station~ stations
 
       +collect()
@@ -113,7 +113,7 @@ classDiagram
     }
 
     class DailyAnalyzer {
-      -IRepository& repository
+      -IFuelRepository& repository
       -List~StationAnalysis~ lastResult
 
       +analyze()
@@ -154,6 +154,8 @@ classDiagram
   FuelModule --> TankerKoenigCollector
   FuelModule --> JsonReport
   FuelModule --> DailyAnalyzer
+  FuelModule --> IRepository
+  FuelModule --> FuelRepositoryAdapter
 
   FuelRepositoryAdapter ..|> IFuelRepository
 
