@@ -20,6 +20,7 @@ target_sources(
                 ./core/CommandRegistry.hpp
                 ./core/EventBus.hpp
                 ./core/Scheduler.hpp
+                ./fuel/Domain.hpp
                 ./report/IReport.hpp
                 ./storage/IRepository.hpp
                 ./utility/Assert.hpp
