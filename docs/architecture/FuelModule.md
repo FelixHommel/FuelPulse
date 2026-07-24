@@ -17,13 +17,6 @@ classDiagram
 
     class Scheduler
     class EventBus
-
-    class SQLiteRepository {
-      +put(...)
-      +get(...)
-      +range(...)
-      +all(...)
-    }
   }
 
   namespace Interfaces {
@@ -37,15 +30,6 @@ classDiagram
       <<interface>>
 
       +collect()
-    }
-
-    class IRepository {
-      <<interface>>
-
-      +put(Collection, Key, Json)
-      +get(Collection, Key) Optional~Json~
-      +range(Collection, Key from, Key to) List~Json~
-      +all(Collection) List~Json~
     }
 
     class IReport {
@@ -64,7 +48,7 @@ classDiagram
   namespace FuelModuleImpl {
     class FuelModule {
       -FuelModuleConfig config
-      -unique_ptr~IRepository~ repository
+      -unique_ptr~IFuelRepository~ repository
       -unique_ptr~ICollector~ collector
       -unique_ptr~IAnalysis~ analyzer
 
@@ -75,16 +59,16 @@ classDiagram
       <<interface>>
 
       +store(Measurement)
-      +storeStation(List~Station~)
-      +loadStation() List~Station~
-      +loadMeasurements(StationId, Key from, Key to) List~Measurement~
+      +storeStations(List~Station~)
+      +loadStations() List~Station~
+      +loadMeasurements(StationId, TimePoint from, TimePoint to) List~Measurement~
     }
 
-    class FuelRepositoryAdapter {
+    class SqliteFuelRepository {
       +store(Measurement)
-      +storeStation(List~Station~)
-      +loadStation() List~Station~
-      +loadMeasurements(StationId, Key from, Key to) List~Measurement~
+      +storeStations(List~Station~)
+      +loadStations() List~Station~
+      +loadMeasurements(StationId, TimePoint from, TimePoint to) List~Measurement~
     }
 
     class ConfigLoader {
@@ -143,7 +127,7 @@ classDiagram
 
   IModule <|.. FuelModule
   ICollector <|.. TankerKoenigCollector
-  IRepository <|.. SQLiteRepository
+  IFuelRepository <|.. SqliteFuelRepository
   IReport <|.. JsonReport
   IAnalysis <|.. DailyAnalyzer
 
@@ -154,12 +138,7 @@ classDiagram
   FuelModule --> TankerKoenigCollector
   FuelModule --> JsonReport
   FuelModule --> DailyAnalyzer
-  FuelModule --> IRepository
-  FuelModule --> FuelRepositoryAdapter
-
-  FuelRepositoryAdapter ..|> IFuelRepository
-
-  FuelRepositoryAdapter --> IRepository : translates
+  FuelModule --> IFuelRepository
 
   StationDiscoveryService --> Station
 
@@ -187,7 +166,7 @@ sequenceDiagram
   participant FuelModule
   participant ConfigLoader
   participant StationDiscoveryService
-  participant SQLiteRepository
+  participant SQLiteFuelRepository
   participant Scheduler
   participant EventBus
 
@@ -196,12 +175,12 @@ sequenceDiagram
   FuelModule ->> ConfigLoader: load(argc, argv)
   ConfigLoader -->> FuelModule: FuelModuleConfig
 
-  FuelModule ->> SQLiteRepository: loadStations()
+  FuelModule ->> SQLiteFuelRepository: loadStations()
   alt no stations persisting yet
     FuelModule ->> StationDiscoveryService: discover(postalCode, radiusKm)
     StationDiscoveryService -->> FuelModule: List<Station>
 
-    FuelModule ->> SQLiteRepository: storeStations(stations)
+    FuelModule ->> SQLiteFuelRepository: storeStations(stations)
   end
 
   FuelModule ->> Scheduler: scheduleEvery(interval, CollectionTick)
@@ -217,7 +196,7 @@ sequenceDiagram
   participant EventBus
   participant TankerKoenigCollector
   participant TankerKoenig API
-  participant SQLiteRepository
+  participant SQLiteFuelRepository
 
   Scheduler ->> EventBus: CollectionTick
 
@@ -226,7 +205,7 @@ sequenceDiagram
   TankerKoenigCollector ->> TankerKoenig API: GET prices.php
   TankerKoenig API -->> TankerKoenigCollector: JSON
 
-  TankerKoenigCollector ->> SQLiteRepository: store(measurement) x N
+  TankerKoenigCollector ->> SQLiteFuelRepository: store(measurement) x N
 ```
 
 ### Analyzing Flow
@@ -238,15 +217,15 @@ sequenceDiagram
   participant Scheduler
   participant EventBus
   participant DailyAnalyzer
-  participant SQLiteRepository
+  participant SQLiteFuelRepository
   participant JsonReport
   
   Scheduler ->> EventBus: DailyAnalysisRequest
 
   EventBus ->> DailyAnalyzer: analyze()
 
-  DailyAnalyzer ->> SQLiteRepository: loadMeasurements(station, yesterday)
-  SQLiteRepository -->> DailyAnalyzer: vector<Measurement>
+  DailyAnalyzer ->> SQLiteFuelRepository: loadMeasurements(station, yesterday)
+  SQLiteFuelRepository -->> DailyAnalyzer: vector<Measurement>
 
   DailyAnalyzer ->> DailyAnalyzer: compute statistics
 
