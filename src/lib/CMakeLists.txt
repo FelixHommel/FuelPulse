@@ -22,7 +22,6 @@ target_sources(
                 ./core/Scheduler.hpp
                 ./fuel/Domain.hpp
                 ./report/IReport.hpp
-                ./storage/IRepository.hpp
                 ./utility/Assert.hpp
                 ./utility/LoggerFactory.hpp
                 ./utility/StringOperations.hpp
