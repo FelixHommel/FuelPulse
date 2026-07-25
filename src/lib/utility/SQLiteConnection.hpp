@@ -48,6 +48,10 @@ public:
     ///
     /// \returns \p true if there is an open connection, \p false if not
     [[nodiscard]] bool isOpen() const noexcept;
+    /// \brief Query the \ref OpenMode that was used to open the database connection.
+    ///
+    /// \throws \ref std::logic_error if the \ref SQLiteConnection is closed
+    [[nodiscard]] OpenMode mode() const;
     /// \brief Get the handle to the \ref SQLite::Database object
     ///
     /// \throws \ref std::logic_error if the \ref SQLiteConnection is closed
@@ -66,6 +70,7 @@ public:
     void close();
 
 private:
+    OpenMode m_mode{};
     std::unique_ptr<SQLite::Database> m_database;
 
     /// \brief Convert a \ref SQLiteConnection::OpenMode to the appropriate SQLite flags.
@@ -73,9 +78,9 @@ private:
     /// \param mode The \ref SQLiteConnection::OpenMode that is converted
     ///
     /// \returns the flags to give to the database.
-    [[nodiscard]] static constexpr int openModeToSQLiteFlag(OpenMode mode)
+    [[nodiscard]] static int openModeToSQLiteFlag(OpenMode mode)
     {
-        int flags{ SQLite::OPEN_CREATE };
+        int flags{ 0 };
 
         switch(mode)
         {
@@ -83,10 +88,12 @@ private:
 
         case ReadWrite:
             flags |= SQLite::OPEN_READWRITE;
+            flags |= SQLite::OPEN_CREATE;
             break;
         case ReadOnly:
-        default:
             flags |= SQLite::OPEN_READONLY;
+            break;
+        default:
             break;
         }
 

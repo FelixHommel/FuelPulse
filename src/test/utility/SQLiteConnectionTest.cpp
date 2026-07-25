@@ -6,8 +6,15 @@
 
 #include <exception>
 #include <filesystem>
-#include <stdexcept>
 #include <tuple>
+
+namespace
+{
+
+// NOTE: Find out if it is better to have a test resource be created programmatically and deleted after the test finishes.
+inline const auto DB_PATH{ std::filesystem::path(TEST_RESOURCE_DIR) / "SQLiteConnectionTest.db3" };
+
+} // namespace
 
 namespace ful::testing
 {
@@ -19,19 +26,31 @@ TEST(SQLiteConnectionConstructionTest, CreateConnectionObjectWithoutOpeningConne
     SQLiteConnection conn{};
 
     EXPECT_FALSE(conn.isOpen());
-    EXPECT_THROW(std::ignore = conn.database(), std::logic_error);
+    EXPECT_THROW(std::ignore = conn.mode(), std::exception);
+    EXPECT_THROW(std::ignore = conn.database(), std::exception);
 }
 
 /// \brief When a new \ref SQLiteConnection object is created and provided with a path to the database, the connection
 ///     should be established at construction.
 TEST(SQLiteConnectionConstructionTest, CreateConnectionObjectWithOpeningConnection)
 {
-    SQLiteConnection conn{ std::filesystem::path(TEST_RESOURCE_DIR) / "test.db3" };
+    SQLiteConnection conn{ ::DB_PATH };
 
     EXPECT_TRUE(conn.isOpen());
+    EXPECT_EQ(conn.mode(), SQLiteConnection::OpenMode::ReadWrite);
     EXPECT_NO_THROW(std::ignore = conn.database());
 }
 
+/// \brief When a new \ref SQLiteConnection object is created a provided with a path to the database as well as a
+///     specific \ref SQLiteConnection::OpenMode, the specified mode should be remembered.
+TEST(SQLiteConnectionConstructionTest, CreateConnectionWithSpecifyingOpenMode)
+{
+    SQLiteConnection conn{ ::DB_PATH, SQLiteConnection::OpenMode::ReadOnly };
+
+    EXPECT_TRUE(conn.isOpen());
+    EXPECT_EQ(conn.mode(), SQLiteConnection::OpenMode::ReadOnly);
+    EXPECT_NO_THROW(std::ignore = conn.database());
+}
 
 /// \brief Test \ref SQLiteConnection::open and \ref SQLiteConnection::close.
 ///
@@ -49,8 +68,6 @@ public:
     SQLiteConnectionTest& operator=(SQLiteConnectionTest&&) = delete;
 
 protected:
-    static inline const auto DB_PATH{ std::filesystem::path(TEST_RESOURCE_DIR) / "test.db3" };
-
     SQLiteConnection m_connection;
 };
 
@@ -59,7 +76,7 @@ TEST_F(SQLiteConnectionTest, OpenConnectionToDatabase)
 {
     ASSERT_FALSE(m_connection.isOpen());
 
-    m_connection.open(DB_PATH);
+    m_connection.open(::DB_PATH);
 
     EXPECT_TRUE(m_connection.isOpen());
 }
@@ -75,7 +92,7 @@ TEST_F(SQLiteConnectionTest, TryOpenConnectionAtInvalidLocation)
 /// \brief Test that \ref SQLiteConnection::close does close an open database connection.
 TEST_F(SQLiteConnectionTest, CloseClosesDatabaseConnection)
 {
-    m_connection.open(DB_PATH);
+    m_connection.open(::DB_PATH);
 
     ASSERT_TRUE(m_connection.isOpen());
 
@@ -87,7 +104,7 @@ TEST_F(SQLiteConnectionTest, CloseClosesDatabaseConnection)
 /// \brief Test that database access via a const-ref is valid when the source is a connected database.
 TEST_F(SQLiteConnectionTest, ConstRefAccessOnConnectedDatabase)
 {
-    m_connection.open(DB_PATH);
+    m_connection.open(::DB_PATH);
 
     const auto& dbRef{ m_connection };
 
@@ -118,7 +135,7 @@ public:
     SQLiteConnectionOpenModeTest& operator=(SQLiteConnectionOpenModeTest&&) = delete;
 
 protected:
-    [[nodiscard]] constexpr static int convertOpenMode(SQLiteConnection::OpenMode mode)
+    [[nodiscard]] static int convertOpenMode(SQLiteConnection::OpenMode mode)
     {
         return SQLiteConnection::openModeToSQLiteFlag(mode);
     }
@@ -127,7 +144,7 @@ protected:
 /// \brief Test that the ReadOnly open mode is converted correctly.
 TEST_F(SQLiteConnectionOpenModeTest, OpenModeReadOnly)
 {
-    EXPECT_EQ(convertOpenMode(SQLiteConnection::OpenMode::ReadOnly), SQLite::OPEN_CREATE | SQLite::OPEN_READONLY);
+    EXPECT_EQ(convertOpenMode(SQLiteConnection::OpenMode::ReadOnly), SQLite::OPEN_READONLY);
 }
 
 /// \brief Test that the ReadWrite open mode is converted correctly.

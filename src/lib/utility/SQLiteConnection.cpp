@@ -11,11 +11,20 @@ namespace ful
 
 SQLiteConnection::SQLiteConnection(const std::filesystem::path& databasePath, OpenMode mode)
     : m_database{ std::make_unique<SQLite::Database>(databasePath, SQLiteConnection::openModeToSQLiteFlag(mode)) }
+    , m_mode{ mode }
 {}
 
 bool SQLiteConnection::isOpen() const noexcept
 {
     return static_cast<bool>(m_database);
+}
+
+SQLiteConnection::OpenMode SQLiteConnection::mode() const
+{
+    if(!m_database)
+        throw std::logic_error("Database connection is not open");
+
+    return m_mode;
 }
 
 SQLite::Database& SQLiteConnection::database()
@@ -37,6 +46,7 @@ SQLite::Database& SQLiteConnection::database() const
 void SQLiteConnection::open(const std::filesystem::path& databasePath, OpenMode mode)
 {
     m_database = std::make_unique<SQLite::Database>(databasePath, SQLiteConnection::openModeToSQLiteFlag(mode));
+    m_mode = mode;
 }
 
 void SQLiteConnection::close()
