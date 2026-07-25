@@ -24,6 +24,7 @@ target_sources(
                 ./fuel/Domain.hpp
                 ./report/IReport.hpp
                 ./utility/Assert.hpp
+                ./utility/HashCombine.hpp
                 ./utility/LoggerFactory.hpp
                 ./utility/SQLiteConnection.hpp
                 ./utility/StringOperations.hpp
