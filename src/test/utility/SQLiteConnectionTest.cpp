@@ -1,0 +1,139 @@
+#include "utility/SQLiteConnection.hpp"
+
+#include <gtest/gtest.h>
+
+#include <SQLiteCpp/Database.h>
+
+#include <exception>
+#include <filesystem>
+#include <stdexcept>
+#include <tuple>
+
+namespace ful::testing
+{
+
+/// \brief When a new \ref SQLiteConnection object is created without providing any parameters, the connection should be
+///     in a closed state.
+TEST(SQLiteConnectionConstructionTest, CreateConnectionObjectWithoutOpeningConnection)
+{
+    SQLiteConnection conn{};
+
+    EXPECT_FALSE(conn.isOpen());
+    EXPECT_THROW(std::ignore = conn.database(), std::logic_error);
+}
+
+/// \brief When a new \ref SQLiteConnection object is created and provided with a path to the database, the connection
+///     should be established at construction.
+TEST(SQLiteConnectionConstructionTest, CreateConnectionObjectWithOpeningConnection)
+{
+    SQLiteConnection conn{ std::filesystem::path(TEST_RESOURCE_DIR) / "test.db3" };
+
+    EXPECT_TRUE(conn.isOpen());
+    EXPECT_NO_THROW(std::ignore = conn.database());
+}
+
+
+/// \brief Test \ref SQLiteConnection::open and \ref SQLiteConnection::close.
+///
+/// \author Felix Hommel
+/// \date 7/24/2026
+class SQLiteConnectionTest : public ::testing::Test
+{
+public:
+    SQLiteConnectionTest() = default;
+    ~SQLiteConnectionTest() override = default;
+
+    SQLiteConnectionTest(const SQLiteConnectionTest&) = delete;
+    SQLiteConnectionTest& operator=(const SQLiteConnectionTest&) = delete;
+    SQLiteConnectionTest(SQLiteConnectionTest&&) = delete;
+    SQLiteConnectionTest& operator=(SQLiteConnectionTest&&) = delete;
+
+protected:
+    static inline const auto DB_PATH{ std::filesystem::path(TEST_RESOURCE_DIR) / "test.db3" };
+
+    SQLiteConnection m_connection;
+};
+
+/// \brief Test that \ref SQLiteConnection::open does open a connection to the database.
+TEST_F(SQLiteConnectionTest, OpenConnectionToDatabase)
+{
+    ASSERT_FALSE(m_connection.isOpen());
+
+    m_connection.open(DB_PATH);
+
+    EXPECT_TRUE(m_connection.isOpen());
+}
+
+/// \brief Test that \ref SQLiteConnection::open throws when trying to connect to a database at an invalid location.
+TEST_F(SQLiteConnectionTest, TryOpenConnectionAtInvalidLocation)
+{
+    ASSERT_FALSE(m_connection.isOpen());
+
+    EXPECT_THROW(m_connection.open("non-existing-path/test.db3"), std::exception);
+}
+
+/// \brief Test that \ref SQLiteConnection::close does close an open database connection.
+TEST_F(SQLiteConnectionTest, CloseClosesDatabaseConnection)
+{
+    m_connection.open(DB_PATH);
+
+    ASSERT_TRUE(m_connection.isOpen());
+
+    m_connection.close();
+
+    EXPECT_FALSE(m_connection.isOpen());
+}
+
+/// \brief Test that database access via a const-ref is valid when the source is a connected database.
+TEST_F(SQLiteConnectionTest, ConstRefAccessOnConnectedDatabase)
+{
+    m_connection.open(DB_PATH);
+
+    const auto& dbRef{ m_connection };
+
+    EXPECT_NO_THROW(std::ignore = dbRef.database());
+}
+
+/// \brief Test that database access via a const-ref throws when the source is not a connected database.
+TEST_F(SQLiteConnectionTest, ConstRefAccessOnDisconnectedDatabase)
+{
+    const auto& dbRef{ m_connection };
+
+    EXPECT_THROW(std::ignore = dbRef.database(), std::exception);
+}
+
+/// \brief Test the \ref SQLiteConnection::OpenMode functionality.
+///
+/// \author Felix Hommel
+/// \date 7/25/2026
+class SQLiteConnectionOpenModeTest : public ::testing::Test
+{
+public:
+    SQLiteConnectionOpenModeTest() = default;
+    ~SQLiteConnectionOpenModeTest() override = default;
+
+    SQLiteConnectionOpenModeTest(const SQLiteConnectionOpenModeTest&) = delete;
+    SQLiteConnectionOpenModeTest& operator=(const SQLiteConnectionOpenModeTest&) = delete;
+    SQLiteConnectionOpenModeTest(SQLiteConnectionOpenModeTest&&) = delete;
+    SQLiteConnectionOpenModeTest& operator=(SQLiteConnectionOpenModeTest&&) = delete;
+
+protected:
+    [[nodiscard]] constexpr static int convertOpenMode(SQLiteConnection::OpenMode mode)
+    {
+        return SQLiteConnection::openModeToSQLiteFlag(mode);
+    }
+};
+
+/// \brief Test that the ReadOnly open mode is converted correctly.
+TEST_F(SQLiteConnectionOpenModeTest, OpenModeReadOnly)
+{
+    EXPECT_EQ(convertOpenMode(SQLiteConnection::OpenMode::ReadOnly), SQLite::OPEN_CREATE | SQLite::OPEN_READONLY);
+}
+
+/// \brief Test that the ReadWrite open mode is converted correctly.
+TEST_F(SQLiteConnectionOpenModeTest, OpenModeReadWrite)
+{
+    EXPECT_EQ(convertOpenMode(SQLiteConnection::OpenMode::ReadWrite), SQLite::OPEN_CREATE | SQLite::OPEN_READWRITE);
+}
+
+} // namespace ful::testing

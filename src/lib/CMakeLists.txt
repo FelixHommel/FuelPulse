@@ -7,6 +7,7 @@ add_library(
     ./core/CommandRegistry.cpp
     ./core/EventBus.cpp
     ./utility/LoggerFactory.cpp
+    ./utility/SQLiteConnection.cpp
 )
 
 target_sources(
@@ -24,6 +25,7 @@ target_sources(
                 ./report/IReport.hpp
                 ./utility/Assert.hpp
                 ./utility/LoggerFactory.hpp
+                ./utility/SQLiteConnection.hpp
                 ./utility/StringOperations.hpp
                 ./utility/Threading.hpp
                 ./utility/ThreadingDetail.hpp
@@ -46,6 +48,6 @@ target_compile_options(
 target_link_libraries(
     ${NAME}
     PUBLIC spdlog::spdlog
-    PRIVATE nlohmann_json::nlohmann_json
+    PRIVATE nlohmann_json::nlohmann_json SQLiteCpp
 )
 target_include_directories(${NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

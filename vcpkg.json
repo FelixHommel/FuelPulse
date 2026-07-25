@@ -1,7 +1,8 @@
 {
   "dependencies": [
     "gtest",
+    "nlohmann-json",
     "spdlog",
-    "nlohmann-json"
+    "sqlitecpp"
   ]
 }
