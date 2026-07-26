@@ -37,7 +37,7 @@ public:
 private:
     static constexpr auto MEASUREMENT_TABLE{ "measurements" };
     static constexpr auto CREATE_MEASUREMENT_TABLE_STATEMENT{
-        "CREATE TABLE measurements (stationId TEXT PRIMARY KEY, timestamp INTEGER, priceDiesel INTEGER, priceE5 INTEGER, priceE10 INTEGER)"
+        "CREATE TABLE measurements (id INTEGER PRIMARY KEY AUTOINCREMENT, stationId TEXT NOT NULL, timestamp INTEGER NOT NULL, priceDiesel INTEGER, priceE5 INTEGER, priceE10 INTEGER)"
     };
     static constexpr auto QUERY_MEASUREMENT_TABLE_FROM_TO{
         "SELECT * FROM measurements AS m WHERE m.timestamp BETWEEN ? AND ?"
