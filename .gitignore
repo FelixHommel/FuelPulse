@@ -1,6 +1,7 @@
 .cache
 .idea
 .vscode
+.vs
 build
 *.db3
 **/docs/doxygen/**
