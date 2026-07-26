@@ -6,6 +6,7 @@
 #include "SQLiteCpp/Transaction.h"
 
 #include <chrono>
+#include <cstdint>
 #include <filesystem>
 #include <optional>
 #include <vector>
@@ -14,13 +15,15 @@ namespace
 {
 
 /// \brief Convert a \ref std::chrono::system_clock::time_point to long (in ms).
-constexpr long systemClockToUnixTime(const ful::fuel::SQLiteFuelRepository::TimePoint& tp)
+constexpr std::int64_t systemClockToUnixTime(const ful::fuel::SQLiteFuelRepository::TimePoint& tp)
 {
-    return std::chrono::duration_cast<std::chrono::milliseconds>(tp.time_since_epoch()).count();
+    return static_cast<std::int64_t>(
+        std::chrono::duration_cast<std::chrono::milliseconds>(tp.time_since_epoch()).count()
+    );
 }
 
 /// \brief Convert a long (in ms) to \ref std::chrono::system_clock::time_point.
-constexpr ful::fuel::SQLiteFuelRepository::TimePoint unixTimeToSystemClock(long tp)
+constexpr ful::fuel::SQLiteFuelRepository::TimePoint unixTimeToSystemClock(std::int64_t tp)
 {
     return ful::fuel::SQLiteFuelRepository::TimePoint(std::chrono::milliseconds(tp));
 }
