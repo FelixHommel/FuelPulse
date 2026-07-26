@@ -1,6 +1,8 @@
 #include "SQLiteFuelRepository.hpp"
 
+#include "fuel/Domain.hpp"
 #include "utility/Assert.hpp"
+#include "utility/SQLiteConnection.hpp"
 
 #include "SQLiteCpp/Statement.h"
 #include "SQLiteCpp/Transaction.h"
