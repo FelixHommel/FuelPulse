@@ -9,6 +9,10 @@
 namespace ful::fuel
 {
 
+/// \brief Interface definition for fuel data storage.
+///
+/// \author Felix Hommel
+/// \date 7/23/2026
 class IFuelRepository
 {
 public:
@@ -22,9 +26,24 @@ public:
     IFuelRepository(IFuelRepository&&) = default;
     IFuelRepository& operator=(IFuelRepository&&) = default;
 
-    virtual void store(const Measurement& m) = 0;
-    virtual void storeStation(const Station& s) = 0;
+    /// \brief Store a \ref Measurement.
+    ///
+    /// \param measurement The \ref Measurement that is stored
+    virtual void store(const Measurement& measurement) = 0;
+    /// \brief Store a \ref Station.
+    ///
+    /// \param station The \ref Station that is stored
+    virtual void storeStation(const Station& station) = 0;
+    /// \brif Load all \ref Station.
+    ///
+    /// \returns \ref std::vector of \ref Station
     virtual std::vector<Station> loadStations() = 0;
+    /// \brief Load all \ref Measurement that are between \p from and \p to.
+    ///
+    /// \param from Lower time bound
+    /// \param to Upper time bound
+    ///
+    /// \returns \ref std::vector of \ref Measurement that are between \p from and \p to
     virtual std::vector<Measurement> loadMeasurements(TimePoint from, TimePoint to) = 0;
 };
 
