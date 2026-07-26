@@ -19,6 +19,10 @@ namespace ful::fuel
 class SQLiteFuelRepository : public IFuelRepository
 {
 public:
+    /// \brief Create a new \ref SQLiteFuelRepository
+    ///
+    /// \param dbLocation Path to the database file
+    /// \param mode (optional) How the connection is established
     SQLiteFuelRepository(
         const std::filesystem::path& dbLocation, SQLiteConnection::OpenMode mode = SQLiteConnection::OpenMode::ReadWrite
     );
@@ -31,19 +35,10 @@ public:
 
     void store(const Measurement& m) override;
     void storeStation(const Station& s) override;
-    std::vector<Station> loadStations() override;
     std::vector<Measurement> loadMeasurements(TimePoint from, TimePoint to) override;
+    std::vector<Station> loadStations() override;
 
 private:
-    static constexpr auto MEASUREMENT_TABLE{ "measurements" };
-    static constexpr auto CREATE_MEASUREMENT_TABLE_STATEMENT{
-        "CREATE TABLE measurements (id INTEGER PRIMARY KEY AUTOINCREMENT, stationId TEXT NOT NULL, timestamp INTEGER NOT NULL, priceDiesel INTEGER, priceE5 INTEGER, priceE10 INTEGER)"
-    };
-    static constexpr auto QUERY_MEASUREMENT_TABLE_FROM_TO{
-        "SELECT * FROM measurements AS m WHERE m.timestamp BETWEEN ? AND ?"
-    };
-    static constexpr auto QUERY_INSERT_MEASUREMENT{ "INSERT INTO measurements values(?, ?, ?, ?, ?)" };
-
     SQLiteConnection m_connection;
 
     void ensureTableLayout() const;

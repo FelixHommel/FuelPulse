@@ -16,6 +16,22 @@
 namespace
 {
 
+constexpr auto MEASUREMENT_TABLE_NAME{ "measurements" };
+constexpr auto STATION_TABLE_NAME{ "stations" };
+
+constexpr auto CREATE_MEASUREMENT_TABLE{
+    "CREATE TABLE measurements (id INTEGER PRIMARY KEY AUTOINCREMENT, stationId TEXT NOT NULL, timestamp INTEGER NOT NULL, priceDiesel INTEGER, priceE5 INTEGER, priceE10 INTEGER)"
+};
+constexpr auto CREATE_STATIONS_TABLE{
+    "CREATE TABLE stations (stationId TEXT PRIMARY KEY, name TEXT, brand TEXT, longitude REAL, latitude REAL)"
+};
+
+constexpr auto INSERT_MEASUREMENT{ "INSERT INTO measurements values(?, ?, ?, ?, ?)" };
+constexpr auto INSERT_STATION{ "INSERT INTO stations values(?, ?, ?, ?, ?)" };
+
+constexpr auto QUERY_MEASUREMENTS_FROM_TO{ "SELECT * FROM measurements AS m WHERE m.timestamp BETWEEN ? AND ?" };
+constexpr auto QUERY_STATIONS{ "SELECT * FROM stations" };
+
 /// \brief Convert a \ref std::chrono::system_clock::time_point to long (in ms).
 constexpr std::int64_t systemClockToUnixTime(const ful::fuel::SQLiteFuelRepository::TimePoint& tp)
 {
@@ -48,7 +64,7 @@ void SQLiteFuelRepository::store(const Measurement& m)
 
     SQLite::Transaction transaction{ m_connection.database() };
 
-    SQLite::Statement insert{ m_connection.database(), QUERY_INSERT_MEASUREMENT };
+    SQLite::Statement insert{ m_connection.database(), ::INSERT_MEASUREMENT };
 
     insert.bind(1, m.stationId);
     insert.bind(2, ::systemClockToUnixTime(m.timestamp));
@@ -63,24 +79,33 @@ void SQLiteFuelRepository::store(const Measurement& m)
     transaction.commit();
 }
 
-void SQLiteFuelRepository::storeStation([[maybe_unused]] const Station& s)
+void SQLiteFuelRepository::storeStation(const Station& s)
 {
     FUL_ASSERT(m_connection.isOpen());
     FUL_ASSERT(m_connection.mode() == SQLiteConnection::OpenMode::ReadWrite);
-}
 
-std::vector<Station> SQLiteFuelRepository::loadStations()
-{
-    FUL_ASSERT(m_connection.isOpen());
+    SQLite::Transaction transaction{ m_connection.database() };
 
-    return {};
+    SQLite::Statement insert{ m_connection.database(), ::INSERT_STATION };
+
+    // NOLINTBEGIN(readability-magic-numbers): Just indices into the SQLite query
+    insert.bind(1, s.id);
+    insert.bind(2, s.name);
+    insert.bind(3, s.brand);
+    insert.bind(4, s.longitude);
+    insert.bind(5, s.latitude);
+    // NOLINTEND(readability-magic-numbers)
+
+    insert.exec();
+
+    transaction.commit();
 }
 
 std::vector<Measurement> SQLiteFuelRepository::loadMeasurements(TimePoint from, TimePoint to)
 {
     FUL_ASSERT(m_connection.isOpen());
 
-    SQLite::Statement query{ m_connection.database(), QUERY_MEASUREMENT_TABLE_FROM_TO };
+    SQLite::Statement query{ m_connection.database(), ::QUERY_MEASUREMENTS_FROM_TO };
 
     // NOLINTBEGIN(readability-magic-numbers): Just indices into the SQLite query
     query.bind(1, ::systemClockToUnixTime(from));
@@ -102,10 +127,47 @@ std::vector<Measurement> SQLiteFuelRepository::loadMeasurements(TimePoint from, 
     return result;
 }
 
+std::vector<Station> SQLiteFuelRepository::loadStations()
+{
+    FUL_ASSERT(m_connection.isOpen());
+
+    SQLite::Statement query{ m_connection.database(), ::QUERY_STATIONS };
+
+    std::vector<Station> result;
+    while(query.executeStep())
+    {
+        // NOLINTBEGIN(readability-magic-numbers): Just indices into the SQLite query
+        result.emplace_back(
+            query.getColumn(0).getString(),
+            query.getColumn(1).getString(),
+            query.getColumn(2).getString(),
+            query.getColumn(3).getDouble(),
+            query.getColumn(4).getDouble()
+        );
+        // NOLINTEND(readability-magic-numbers)
+    }
+
+    return result;
+}
+
+/// \brief Make sure that the connected database has the required tables.
+///
+/// If the database does not have the required tables, the tables will be created.
 void SQLiteFuelRepository::ensureTableLayout() const
 {
-    if(!m_connection.database().tableExists(MEASUREMENT_TABLE))
-        m_connection.database().exec(CREATE_MEASUREMENT_TABLE_STATEMENT);
+    FUL_ASSERT(m_connection.isOpen());
+
+    if(!m_connection.database().tableExists(::MEASUREMENT_TABLE_NAME))
+    {
+        FUL_ASSERT(m_connection.mode() == SQLiteConnection::OpenMode::ReadWrite);
+        m_connection.database().exec(::CREATE_MEASUREMENT_TABLE);
+    }
+
+    if(!m_connection.database().tableExists(::STATION_TABLE_NAME))
+    {
+        FUL_ASSERT(m_connection.mode() == SQLiteConnection::OpenMode::ReadWrite);
+        m_connection.database().exec(::CREATE_STATIONS_TABLE);
+    }
 }
 
 } // namespace ful::fuel
