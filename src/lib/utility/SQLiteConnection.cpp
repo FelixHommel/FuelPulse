@@ -10,7 +10,9 @@ namespace ful
 {
 
 SQLiteConnection::SQLiteConnection(const std::filesystem::path& databasePath, OpenMode mode)
-    : m_database{ std::make_unique<SQLite::Database>(databasePath, SQLiteConnection::openModeToSQLiteFlag(mode)) }
+    : m_database{
+        std::make_unique<SQLite::Database>(databasePath.string(), SQLiteConnection::openModeToSQLiteFlag(mode))
+    }
     , m_mode{ mode }
 {}
 
@@ -45,7 +47,8 @@ SQLite::Database& SQLiteConnection::database() const
 
 void SQLiteConnection::open(const std::filesystem::path& databasePath, OpenMode mode)
 {
-    m_database = std::make_unique<SQLite::Database>(databasePath, SQLiteConnection::openModeToSQLiteFlag(mode));
+    m_database
+        = std::make_unique<SQLite::Database>(databasePath.string(), SQLiteConnection::openModeToSQLiteFlag(mode));
     m_mode = mode;
 }
 
