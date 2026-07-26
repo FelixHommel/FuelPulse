@@ -11,8 +11,7 @@
 namespace
 {
 
-// NOTE: Find out if it is better to have a test resource be created programmatically and deleted after the test finishes.
-inline const auto DB_PATH{ std::filesystem::path(TEST_RESOURCE_DIR) / "SQLiteConnectionTest.db3" };
+constexpr auto DB_IN_MEMORY_PATH{ ":memory:" };
 
 } // namespace
 
@@ -34,7 +33,7 @@ TEST(SQLiteConnectionConstructionTest, CreateConnectionObjectWithoutOpeningConne
 ///     should be established at construction.
 TEST(SQLiteConnectionConstructionTest, CreateConnectionObjectWithOpeningConnection)
 {
-    SQLiteConnection conn{ ::DB_PATH };
+    SQLiteConnection conn{ ::DB_IN_MEMORY_PATH };
 
     EXPECT_TRUE(conn.isOpen());
     EXPECT_EQ(conn.mode(), SQLiteConnection::OpenMode::ReadWrite);
@@ -45,7 +44,7 @@ TEST(SQLiteConnectionConstructionTest, CreateConnectionObjectWithOpeningConnecti
 ///     specific \ref SQLiteConnection::OpenMode, the specified mode should be remembered.
 TEST(SQLiteConnectionConstructionTest, CreateConnectionWithSpecifyingOpenMode)
 {
-    SQLiteConnection conn{ ::DB_PATH, SQLiteConnection::OpenMode::ReadOnly };
+    SQLiteConnection conn{ ::DB_IN_MEMORY_PATH, SQLiteConnection::OpenMode::ReadOnly };
 
     EXPECT_TRUE(conn.isOpen());
     EXPECT_EQ(conn.mode(), SQLiteConnection::OpenMode::ReadOnly);
@@ -76,7 +75,7 @@ TEST_F(SQLiteConnectionTest, OpenConnectionToDatabase)
 {
     ASSERT_FALSE(m_connection.isOpen());
 
-    m_connection.open(::DB_PATH);
+    m_connection.open(::DB_IN_MEMORY_PATH);
 
     EXPECT_TRUE(m_connection.isOpen());
 }
@@ -87,12 +86,14 @@ TEST_F(SQLiteConnectionTest, TryOpenConnectionAtInvalidLocation)
     ASSERT_FALSE(m_connection.isOpen());
 
     EXPECT_THROW(m_connection.open("non-existing-path/test.db3"), std::exception);
+
+    EXPECT_FALSE(m_connection.isOpen());
 }
 
 /// \brief Test that \ref SQLiteConnection::close does close an open database connection.
 TEST_F(SQLiteConnectionTest, CloseClosesDatabaseConnection)
 {
-    m_connection.open(::DB_PATH);
+    m_connection.open(::DB_IN_MEMORY_PATH);
 
     ASSERT_TRUE(m_connection.isOpen());
 
@@ -104,7 +105,7 @@ TEST_F(SQLiteConnectionTest, CloseClosesDatabaseConnection)
 /// \brief Test that database access via a const-ref is valid when the source is a connected database.
 TEST_F(SQLiteConnectionTest, ConstRefAccessOnConnectedDatabase)
 {
-    m_connection.open(::DB_PATH);
+    m_connection.open(::DB_IN_MEMORY_PATH);
 
     const auto& dbRef{ m_connection };
 
