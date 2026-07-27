@@ -20,16 +20,18 @@ constexpr auto MEASUREMENT_TABLE_NAME{ "measurements" };
 constexpr auto STATION_TABLE_NAME{ "stations" };
 
 constexpr auto CREATE_MEASUREMENT_TABLE{
-    "CREATE TABLE measurements (id INTEGER PRIMARY KEY AUTOINCREMENT, stationId TEXT NOT NULL, timestamp INTEGER NOT NULL, priceDiesel INTEGER, priceE5 INTEGER, priceE10 INTEGER)"
+    "CREATE TABLE measurements (id INTEGER PRIMARY KEY AUTOINCREMENT, stationId TEXT NOT NULL, timestamp INTEGER NOT NULL, priceE5 INTEGER, priceE10 INTEGER, priceDiesel INTEGER)"
 };
 constexpr auto CREATE_STATIONS_TABLE{
     "CREATE TABLE stations (stationId TEXT PRIMARY KEY, name TEXT, brand TEXT, longitude REAL, latitude REAL)"
 };
 
-constexpr auto INSERT_MEASUREMENT{ "INSERT INTO measurements values(?, ?, ?, ?, ?)" };
+constexpr auto INSERT_MEASUREMENT{ "INSERT INTO measurements values(?, ?, ?, ?, ?, ?)" };
 constexpr auto INSERT_STATION{ "INSERT INTO stations values(?, ?, ?, ?, ?)" };
 
-constexpr auto QUERY_MEASUREMENTS_FROM_TO{ "SELECT * FROM measurements AS m WHERE m.timestamp BETWEEN ? AND ?" };
+constexpr auto QUERY_MEASUREMENTS_FROM_TO{
+    "SELECT stationId, timestamp, priceE5, priceE10, priceDiesel FROM measurements AS m WHERE m.timestamp BETWEEN ? AND ?"
+};
 constexpr auto QUERY_STATIONS{ "SELECT * FROM stations" };
 
 /// \brief Convert a \ref std::chrono::system_clock::time_point to long (in ms).
