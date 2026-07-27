@@ -68,13 +68,16 @@ void SQLiteFuelRepository::store(const Measurement& m)
 
     SQLite::Statement insert{ m_connection.database(), ::INSERT_MEASUREMENT };
 
-    insert.bind(1, m.stationId);
-    insert.bind(2, ::systemClockToUnixTime(m.timestamp));
-    for(int idx{ 3 }; const auto& opt : { m.diesel, m.e5, m.e10 })
+    // NOLINTBEGIN(readability-magic-numbers): Just indices into the SQLite query
+    insert.bind(1);
+    insert.bind(2, m.stationId);
+    insert.bind(3, ::systemClockToUnixTime(m.timestamp));
+    for(int idx{ 4 }; const auto& opt : { m.e5, m.e10, m.diesel })
     {
         opt.has_value() ? insert.bind(idx, *opt) : insert.bind(idx);
         ++idx;
     }
+    // NOLINTEND(readability-magic-numbers)
 
     insert.exec();
 
