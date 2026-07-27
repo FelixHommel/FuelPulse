@@ -73,10 +73,7 @@ void SQLiteFuelRepository::store(const Measurement& m)
     insert.bind(2, m.stationId);
     insert.bind(3, ::systemClockToUnixTime(m.timestamp));
     for(int idx{ 4 }; const auto& opt : { m.e5, m.e10, m.diesel })
-    {
-        opt.has_value() ? insert.bind(idx, *opt) : insert.bind(idx);
-        ++idx;
-    }
+        opt.has_value() ? insert.bind(idx++, *opt) : insert.bind(idx++);
     // NOLINTEND(readability-magic-numbers)
 
     insert.exec();
