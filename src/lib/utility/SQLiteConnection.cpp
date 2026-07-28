@@ -9,12 +9,14 @@
 namespace ful
 {
 
+// clang-format off: For some reason clang-format was unhappy about the member initializer list
 SQLiteConnection::SQLiteConnection(const std::filesystem::path& databasePath, OpenMode mode)
     : m_database{
         std::make_unique<SQLite::Database>(databasePath.string(), SQLiteConnection::openModeToSQLiteFlag(mode))
     }
     , m_mode{ mode }
 {}
+// clang-format on
 
 bool SQLiteConnection::isOpen() const noexcept
 {
