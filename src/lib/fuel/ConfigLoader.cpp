@@ -21,7 +21,7 @@ namespace ful::fuel
 namespace
 {
 
-/// \brief Attempt to load the Tanker Keonig API Key from the environment.
+/// \brief Attempt to load the Tanker Koenig API Key from the environment.
 ///
 /// \returns The API Key in string form wrapped in a \ref std::optional if possible, \ref std::nullopt otherwise
 std::optional<std::string> loadApiKeyFromEnv()
