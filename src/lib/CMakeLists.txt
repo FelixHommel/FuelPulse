@@ -6,6 +6,7 @@ add_library(
     ./core/CommandInterpreter.cpp
     ./core/CommandRegistry.cpp
     ./core/EventBus.cpp
+    ./fuel/ConfigLoader.cpp
     ./fuel/SQLiteFuelRepository.cpp
     ./utility/LoggerFactory.cpp
     ./utility/SQLiteConnection.cpp
@@ -22,6 +23,7 @@ target_sources(
                 ./core/CommandRegistry.hpp
                 ./core/EventBus.hpp
                 ./core/Scheduler.hpp
+                ./fuel/ConfigLoader.hpp
                 ./fuel/Domain.hpp
                 ./fuel/FuelPulseConfig.hpp
                 ./fuel/IFuelRepository.hpp
