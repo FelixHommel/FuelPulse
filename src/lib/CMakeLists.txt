@@ -7,6 +7,7 @@ add_library(
     ./core/CommandRegistry.cpp
     ./core/EventBus.cpp
     ./fuel/ConfigLoader.cpp
+    ./fuel/FuelPulseConfig.cpp
     ./fuel/SQLiteFuelRepository.cpp
     ./utility/LoggerFactory.cpp
     ./utility/SQLiteConnection.cpp
