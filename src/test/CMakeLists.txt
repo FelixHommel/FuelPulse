@@ -9,6 +9,7 @@ add_executable(
     ./core/CommandInterpreterTest.cpp
     ./core/EventBusTest.cpp
     ./core/SchedulerTest.cpp
+    ./fuel/ConfigLoaderTest.cpp
     ./fuel/SQLiteFuelRepositoryTest.cpp
     ./integration/CoreIntegrationTest.cpp
     ./utility/ThreadingTest.cpp
