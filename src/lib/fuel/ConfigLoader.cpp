@@ -11,6 +11,7 @@
 #include <format>
 #include <fstream>
 #include <optional>
+#include <sstream>
 #include <stdexcept>
 #include <string>
 
@@ -37,7 +38,7 @@ std::optional<std::string> loadApiKeyFromEnv()
 /// \throws \ref std::runtime_error If the file does not exist or it couldn't be opened
 ///
 /// \param configPath a \ref std::filesystem::path to the location of the configuration file
-FuelPulseConfig loadConfigFromFile(const std::filesystem::path& configPath)
+std::string loadFileContent(const std::filesystem::path& configPath)
 {
     if(!std::filesystem::exists(configPath))
         throw std::runtime_error(std::format("There is no file at the following location: {}", configPath.string()));
@@ -47,9 +48,10 @@ FuelPulseConfig loadConfigFromFile(const std::filesystem::path& configPath)
     if(!ifs.is_open())
         throw std::runtime_error(std::format("Unable to open file at the following location: {}", configPath.string()));
 
-    nlohmann::json data{ nlohmann::json::parse(ifs) };
+    std::stringstream buffer{};
+    buffer << ifs.rdbuf();
 
-    return data.get<FuelPulseConfig>();
+    return buffer.str();
 }
 
 } // namespace
@@ -59,19 +61,33 @@ FuelPulseConfig loadConfig(const std::filesystem::path& configPath)
     FuelPulseConfig config;
     try
     {
-        config = loadConfigFromFile(configPath);
+        config = loadConfig(loadFileContent(configPath));
     }
-    catch(const std::exception& exc)
+    catch(const std::exception& e)
     {
-        spdlog::warn(
-            "Failed to load the configuration from the following location: {}\n for the following reason: {}",
-            configPath.string(),
-            exc.what()
-        );
+        spdlog::warn("Failed to load the configuration from the following location: {}", configPath.string());
+    }
+
+    return config;
+}
+
+FuelPulseConfig loadConfig(const std::string& json)
+{
+    FuelPulseConfig config;
+    try
+    {
+        // FIXME: Why does this make an array out of the config???????
+        const nlohmann::json j{ nlohmann::json::parse(json) };
+
+        config = j[0].get<FuelPulseConfig>();
+    }
+    catch(const std::exception& e)
+    {
+        spdlog::warn("Failed to load the configuration for the following reason: {}", e.what());
         spdlog::info("Proceeding with default values in the config.");
         config = {};
 
-        throw exc;
+        throw e;
     }
 
     config.apiKey = loadApiKeyFromEnv();

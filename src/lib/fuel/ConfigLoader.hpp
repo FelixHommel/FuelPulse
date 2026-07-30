@@ -16,6 +16,7 @@ namespace ful::fuel
 ///
 /// \returns \ref FuelPulseConfig with the loaded values
 FuelPulseConfig loadConfig(const std::filesystem::path& configPath);
+FuelPulseConfig loadConfig(const std::string& json);
 
 } // namespace ful::fuel
 
