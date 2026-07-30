@@ -23,6 +23,7 @@ target_sources(
                 ./core/EventBus.hpp
                 ./core/Scheduler.hpp
                 ./fuel/Domain.hpp
+                ./fuel/FuelPulseConfig.hpp
                 ./fuel/IFuelRepository.hpp
                 ./fuel/SQLiteFuelRepository.hpp
                 ./report/IReport.hpp
