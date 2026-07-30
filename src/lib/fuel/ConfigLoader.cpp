@@ -76,10 +76,9 @@ FuelPulseConfig loadConfig(const std::string& json)
     FuelPulseConfig config;
     try
     {
-        // FIXME: Why does this make an array out of the config???????
         const nlohmann::json j{ nlohmann::json::parse(json) };
 
-        config = j[0].get<FuelPulseConfig>();
+        config = j.get<FuelPulseConfig>();
     }
     catch(const std::exception& e)
     {
