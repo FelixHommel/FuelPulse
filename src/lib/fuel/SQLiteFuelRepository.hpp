@@ -33,6 +33,11 @@ public:
     SQLiteFuelRepository(SQLiteFuelRepository&&) = default;
     SQLiteFuelRepository& operator=(SQLiteFuelRepository&&) = default;
 
+    /// \brief Store a \ref Measurement in the repository.
+    ///
+    /// \param m The \ref Measurement that is stored
+    ///
+    /// \throws \ref std::runtime_error if the \ref SQLiteConnection is not opened and in read write mode
     void store(const Measurement& m) override;
     void storeStation(const Station& s) override;
     std::vector<Measurement> loadMeasurements(TimePoint from, TimePoint to) override;
@@ -42,6 +47,10 @@ private:
     SQLiteConnection m_connection;
 
     void ensureTableLayout() const;
+
+    void ensureConnectionOpen() const;
+    void ensureConnectionReadWrite() const;
+    void ensureConnectionOpenReadWrite() const;
 };
 
 } // namespace ful::fuel

@@ -1,7 +1,6 @@
 #include "SQLiteFuelRepository.hpp"
 
 #include "fuel/Domain.hpp"
-#include "utility/Assert.hpp"
 #include "utility/SQLiteConnection.hpp"
 
 #include "SQLiteCpp/Statement.h"
@@ -11,6 +10,7 @@
 #include <cstdint>
 #include <filesystem>
 #include <optional>
+#include <stdexcept>
 #include <vector>
 
 namespace
@@ -61,8 +61,7 @@ SQLiteFuelRepository::SQLiteFuelRepository(const std::filesystem::path& dbLocati
 
 void SQLiteFuelRepository::store(const Measurement& m)
 {
-    FUL_ASSERT(m_connection.isOpen());
-    FUL_ASSERT(m_connection.mode() == SQLiteConnection::OpenMode::ReadWrite);
+    ensureConnectionOpenReadWrite();
 
     SQLite::Transaction transaction{ m_connection.database() };
 
@@ -83,8 +82,7 @@ void SQLiteFuelRepository::store(const Measurement& m)
 
 void SQLiteFuelRepository::storeStation(const Station& s)
 {
-    FUL_ASSERT(m_connection.isOpen());
-    FUL_ASSERT(m_connection.mode() == SQLiteConnection::OpenMode::ReadWrite);
+    ensureConnectionOpenReadWrite();
 
     SQLite::Transaction transaction{ m_connection.database() };
 
@@ -105,7 +103,7 @@ void SQLiteFuelRepository::storeStation(const Station& s)
 
 std::vector<Measurement> SQLiteFuelRepository::loadMeasurements(TimePoint from, TimePoint to)
 {
-    FUL_ASSERT(m_connection.isOpen());
+    ensureConnectionOpen();
 
     SQLite::Statement query{ m_connection.database(), ::QUERY_MEASUREMENTS_FROM_TO };
 
@@ -131,7 +129,7 @@ std::vector<Measurement> SQLiteFuelRepository::loadMeasurements(TimePoint from, 
 
 std::vector<Station> SQLiteFuelRepository::loadStations()
 {
-    FUL_ASSERT(m_connection.isOpen());
+    ensureConnectionOpen();
 
     SQLite::Statement query{ m_connection.database(), ::QUERY_STATIONS };
 
@@ -155,21 +153,50 @@ std::vector<Station> SQLiteFuelRepository::loadStations()
 /// \brief Make sure that the connected database has the required tables.
 ///
 /// If the database does not have the required tables, the tables will be created.
+///
+/// \throws If the connection to the database is not open or it can't write to the database if it needs to create the tables
 void SQLiteFuelRepository::ensureTableLayout() const
 {
-    FUL_ASSERT(m_connection.isOpen());
+    ensureConnectionOpen();
 
     if(!m_connection.database().tableExists(::MEASUREMENT_TABLE_NAME))
     {
-        FUL_ASSERT(m_connection.mode() == SQLiteConnection::OpenMode::ReadWrite);
+        ensureConnectionReadWrite();
         m_connection.database().exec(::CREATE_MEASUREMENT_TABLE);
     }
 
     if(!m_connection.database().tableExists(::STATION_TABLE_NAME))
     {
-        FUL_ASSERT(m_connection.mode() == SQLiteConnection::OpenMode::ReadWrite);
+        ensureConnectionReadWrite();
         m_connection.database().exec(::CREATE_STATIONS_TABLE);
     }
+}
+
+/// \brief Check that the connection to the database is open.
+///
+/// \throws A \ref std::runtime_error if the connection is currently not open
+void SQLiteFuelRepository::ensureConnectionOpen() const
+{
+    if(!m_connection.isOpen())
+        throw std::runtime_error("Repository is not connected to a database");
+}
+
+/// \brief Check that the connection to the database is in read-write mode.
+///
+/// \throws A \ref std::runtime_error if the connection is currently not in read-write mode
+void SQLiteFuelRepository::ensureConnectionReadWrite() const
+{
+    if(m_connection.mode() != SQLiteConnection::OpenMode::ReadWrite)
+        throw std::runtime_error("Repository is not connected in read-write mode");
+}
+
+/// \brief Check that the connection to the database is open and in read-write mode.
+///
+/// \throws A \ref std::runtime_error if the connection is currently not open in read-write mode
+void SQLiteFuelRepository::ensureConnectionOpenReadWrite() const
+{
+    ensureConnectionOpen();
+    ensureConnectionReadWrite();
 }
 
 } // namespace ful::fuel
