@@ -76,7 +76,7 @@ FuelPulseConfig loadConfig(const std::string& json)
     FuelPulseConfig config;
     try
     {
-        const nlohmann::json j{ nlohmann::json::parse(json) };
+        const auto j = nlohmann::json::parse(json);
 
         config = j.get<FuelPulseConfig>();
     }
