@@ -23,6 +23,7 @@ target_sources(
     PRIVATE
         FILE_SET HEADERS
             FILES
+                ./testUtility/EnvVarGuard.hpp
                 ./testUtility/RandomNumberGenerator.hpp
                 ./testUtility/ConcurrencyTest.hpp
 )
