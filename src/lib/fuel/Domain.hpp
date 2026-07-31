@@ -28,7 +28,7 @@ struct Station
     double longitude{};
     double latitude{};
 
-    constexpr bool operator<=>(const Station&) const = default;
+    constexpr auto operator<=>(const Station&) const = default;
 };
 
 /// \brief A single point-in-time price reading for one station.
@@ -43,7 +43,7 @@ struct Measurement
     std::optional<PriceCents> e10;
     std::optional<PriceCents> diesel;
 
-    constexpr bool operator<=>(const Measurement&) const = default;
+    constexpr auto operator<=>(const Measurement&) const = default;
 };
 
 } // namespace ful::fuel

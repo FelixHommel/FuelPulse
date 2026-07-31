@@ -39,7 +39,7 @@ struct FuelPulseConfig
     std::filesystem::path databasePath{ DEFAULT_DATABASE_PATH };
     std::filesystem::path reportDir{ DEFAULT_REPORT_DIR };
 
-    constexpr bool operator<=>(const FuelPulseConfig&) const = default;
+    constexpr auto operator<=>(const FuelPulseConfig&) const = default;
 };
 
 /// \brief nlohmann::json utility to allow for json::get<FuelPulseConfig>.
