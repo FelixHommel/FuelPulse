@@ -39,8 +39,26 @@ public:
     ///
     /// \throws \ref std::runtime_error if the \ref SQLiteConnection is not opened and in read write mode
     void store(const Measurement& m) override;
+    /// \brief Store a \ref Station in the repository.
+    ///
+    /// \param s The \ref Station that is stored
+    ///
+    /// \throws \ref std::runtime_error if the \ref SQLiteConnection is not opened and in read write mode
     void storeStation(const Station& s) override;
+    /// \brief Load measurements in a given timeframe.
+    ///
+    /// \param from Lower \ref TimePoint bound
+    /// \param to Upper \ref TimePoint bound
+    ///
+    /// \returns \ref std::vector of \ref Measurement which lie between \p from and \p to (inclusive)
+    ///
+    /// \throws \ref std::runtime_error if the \ref SQLiteConnection is not open
     std::vector<Measurement> loadMeasurements(TimePoint from, TimePoint to) override;
+    /// \brief Load the stations.
+    ///
+    /// \returns \ref std::vector of \ref Station
+    ///
+    /// \throws \ref std::runtime_error if the \ref SQLiteConnection is not open
     std::vector<Station> loadStations() override;
 
 private:
