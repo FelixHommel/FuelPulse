@@ -7,6 +7,7 @@
 #include <gtest/gtest.h>
 
 #include <chrono>
+#include <exception>
 #include <filesystem>
 #include <memory>
 #include <optional>
@@ -298,18 +299,16 @@ TEST_F(SQLiteFuelRepositoryReadOnlyTest, ReadOnlyRepositoryCanLoadExistingStatio
     EXPECT_EQ(loaded.front().id, ::makeStation().id);
 }
 
-using SQLiteFuelRepositoryReadOnlyDeathTest = SQLiteFuelRepositoryReadOnlyTest;
-
 /// \brief Test that a read-only \ref SQLiteFuelRepository fails assertions when trying to write something.
-TEST_F(SQLiteFuelRepositoryReadOnlyDeathTest, ReadOnlyRepositoryCantStoreAnything)
+TEST_F(SQLiteFuelRepositoryReadOnlyTest, ReadOnlyRepositoryCantStoreAnything)
 {
     fuel::SQLiteFuelRepository readOnly{ m_dbPath, SQLiteConnection::OpenMode::ReadOnly };
 
-    EXPECT_DEATH(
+    EXPECT_THROW(
         readOnly.store(::makeMeasurement("station-1", ::truncateToMillis(std::chrono::system_clock::now()))),
-        ::testing::MatchesRegex(".*")
+        std::exception
     );
-    EXPECT_DEATH(readOnly.storeStation(::makeStation()), ::testing::MatchesRegex(".*"));
+    EXPECT_THROW(readOnly.storeStation(::makeStation()), std::exception);
 }
 
 } // namespace ful::testing
