@@ -45,9 +45,6 @@ std::string loadFileContent(const std::filesystem::path& configPath)
 
     std::ifstream ifs{ configPath };
 
-    if(!ifs.is_open())
-        throw std::runtime_error(std::format("Unable to open file at the following location: {}", configPath.string()));
-
     std::stringstream buffer{};
     buffer << ifs.rdbuf();
 
