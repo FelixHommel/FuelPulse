@@ -82,8 +82,6 @@ FuelPulseConfig loadConfig(const std::string& json)
         spdlog::warn("Failed to load the configuration for the following reason: {}", e.what());
         spdlog::info("Proceeding with default values in the config.");
         config = {};
-
-        throw e;
     }
 
     config.apiKey = loadApiKeyFromEnv();
