@@ -15,7 +15,7 @@ namespace ful::fuel
 /// \throws std::exception If loading the config from disk failed for some reason
 ///
 /// \returns \ref FuelPulseConfig with the loaded values
-FuelPulseConfig loadConfig(const std::filesystem::path& configPath);
+[[nodiscard]] FuelPulseConfig loadConfig(const std::filesystem::path& configPath);
 /// \brief Load a configuration file from a JSON string.
 ///
 /// \param json The \ref std::string containing the JSON
@@ -23,7 +23,7 @@ FuelPulseConfig loadConfig(const std::filesystem::path& configPath);
 /// \throws std::exception If loading the config from disk failed for some reason
 ///
 /// \returns \ref FuelPulseConfig with the loaded values
-FuelPulseConfig loadConfig(const std::string& json);
+[[nodiscard]] FuelPulseConfig loadConfig(const std::string& json);
 
 } // namespace ful::fuel
 
