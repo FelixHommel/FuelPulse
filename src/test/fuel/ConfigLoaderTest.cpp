@@ -3,10 +3,14 @@
 #include "testUtility/EnvVarGuard.hpp"
 
 #include <gtest/gtest.h>
+#include <nlohmann/json_fwd.hpp>
 
 #include <chrono>
 #include <cstdlib>
-#include <exception>
+#include <filesystem>
+#include <fstream>
+#include <iomanip>
+#include <stdlib.h> // NOLINT(misc-include-cleaner, modernize-deprecated-headers): For some reason unsetenv(…) needs this header
 #include <string>
 
 namespace ful::testing
@@ -54,15 +58,17 @@ TEST(ConfigLoaderTest, LoadConfigFromString)
     EXPECT_EQ(conf, BASIC_TEST_JSON_REFERENCE);
 }
 
-/// \brief Test that trying to load a JSON string that is not valid JSON format will throw and return a default config.
+/// \brief Test that trying to load a JSON string that is not valid JSON format should not throw but return a default \ref FuelPulseConfig.
 TEST(ConfigLoaderTest, LoadingInvalidConfigThrows)
 {
     fuel::FuelPulseConfig config;
 
-    ASSERT_THROW(config = fuel::loadConfig(std::string(TEST_INVALID_JSON)), std::exception);
+    ASSERT_NO_THROW(config = fuel::loadConfig(std::string(TEST_INVALID_JSON)));
     EXPECT_EQ(config, fuel::FuelPulseConfig{});
 }
 
+/// \brief Test loading the API key from an environment variable where the environment variable exists should populate
+///     the optional in \ref FuelPulseConfig.
 TEST(ConfigLoaderApiKeyTest, ApiKeyIsPopulatedFromEnvironmentWhenPresent)
 {
     EnvVarGuard guard{ "TANKER_KOENIG_API_KEY", "test-key-1" };
@@ -75,6 +81,8 @@ TEST(ConfigLoaderApiKeyTest, ApiKeyIsPopulatedFromEnvironmentWhenPresent)
     // NOLINTEND(bugprone-unchecked-optional-access)
 }
 
+/// \brief Test loading the API key from an environment variable where the environment variable does not exist, should
+///     leave the optional in \ref FuelPulseConfig as a \ref std::nullopt.
 TEST(ConfigLoaderApiKeyTest, ApiKeyIsNotPopulatedFromEnvironmentWhenNotPresent)
 {
     if([[maybe_unused]] const char* existing{ std::getenv("TANKER_KOENIG_API_KEY") })
@@ -89,6 +97,58 @@ TEST(ConfigLoaderApiKeyTest, ApiKeyIsNotPopulatedFromEnvironmentWhenNotPresent)
     const auto config{ fuel::loadConfig(std::string(BASIC_TEST_JSON)) };
 
     EXPECT_FALSE(config.apiKey.has_value());
+}
+
+/// \brief Test config loading from a file.
+///
+/// \author Felix Hommel
+/// \date 8/1/26
+class ConfigLoaderFromFileTest : public ::testing::Test
+{
+public:
+    ConfigLoaderFromFileTest() = default;
+    ~ConfigLoaderFromFileTest() override { std::filesystem::remove(m_filePath); }
+
+    ConfigLoaderFromFileTest(const ConfigLoaderFromFileTest&) = delete;
+    ConfigLoaderFromFileTest& operator=(const ConfigLoaderFromFileTest&) = delete;
+    ConfigLoaderFromFileTest(ConfigLoaderFromFileTest&&) = delete;
+    ConfigLoaderFromFileTest& operator=(ConfigLoaderFromFileTest&&) = delete;
+
+    void SetUp() override
+    {
+        if(!std::filesystem::exists(TEST_RESOURCE_DIR))
+            std::filesystem::create_directories(TEST_RESOURCE_DIR);
+
+        m_filePath = std::filesystem::path(TEST_RESOURCE_DIR)
+                   / (std::string(::testing::UnitTest::GetInstance()->current_test_info()->name()) + ".json");
+
+        const auto j = nlohmann::json::parse(BASIC_TEST_JSON);
+        std::ofstream ofs{ m_filePath };
+        ofs << std::setw(4) << j.dump() << '\n'; // NOLINT(readability-magic-numbers): width of 4
+    }
+
+protected:
+    std::filesystem::path m_filePath;
+};
+
+/// \brief Test Loading a config from a file that exists on the disk should return a valid \ref FuelPulseConfig.
+TEST_F(ConfigLoaderFromFileTest, LoadingFromValidFileGivesValidConfig)
+{
+    const auto config{ fuel::loadConfig(m_filePath) };
+
+    EXPECT_EQ(config, BASIC_TEST_JSON_REFERENCE);
+}
+
+/// \brief Test loading a config from a file that does not exist on the disk should not throw an exception but return a
+///     default \ref FuelPulseConfig.
+TEST_F(ConfigLoaderFromFileTest, LoadingFromNonExistingFileThrowsException)
+{
+    std::filesystem::remove(m_filePath);
+
+    fuel::FuelPulseConfig config;
+
+    ASSERT_NO_THROW(config = fuel::loadConfig(m_filePath));
+    EXPECT_EQ(config, fuel::FuelPulseConfig{});
 }
 
 } // namespace ful::testing
