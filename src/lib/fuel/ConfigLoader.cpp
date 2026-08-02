@@ -1,6 +1,7 @@
 #include "ConfigLoader.hpp"
 
 #include "fuel/FuelPulseConfig.hpp"
+#include "utility/FileIO.hpp"
 #include "utility/Validator.hpp"
 
 #include <nlohmann/json_fwd.hpp>
@@ -10,10 +11,7 @@
 #include <cstdlib>
 #include <exception>
 #include <filesystem>
-#include <format>
-#include <fstream>
 #include <optional>
-#include <sstream>
 #include <stdexcept>
 #include <string>
 
@@ -35,24 +33,6 @@ std::optional<std::string> loadApiKeyFromEnv()
     return std::nullopt;
 }
 
-/// \brief Load the JSON part of the \ref FuelPulseConfig.
-///
-/// \throws \ref std::runtime_error If the file does not exist or it couldn't be opened
-///
-/// \param configPath a \ref std::filesystem::path to the location of the configuration file
-std::string loadFileContent(const std::filesystem::path& configPath)
-{
-    if(!std::filesystem::exists(configPath))
-        throw std::runtime_error(std::format("There is no file at the following location: {}", configPath.string()));
-
-    std::ifstream ifs{ configPath };
-
-    std::stringstream buffer{};
-    buffer << ifs.rdbuf();
-
-    return buffer.str();
-}
-
 } // namespace
 
 FuelPulseConfig loadConfig(const std::filesystem::path& configPath)
@@ -60,7 +40,7 @@ FuelPulseConfig loadConfig(const std::filesystem::path& configPath)
     FuelPulseConfig config;
     try
     {
-        config = loadConfig(loadFileContent(configPath));
+        config = loadConfig(file::readFromFile(configPath));
     }
     catch(const std::exception& e)
     {

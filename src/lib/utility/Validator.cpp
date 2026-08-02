@@ -1,8 +1,9 @@
 #include "Validator.hpp"
 
-#include <nlohmann/json.hpp>
+#include "utility/FileIO.hpp"
+
+#include <nlohmann/json_fwd.hpp>
 #include <valijson/adapters/nlohmann_json_adapter.hpp>
-#include <valijson/schema.hpp>
 #include <valijson/schema_parser.hpp>
 #include <valijson/validation_results.hpp>
 #include <valijson/validator.hpp>
@@ -24,7 +25,7 @@ Validator::Validator(const std::string& jsonString)
     parser.populateSchema(schemaAdapter, schema);
 }
 
-Validator::Validator(const std::filesystem::path& schemaPath) : Validator{ readSchemaFile(schemaPath) } {}
+Validator::Validator(const std::filesystem::path& schemaPath) : Validator{ file::readFromFile(schemaPath) } {}
 
 std::optional<valijson::ValidationResults> Validator::validate(const nlohmann::json& doc)
 {
