@@ -27,7 +27,7 @@ const auto DEFAULT_REPORT_DIR{ FUL_ROOT / std::filesystem::path("reports/") };
 /// \brief Configuration for the FuelPulse runtime.
 ///
 /// \author Felix Hommel
-/// \date 07/30/26
+/// \date 07/30/2026
 struct FuelPulseConfig
 {
     std::optional<std::string> apiKey{ std::nullopt };

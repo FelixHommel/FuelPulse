@@ -4,3 +4,5 @@ find_package(nlohmann_json CONFIG REQUIRED)
 
 find_package(spdlog CONFIG REQUIRED)
 find_package(SQLiteCpp CONFIG REQUIRED)
+
+find_package(valijson CONFIG REQUIRED)

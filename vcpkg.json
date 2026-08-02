@@ -3,6 +3,7 @@
     "gtest",
     "nlohmann-json",
     "spdlog",
-    "sqlitecpp"
+    "sqlitecpp",
+    "valijson"
   ]
 }

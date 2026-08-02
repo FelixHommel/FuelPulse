@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FuelPulseConfig",
+  "type": "object",
+  "properties": {
+      "max_stations": {
+          "description": "The maximum amount of stations to analyze",
+          "type": "integer",
+          "minimum": 1
+      },
+      "postal_code": {
+          "description": "The postal code around which to analyze the gas stations",
+          "type": "integer",
+          "minimum": 1
+      },
+      "search_radius": {
+          "description": "The radius around which to search for gas stations",
+          "type": "number",
+          "minimum": 1.0
+      },
+      "collection_interval": {
+          "description": "Intervall in which to query the gas station prices (in minutes)",
+          "type": "integer",
+          "minimum": 1
+      },
+      "database_path": {
+          "description": "Path to the database where the measurements and stations are stored",
+          "type": "string"
+      },
+      "report_dir": {
+          "description": "Path to the directory where the reports will be output to",
+          "type": "string"
+      }
+  }
+}
