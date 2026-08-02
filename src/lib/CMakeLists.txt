@@ -11,6 +11,7 @@ add_library(
     ./fuel/SQLiteFuelRepository.cpp
     ./utility/LoggerFactory.cpp
     ./utility/SQLiteConnection.cpp
+    ./utility/Validator.cpp
 )
 
 target_sources(
