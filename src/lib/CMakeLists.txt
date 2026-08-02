@@ -37,6 +37,7 @@ target_sources(
                 ./utility/StringOperations.hpp
                 ./utility/Threading.hpp
                 ./utility/ThreadingDetail.hpp
+                ./utility/Validator.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)
