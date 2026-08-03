@@ -58,7 +58,6 @@ private:
     };
 
     nlohmann::json_schema::json_validator m_validator;
-    bool m_schemaLoaded{ false };
 };
 
 } // namespace ful

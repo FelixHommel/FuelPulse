@@ -24,11 +24,11 @@ Validator::Validator(const std::string& jsonString)
         const auto schemaDoc = nlohmann::json::parse(jsonString);
 
         m_validator.set_root_schema(schemaDoc);
-        m_schemaLoaded = true;
     }
     catch(const std::exception& e)
     {
         spdlog::error("Could not load the schema: {}", e.what());
+        throw e;
     }
 }
 
@@ -36,12 +36,6 @@ Validator::Validator(const std::filesystem::path& schemaPath) : Validator{ file:
 
 std::optional<Validator::ValidationErrors> Validator::validate(const nlohmann::json& doc) const
 {
-    if(!m_schemaLoaded)
-    {
-        spdlog::warn("Schema was not loaded correctly. Can not validate the requested document.");
-        return std::make_optional(ValidationErrors{});
-    }
-
     ValidationErrorHandler handler;
     m_validator.validate(doc, handler);
 
