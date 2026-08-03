@@ -1,6 +1,6 @@
 #include "Validator.hpp"
 
-#include "utility/FileIO.hpp"
+#include "utility/file/FileIO.hpp"
 
 #include <nlohmann/json_fwd.hpp>
 #include <valijson/adapters/nlohmann_json_adapter.hpp>

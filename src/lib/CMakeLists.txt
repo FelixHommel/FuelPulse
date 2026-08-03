@@ -10,7 +10,7 @@ add_library(
     ./fuel/FuelPulseConfig.cpp
     ./fuel/SQLiteFuelRepository.cpp
     ./utility/env/EnvironmentVariableHelper.cpp
-    ./utility/FileIO.cpp
+    ./utility/file/FileIO.cpp
     ./utility/LoggerFactory.cpp
     ./utility/SQLiteConnection.cpp
     ./utility/Validator.cpp
@@ -35,7 +35,7 @@ target_sources(
                 ./report/IReport.hpp
                 ./utility/Assert.hpp
                 ./utility/env/EnvironmentVariableHelper.hpp
-                ./utility/FileIO.hpp
+                ./utility/file/FileIO.hpp
                 ./utility/HashCombine.hpp
                 ./utility/LoggerFactory.hpp
                 ./utility/SQLiteConnection.hpp
