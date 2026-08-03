@@ -1,5 +1,5 @@
-#ifndef FUL_SRC_LIB_UTILITY_VALIDATOR_HPP
-#define FUL_SRC_LIB_UTILITY_VALIDATOR_HPP
+#ifndef FUL_SRC_LIB_UTILITY_VALIDATION_VALIDATOR_HPP
+#define FUL_SRC_LIB_UTILITY_VALIDATION_VALIDATOR_HPP
 
 #include <nlohmann/json_fwd.hpp>
 #include <valijson/schema.hpp>
@@ -35,4 +35,4 @@ private:
 
 } // namespace ful
 
-#endif // FUL_SRC_LIB_UTILITY_VALIDATOR_HPP
+#endif // FUL_SRC_LIB_UTILITY_VALIDATION_VALIDATOR_HPP
