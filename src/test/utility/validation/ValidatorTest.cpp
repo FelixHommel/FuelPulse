@@ -3,8 +3,11 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
+#include <memory>
 #include <nlohmann/json_fwd.hpp>
 
+#include <filesystem>
+#include <fstream>
 #include <string>
 
 namespace ful::testing
@@ -117,6 +120,51 @@ TEST(ValidatorFromJsonStringTest, MultipleViolationsAreCaught)
     EXPECT_THAT(errors[1].path.to_string(), ::testing::HasSubstr("postal_code"));
     EXPECT_THAT(errors[1].message, ::testing::HasSubstr("exceeds maximum"));
     // NOLINTEND(bugprone-unchecked-optional-access)
+}
+
+class ValidatorFromSchemaFileTest : public ::testing::Test
+{
+public:
+    ValidatorFromSchemaFileTest() = default;
+    ~ValidatorFromSchemaFileTest() override { std::filesystem::remove(m_filePath); }
+
+    ValidatorFromSchemaFileTest(const ValidatorFromSchemaFileTest&) = delete;
+    ValidatorFromSchemaFileTest& operator=(const ValidatorFromSchemaFileTest&) = delete;
+    ValidatorFromSchemaFileTest(ValidatorFromSchemaFileTest&&) = delete;
+    ValidatorFromSchemaFileTest& operator=(ValidatorFromSchemaFileTest&&) = delete;
+
+    void SetUp() override
+    {
+        if(!std::filesystem::exists(TEST_RESOURCE_DIR))
+            std::filesystem::create_directory(TEST_RESOURCE_DIR);
+    }
+
+protected:
+    void prepareSchema(const std::string& schema)
+    {
+        m_filePath = TEST_RESOURCE_DIR
+                   / std::filesystem::path(
+                         std::string(::testing::UnitTest::GetInstance()->current_test_info()->name()) + ".json"
+                   );
+
+        std::ofstream ofs{ m_filePath };
+        const auto json = nlohmann::json::parse(schema);
+        ofs << json.dump(4);
+    }
+
+    std::filesystem::path m_filePath;
+};
+
+TEST_F(ValidatorFromSchemaFileTest, ValidSchemaFileLoadsSchema)
+{
+    prepareSchema(VALID_SCHEMA);
+
+    std::unique_ptr<Validator> validator;
+    EXPECT_NO_THROW(validator = std::make_unique<Validator>(m_filePath));
+
+    const auto result{ validator->validate(std::string(SCHEMA_CONFORM_JSON)) };
+
+    ASSERT_FALSE(result.has_value());
 }
 
 } // namespace ful::testing
