@@ -2,9 +2,9 @@
 
 #include "core/CommandRegistry.hpp"
 #include "core/EventBus.hpp"
-#include "utility/LoggerFactory.hpp"
 #include "utility/StringOperations.hpp"
 #include "utility/Threading.hpp"
+#include "utility/logging/LoggerFactory.hpp"
 
 #include <exception>
 #include <functional>

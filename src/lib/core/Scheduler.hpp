@@ -1,8 +1,8 @@
 #ifndef FUL_SRC_LIB_CORE_SCHEDULER_HPP
 #define FUL_SRC_LIB_CORE_SCHEDULER_HPP
 
-#include "utility/LoggerFactory.hpp"
 #include "utility/Threading.hpp"
+#include "utility/logging/LoggerFactory.hpp"
 
 #include <spdlog/logger.h>
 

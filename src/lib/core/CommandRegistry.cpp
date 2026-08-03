@@ -1,6 +1,6 @@
 #include "CommandRegistry.hpp"
 
-#include "utility/LoggerFactory.hpp"
+#include "utility/logging/LoggerFactory.hpp"
 
 #include <memory>
 #include <optional>

@@ -11,7 +11,7 @@ add_library(
     ./fuel/SQLiteFuelRepository.cpp
     ./utility/env/EnvironmentVariableHelper.cpp
     ./utility/file/FileIO.cpp
-    ./utility/LoggerFactory.cpp
+    ./utility/logging/LoggerFactory.cpp
     ./utility/SQLiteConnection.cpp
     ./utility/Validator.cpp
 )
@@ -37,7 +37,7 @@ target_sources(
                 ./utility/env/EnvironmentVariableHelper.hpp
                 ./utility/file/FileIO.hpp
                 ./utility/hash/HashCombine.hpp
-                ./utility/LoggerFactory.hpp
+                ./utility/logging/LoggerFactory.hpp
                 ./utility/SQLiteConnection.hpp
                 ./utility/StringOperations.hpp
                 ./utility/Threading.hpp
