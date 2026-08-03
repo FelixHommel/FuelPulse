@@ -7,7 +7,6 @@
 
 #include <nlohmann/json_fwd.hpp>
 #include <spdlog/spdlog.h>
-#include <valijson/validation_results.hpp>
 
 #include <exception>
 #include <filesystem>
@@ -62,13 +61,10 @@ FuelPulseConfig loadConfig(const std::string& json)
         Validator validator{ FUL_ROOT / std::filesystem::path("resources/ConfigSchema.json") };
         if(auto results{ validator.validate(configJson) }; results.has_value())
         {
-            auto& errors{ *results };
             spdlog::error("Config validation failed.");
 
-            valijson::ValidationResults::Error error;
-            unsigned int errorNum{ 1 };
-            while(errors.popError(error))
-                spdlog::error("Error #{}\n\t@ {}\n\t- {}", errorNum++, error.context[0], error.description);
+            for(const auto& error : *results)
+                spdlog::warn("{}: {}", error.path.to_string(), error.message);
 
             throw std::runtime_error("");
         }

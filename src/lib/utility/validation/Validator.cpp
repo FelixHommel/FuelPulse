@@ -2,12 +2,12 @@
 
 #include "utility/file/FileIO.hpp"
 
+#include <nlohmann/json-schema.hpp>
 #include <nlohmann/json_fwd.hpp>
-#include <valijson/adapters/nlohmann_json_adapter.hpp>
-#include <valijson/schema_parser.hpp>
-#include <valijson/validation_results.hpp>
-#include <valijson/validator.hpp>
+#include <spdlog/spdlog.h>
 
+#include <algorithm>
+#include <exception>
 #include <filesystem>
 #include <optional>
 #include <string>
@@ -20,20 +20,47 @@ Validator::Validator(const std::string& jsonString)
 {
     const auto schemaDoc = nlohmann::json::parse(jsonString);
 
-    valijson::SchemaParser parser;
-    valijson::adapters::NlohmannJsonAdapter schemaAdapter{ schemaDoc };
-    parser.populateSchema(schemaAdapter, schema);
+    try
+    {
+        m_validator.set_root_schema(schemaDoc);
+        m_schemaLoaded = true;
+    }
+    catch(const std::exception& e)
+    {
+        spdlog::error("Validation of schema failed: {}", e.what());
+    }
 }
 
 Validator::Validator(const std::filesystem::path& schemaPath) : Validator{ file::readFromFile(schemaPath) } {}
 
-std::optional<valijson::ValidationResults> Validator::validate(const nlohmann::json& doc)
+std::optional<Validator::ValidationErrors> Validator::validate(const nlohmann::json& doc)
 {
-    valijson::adapters::NlohmannJsonAdapter docAdapter{ doc };
-    valijson::ValidationResults results;
-    const bool success{ valijson::Validator().validate(schema, docAdapter, &results) };
+    if(!m_schemaLoaded)
+    {
+        spdlog::warn("Schema was not loaded correctly. Can not validate the requested document.");
+        return std::nullopt;
+    }
 
-    return (success ? std::nullopt : std::make_optional(std::move(results)));
+    ValidationErrorHandler handler;
+    m_validator.validate(doc, handler);
+
+    if(handler.errors.empty())
+        return std::nullopt;
+
+    std::ranges::sort(handler.errors, {}, [](const ValidationError& e) { return e.path.to_string(); });
+    const auto [first, last] = std::ranges::unique(handler.errors, [](const auto& lhs, const auto& rhs) {
+        return lhs.path == rhs.path && lhs.message == rhs.message;
+    });
+    handler.errors.erase(first, last);
+
+    return std::make_optional(std::move(handler.errors));
+}
+
+void Validator::ValidationErrorHandler::error(
+    const nlohmann::json::json_pointer& ptr, [[maybe_unused]] const nlohmann::json& j, const std::string& message
+)
+{
+    errors.push_back({ .path = ptr, .message = message });
 }
 
 } // namespace ful

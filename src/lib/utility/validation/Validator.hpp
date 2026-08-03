@@ -1,12 +1,18 @@
 #ifndef FUL_SRC_LIB_UTILITY_VALIDATION_VALIDATOR_HPP
 #define FUL_SRC_LIB_UTILITY_VALIDATION_VALIDATOR_HPP
 
+#include <nlohmann/json-schema.hpp>
 #include <nlohmann/json_fwd.hpp>
-#include <valijson/schema.hpp>
-#include <valijson/validation_results.hpp>
 
 #include <filesystem>
 #include <string>
+#include <vector>
+
+struct ValidationError
+{
+    nlohmann::json::json_pointer path;
+    std::string message;
+};
 
 namespace ful
 {
@@ -18,6 +24,8 @@ namespace ful
 class Validator
 {
 public:
+    using ValidationErrors = std::vector<ValidationError>;
+
     Validator(const std::string& jsonString);
     Validator(const std::filesystem::path& schemaPath);
 
@@ -27,10 +35,21 @@ public:
     ///
     /// \returns A \ref std::optional containing \ref valijson::ValidationResults if the validation failed, otherwise
     ///     contains a \ref std::nullopt
-    std::optional<valijson::ValidationResults> validate(const nlohmann::json& doc);
+    std::optional<ValidationErrors> validate(const nlohmann::json& doc);
 
 private:
-    valijson::Schema schema;
+    struct ValidationErrorHandler final : public nlohmann::json_schema::basic_error_handler
+    {
+        void error(
+            const nlohmann::json::json_pointer& ptr, const nlohmann::json& j, const std::string& message
+        ) override;
+
+
+        ValidationErrors errors;
+    };
+
+    nlohmann::json_schema::json_validator m_validator;
+    bool m_schemaLoaded{ false };
 };
 
 } // namespace ful

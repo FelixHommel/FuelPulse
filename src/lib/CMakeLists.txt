@@ -62,6 +62,8 @@ target_compile_options(
 target_link_libraries(
     ${NAME}
     PUBLIC spdlog::spdlog SQLiteCpp
-    PRIVATE nlohmann_json::nlohmann_json valijson
+    PRIVATE
+        nlohmann_json::nlohmann_json
+        nlohmann_json_schema_validator::validator
 )
 target_include_directories(${NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
