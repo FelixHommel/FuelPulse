@@ -54,7 +54,7 @@ namespace std
 template<>
 struct hash<std::chrono::system_clock::time_point>
 {
-    constexpr std::size_t operator()(const std::chrono::system_clock::time_point& tp) const noexcept
+    std::size_t operator()(const std::chrono::system_clock::time_point& tp) const noexcept
     {
         return std::hash<std::chrono::system_clock::rep>{}(tp.time_since_epoch().count());
     }
@@ -63,7 +63,7 @@ struct hash<std::chrono::system_clock::time_point>
 template<>
 struct hash<ful::fuel::Station>
 {
-    constexpr std::size_t operator()(const ful::fuel::Station& station) const noexcept
+    std::size_t operator()(const ful::fuel::Station& station) const noexcept
     {
         std::size_t seed{ 0 };
 
