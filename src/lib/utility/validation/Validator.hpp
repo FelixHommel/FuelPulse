@@ -8,14 +8,18 @@
 #include <string>
 #include <vector>
 
+namespace ful
+{
+
+/// \brief Describe an error that occurred while validating a JSON document against a schema.
+///
+/// \author Felix Hommel
+/// \date 08/03/2026
 struct ValidationError
 {
     nlohmann::json::json_pointer path;
     std::string message;
 };
-
-namespace ful
-{
 
 /// \brief Simple wrapper class to load a JSON schema and help validate \ref nlohmann::json.
 ///
@@ -35,9 +39,14 @@ public:
     ///
     /// \returns A \ref std::optional containing \ref valijson::ValidationResults if the validation failed, otherwise
     ///     contains a \ref std::nullopt
-    std::optional<ValidationErrors> validate(const nlohmann::json& doc);
+    [[nodiscard]] std::optional<ValidationErrors> validate(const nlohmann::json& doc) const;
 
 private:
+    /// \brief Handler callback for \ref nlohmann::json_schema::json_validator that saves the schema errors as \ref ValidationError
+    ///     and collects them in a \ref std::vector
+    ///
+    /// \brief Felix Hommel
+    /// \date 08/03/2026
     struct ValidationErrorHandler final : public nlohmann::json_schema::basic_error_handler
     {
         void error(
