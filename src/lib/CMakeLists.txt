@@ -36,7 +36,7 @@ target_sources(
                 ./utility/Assert.hpp
                 ./utility/env/EnvironmentVariableHelper.hpp
                 ./utility/file/FileIO.hpp
-                ./utility/HashCombine.hpp
+                ./utility/hash/HashCombine.hpp
                 ./utility/LoggerFactory.hpp
                 ./utility/SQLiteConnection.hpp
                 ./utility/StringOperations.hpp

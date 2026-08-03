@@ -1,7 +1,7 @@
 #ifndef FUL_SRC_LIB_FUEL_DOMAIN_HPP
 #define FUL_SRC_LIB_FUEL_DOMAIN_HPP
 
-#include "utility/HashCombine.hpp"
+#include "utility/hash/HashCombine.hpp"
 
 #include <chrono>
 #include <cstddef>

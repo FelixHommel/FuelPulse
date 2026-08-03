@@ -1,5 +1,5 @@
-#ifndef FUL_SRC_LIB_UTILITY_HASH_COMBINE_HPP
-#define FUL_SRC_LIB_UTILITY_HASH_COMBINE_HPP
+#ifndef FUL_SRC_LIB_UTILITY_HASH_HASH_COMBINE_HPP
+#define FUL_SRC_LIB_UTILITY_HASH_HASH_COMBINE_HPP
 
 #include <cstddef>
 #include <functional>
@@ -26,4 +26,4 @@ constexpr void hashCombine(std::size_t& seed, const T& value)
 
 } // namespace ful::hash
 
-#endif // !FUL_SRC_LIB_UTILITY_HASH_COMBINE_HPP
+#endif // !FUL_SRC_LIB_UTILITY_HASH_HASH_COMBINE_HPP
