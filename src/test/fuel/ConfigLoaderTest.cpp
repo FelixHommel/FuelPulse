@@ -22,7 +22,7 @@ namespace
 constexpr auto BASIC_TEST_JSON{ R"(
 {
     "max_stations": 1,
-    "postal_code": 1,
+    "postal_code": 55555,
     "search_radius": 1.0,
     "collection_interval": 1,
     "database_path": "test.db3",
@@ -32,7 +32,7 @@ constexpr auto BASIC_TEST_JSON{ R"(
 constexpr auto TEST_INVALID_JSON{ R"(
 {
     "max_stations": 1
-    "postal_code": 1,
+    "postal_code": 55555,
     "search_radius": 1.0,
     "collection_interval": 1,
     "database_path": "test.db3",
@@ -51,7 +51,7 @@ constexpr auto NOT_SCHEMA_CONFORM_JSON{ R"(
 )" };
 const fuel::FuelPulseConfig BASIC_TEST_JSON_REFERENCE{
     .maxStations = 1,
-    .postalCode = 1,
+    .postalCode = 55555,
     .searchRadius = 1.f,
     .collectionInterval = std::chrono::minutes(1),
     .databasePath = "test.db3",
