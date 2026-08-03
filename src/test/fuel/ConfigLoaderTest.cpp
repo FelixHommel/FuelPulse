@@ -7,7 +7,6 @@
 #include <nlohmann/json_fwd.hpp>
 
 #include <chrono>
-#include <cstdlib>
 #include <filesystem>
 #include <fstream>
 #include <iomanip>
