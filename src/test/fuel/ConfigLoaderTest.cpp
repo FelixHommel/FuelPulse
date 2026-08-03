@@ -1,6 +1,7 @@
 #include "fuel/ConfigLoader.hpp"
 #include "fuel/FuelPulseConfig.hpp"
 #include "testUtility/EnvVarGuard.hpp"
+#include "utility/EnvironmentVariableHelper.hpp"
 
 #include <gtest/gtest.h>
 #include <nlohmann/json_fwd.hpp>
@@ -95,14 +96,8 @@ TEST(ConfigLoaderApiKeyTest, ApiKeyIsPopulatedFromEnvironmentWhenPresent)
 ///     leave the optional in \ref FuelPulseConfig as a \ref std::nullopt.
 TEST(ConfigLoaderApiKeyTest, ApiKeyIsNotPopulatedFromEnvironmentWhenNotPresent)
 {
-    if([[maybe_unused]] const char* existing{ std::getenv("TANKER_KOENIG_API_KEY") })
-    {
-#ifdef _WIN32
-        _putenv_s("TANKER_KOENIG_API_KEY", "");
-#else
-        unsetenv("TANKER_KOENIG_API_KEY");
-#endif
-    }
+    if(const auto existing{ env::getVar("TANKER_KOENIG_API_KEY") }; existing.has_value())
+        env::unsetVar("TANKER_KOENIG_API_KEY");
 
     const auto config{ fuel::loadConfig(std::string(BASIC_TEST_JSON)) };
 

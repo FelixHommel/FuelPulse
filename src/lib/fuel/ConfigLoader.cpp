@@ -1,6 +1,7 @@
 #include "ConfigLoader.hpp"
 
 #include "fuel/FuelPulseConfig.hpp"
+#include "utility/EnvironmentVariableHelper.hpp"
 #include "utility/FileIO.hpp"
 #include "utility/Validator.hpp"
 
@@ -8,12 +9,12 @@
 #include <spdlog/spdlog.h>
 #include <valijson/validation_results.hpp>
 
-#include <cstdlib>
 #include <exception>
 #include <filesystem>
 #include <optional>
 #include <stdexcept>
 #include <string>
+#include <utility>
 
 namespace ful::fuel
 {
@@ -26,11 +27,12 @@ namespace
 /// \returns The API Key in string form wrapped in a \ref std::optional if possible, \ref std::nullopt otherwise
 std::optional<std::string> loadApiKeyFromEnv()
 {
-    if(const char* pEnv = std::getenv("TANKER_KOENIG_API_KEY"))
-        return std::make_optional(pEnv);
+    auto key{ env::getVar("TANKER_KOENIG_API_KEY") };
 
-    spdlog::warn("Failed to find API Key in environment. Proceeding without being able to query.");
-    return std::nullopt;
+    if(!key.has_value())
+        spdlog::warn("Failed to find API Key in environment. Proceeding without being able to query.");
+
+    return std::move(key);
 }
 
 } // namespace
