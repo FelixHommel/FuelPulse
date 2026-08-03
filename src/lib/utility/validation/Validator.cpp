@@ -61,7 +61,7 @@ void Validator::ValidationErrorHandler::error(
     const nlohmann::json::json_pointer& ptr, [[maybe_unused]] const nlohmann::json& j, const std::string& message
 )
 {
-    errors.push_back({ .path = ptr, .message = message });
+    errors.emplace_back(ptr, message);
 }
 
 } // namespace ful
