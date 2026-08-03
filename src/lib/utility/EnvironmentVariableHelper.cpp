@@ -38,7 +38,7 @@ std::optional<std::string> getVar(std::string_view varName)
 int writeVar(std::string_view varName, std::string_view value)
 {
 #ifdef _WIN32
-    return _putenv_s(varName.data(), value);
+    return _putenv_s(varName.data(), value.data());
 #else
     return setenv(varName.data(), value.data(), 1);
 #endif
