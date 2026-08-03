@@ -13,7 +13,7 @@ add_library(
     ./utility/file/FileIO.cpp
     ./utility/logging/LoggerFactory.cpp
     ./utility/SQLiteConnection.cpp
-    ./utility/Validator.cpp
+    ./utility/validation/Validator.cpp
 )
 
 target_sources(
@@ -42,7 +42,7 @@ target_sources(
                 ./utility/StringOperations.hpp
                 ./utility/threading/Threading.hpp
                 ./utility/threading/ThreadingDetail.hpp
-                ./utility/Validator.hpp
+                ./utility/validation/Validator.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)
