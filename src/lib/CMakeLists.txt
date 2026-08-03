@@ -40,8 +40,8 @@ target_sources(
                 ./utility/logging/LoggerFactory.hpp
                 ./utility/SQLiteConnection.hpp
                 ./utility/StringOperations.hpp
-                ./utility/Threading.hpp
-                ./utility/ThreadingDetail.hpp
+                ./utility/threading/Threading.hpp
+                ./utility/threading/ThreadingDetail.hpp
                 ./utility/Validator.hpp
 )
 

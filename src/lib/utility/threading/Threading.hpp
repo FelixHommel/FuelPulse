@@ -1,5 +1,5 @@
-#ifndef FUL_SRC_LIB_UTILITY_THREADING_HPP
-#define FUL_SRC_LIB_UTILITY_THREADING_HPP
+#ifndef FUL_SRC_LIB_UTILITY_THREADING_THREADING_HPP
+#define FUL_SRC_LIB_UTILITY_THREADING_THREADING_HPP
 
 #include <version>
 
@@ -11,7 +11,7 @@
 #    include <stop_token>
 #    include <thread>
 #else
-#    include "utility/ThreadingDetail.hpp"
+#    include "utility/threading/ThreadingDetail.hpp"
 #endif
 
 namespace ful::threading
@@ -29,5 +29,5 @@ using stop_source_t = detail::stop_source_t;
 
 } // namespace ful::threading
 
-#endif // FUL_SRC_LIB_UTILITY_THREADING_HPP
+#endif // FUL_SRC_LIB_UTILITY_THREADING_THREADING_HPP
 

@@ -3,8 +3,8 @@
 #include "core/CommandRegistry.hpp"
 #include "core/EventBus.hpp"
 #include "utility/StringOperations.hpp"
-#include "utility/Threading.hpp"
 #include "utility/logging/LoggerFactory.hpp"
+#include "utility/threading/Threading.hpp"
 
 #include <exception>
 #include <functional>
