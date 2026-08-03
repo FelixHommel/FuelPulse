@@ -14,6 +14,7 @@ add_executable(
     ./integration/CoreIntegrationTest.cpp
     ./utility/threading/ThreadingTest.cpp
     ./utility/sqlite/SQLiteConnectionTest.cpp
+    ./utility/validation/ValidatorTest.cpp
     ./utility/StringOperationsTest.cpp
     ./testUtility/ConcurrencyTest.cpp
 )
