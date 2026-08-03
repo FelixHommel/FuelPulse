@@ -1,9 +1,9 @@
 #include "ConfigLoader.hpp"
 
 #include "fuel/FuelPulseConfig.hpp"
-#include "utility/EnvironmentVariableHelper.hpp"
 #include "utility/FileIO.hpp"
 #include "utility/Validator.hpp"
+#include "utility/env/EnvironmentVariableHelper.hpp"
 
 #include <nlohmann/json_fwd.hpp>
 #include <spdlog/spdlog.h>

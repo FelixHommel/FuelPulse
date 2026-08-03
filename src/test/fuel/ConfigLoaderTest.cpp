@@ -1,7 +1,7 @@
 #include "fuel/ConfigLoader.hpp"
 #include "fuel/FuelPulseConfig.hpp"
 #include "testUtility/EnvVarGuard.hpp"
-#include "utility/EnvironmentVariableHelper.hpp"
+#include "utility/env/EnvironmentVariableHelper.hpp"
 
 #include <gtest/gtest.h>
 #include <nlohmann/json_fwd.hpp>
