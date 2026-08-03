@@ -3,7 +3,6 @@
 
 #include <optional>
 #include <string>
-#include <string_view>
 
 namespace ful::env
 {
@@ -14,7 +13,7 @@ namespace ful::env
 ///
 /// \returns A \ref std::optional containing the value if one exists, \ref std::nullopt if the environment variable does
 ///     not have a value
-[[nodiscard]] std::optional<std::string> getVar(std::string_view varName);
+[[nodiscard]] std::optional<std::string> getVar(const std::string& varName);
 
 /// \brief Platform aware wrapper to write/replace an environment variable.
 ///
@@ -22,14 +21,14 @@ namespace ful::env
 /// \param value The new value of the environment variable
 ///
 /// \returns the return code of the platforms function
-int writeVar(std::string_view varName, std::string_view value);
+int writeVar(const std::string& varName, const std::string& value);
 
 /// \brief Platform aware wrapper to remove an environment variable.
 ///
 /// \param varName The name of the environment variable
 ///
 /// \returns the return code of the platforms function
-int unsetVar(std::string_view varName);
+int unsetVar(const std::string& varName);
 
 } // namespace ful::env
 

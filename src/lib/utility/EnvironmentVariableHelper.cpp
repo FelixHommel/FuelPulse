@@ -9,12 +9,11 @@
 #include <cstdlib>
 #include <optional>
 #include <string>
-#include <string_view>
 
 namespace ful::env
 {
 
-std::optional<std::string> getVar(std::string_view varName)
+std::optional<std::string> getVar(const std::string& varName)
 {
 #ifdef _WIN32
     // NOLINTBEGIN(cppcoreguidelines-no-malloc): Windows API mandates the memory allocation
@@ -22,7 +21,7 @@ std::optional<std::string> getVar(std::string_view varName)
 
     char* raw{ nullptr };
     std::size_t size{ 0 };
-    if(_dupenv_s(&raw, &size, varName.data()) != 0 || raw == nullptr)
+    if(_dupenv_s(&raw, &size, varName.c_str()) != 0 || raw == nullptr)
         return std::nullopt;
 
     buf.reset(raw);
@@ -30,28 +29,28 @@ std::optional<std::string> getVar(std::string_view varName)
     return std::make_optional(buf.get());
     // NOLINTEND(cppcoreguidelines-no-malloc)
 #else
-    if(const char* value{ std::getenv(varName.data()) }; value != nullptr)
+    if(const char* value{ std::getenv(varName.c_str()) }; value != nullptr)
         return std::make_optional(value);
 
     return std::nullopt;
 #endif
 }
 
-int writeVar(std::string_view varName, std::string_view value)
+int writeVar(const std::string& varName, const std::string& value)
 {
 #ifdef _WIN32
-    return _putenv_s(varName.data(), value.data());
+    return _putenv_s(varName.c_str(), value.c_str());
 #else
-    return setenv(varName.data(), value.data(), 1);
+    return setenv(varName.c_str(), value.c_str(), 1);
 #endif
 }
 
-int unsetVar(std::string_view varName)
+int unsetVar(const std::string& varName)
 {
 #ifdef _WIN32
-    return _putenv_s(varName.data(), "");
+    return _putenv_s(varName.c_str(), "");
 #else
-    return unsetenv(varName.data());
+    return unsetenv(varName.c_str());
 #endif
 }
 
