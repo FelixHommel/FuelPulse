@@ -1,4 +1,4 @@
-#include "utility/SQLiteConnection.hpp"
+#include "utility/sqlite/SQLiteConnection.hpp"
 
 #include <gtest/gtest.h>
 

@@ -2,7 +2,7 @@
 #define FUL_SRC_LIB_FUEL_SQLITE_FUEL_REPOSITORY_HPP
 
 #include "fuel/IFuelRepository.hpp"
-#include "utility/SQLiteConnection.hpp"
+#include "utility/sqlite/SQLiteConnection.hpp"
 
 #include <SQLiteCpp/Database.h>
 

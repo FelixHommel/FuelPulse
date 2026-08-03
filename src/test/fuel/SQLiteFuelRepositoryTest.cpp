@@ -2,7 +2,7 @@
 #include "fuel/Domain.hpp"
 #include "fuel/IFuelRepository.hpp"
 #include "testUtility/RandomNumberGenerator.hpp"
-#include "utility/SQLiteConnection.hpp"
+#include "utility/sqlite/SQLiteConnection.hpp"
 
 #include <gtest/gtest.h>
 

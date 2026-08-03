@@ -12,7 +12,7 @@ add_library(
     ./utility/env/EnvironmentVariableHelper.cpp
     ./utility/file/FileIO.cpp
     ./utility/logging/LoggerFactory.cpp
-    ./utility/SQLiteConnection.cpp
+    ./utility/sqlite/SQLiteConnection.cpp
     ./utility/validation/Validator.cpp
 )
 
@@ -38,7 +38,7 @@ target_sources(
                 ./utility/file/FileIO.hpp
                 ./utility/hash/HashCombine.hpp
                 ./utility/logging/LoggerFactory.hpp
-                ./utility/SQLiteConnection.hpp
+                ./utility/sqlite/SQLiteConnection.hpp
                 ./utility/StringOperations.hpp
                 ./utility/threading/Threading.hpp
                 ./utility/threading/ThreadingDetail.hpp
