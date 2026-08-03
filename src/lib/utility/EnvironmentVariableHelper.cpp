@@ -2,7 +2,7 @@
 
 #ifdef _WIN32
 #    include <cstddef>
-#    include <utility>
+#    include <memory>
 #else
 #    include <stdlib.h> // NOLINT(modernize-deprecated-headers): For some reason setenv(), unsetenv need the C header
 #endif
@@ -18,20 +18,22 @@ std::optional<std::string> getVar(std::string_view varName)
 {
 #ifdef _WIN32
     // NOLINTBEGIN(cppcoreguidelines-no-malloc): Windows API mandates the memory allocation
-    char* buf{ nullptr };
+    std::unique_ptr<char, decltype(&free)> buf{ nullptr, &free };
+
+    char* raw{ nullptr };
     std::size_t size{ 0 };
-    if(_dupenv_s(&buf, &size, varName.data()) == 0 || buf != nullptr)
+    if(_dupenv_s(&raw, &size, varName.data()) != 0 || raw == nullptr)
         return std::nullopt;
 
-    std::string result(buf, size);
-    free(buf);
+    buf.reset(raw);
 
-    return std::make_optional(std::move(result));
+    return std::make_optional(buf.get());
     // NOLINTEND(cppcoreguidelines-no-malloc)
 #else
-    const char* value{ std::getenv(varName.data()) };
+    if(const char* value{ std::getenv(varName.data()) }; value != nullptr)
+        return std::make_optional(value);
 
-    return value == nullptr ? std::nullopt : std::make_optional(value);
+    return std::nullopt;
 #endif
 }
 
