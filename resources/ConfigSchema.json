@@ -11,7 +11,7 @@
       "postal_code": {
           "description": "The postal code around which to analyze the gas stations",
           "type": "integer",
-          "minimum": 01067,
+          "minimum": 1067,
           "maximum": 99998
       },
       "search_radius": {
@@ -27,7 +27,7 @@
       "database_path": {
           "description": "Path to the database where the measurements and stations are stored",
           "type": "string",
-          "pattern": "\.db3$"
+          "pattern": ".db3$"
       },
       "report_dir": {
           "description": "Path to the directory where the reports will be output to",
