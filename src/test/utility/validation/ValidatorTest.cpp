@@ -155,8 +155,6 @@ public:
 
     void SetUp() override
     {
-        if(!std::filesystem::exists(TEST_RESOURCE_DIR))
-            std::filesystem::create_directory(TEST_RESOURCE_DIR);
     }
 
     void TearDown() override { std::filesystem::remove(m_filePath); }

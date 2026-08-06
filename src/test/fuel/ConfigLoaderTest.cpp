@@ -130,9 +130,6 @@ public:
 
     void SetUp() override
     {
-        if(!std::filesystem::exists(TEST_RESOURCE_DIR))
-            std::filesystem::create_directories(TEST_RESOURCE_DIR);
-
         m_filePath = std::filesystem::path(TEST_RESOURCE_DIR)
                    / (std::string(::testing::UnitTest::GetInstance()->current_test_info()->name()) + ".json");
 

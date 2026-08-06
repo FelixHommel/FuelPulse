@@ -62,9 +62,6 @@ namespace ful::testing
 ///     any issues.
 TEST(SQLiteFuelRepositorySchemaReuseTest, SecondRepositoryOverSameFileReusesExistingSchema)
 {
-    if(!std::filesystem::exists(TEST_RESOURCE_DIR))
-        std::filesystem::create_directories(TEST_RESOURCE_DIR);
-
     const auto dbPath{ TEST_RESOURCE_DIR / std::filesystem::path("fuelPulseSchemaReuseTest.db3") };
 
     std::error_code ec;
@@ -271,9 +268,6 @@ public:
 
     void SetUp() override
     {
-        if(!std::filesystem::exists(TEST_RESOURCE_DIR))
-            std::filesystem::create_directories(TEST_RESOURCE_DIR);
-
         m_dbPath = std::filesystem::path(TEST_RESOURCE_DIR)
                  / (std::string(::testing::UnitTest::GetInstance()->current_test_info()->name()) + ".db3");
 
