@@ -155,6 +155,10 @@ public:
 
     void SetUp() override
     {
+        m_filePath = TEST_RESOURCE_DIR
+                   / std::filesystem::path(
+                         std::string(::testing::UnitTest::GetInstance()->current_test_info()->name()) + ".json"
+                   );
     }
 
     void TearDown() override { std::filesystem::remove(m_filePath); }
@@ -162,11 +166,6 @@ public:
 protected:
     void prepareSchema(const std::string& schema)
     {
-        m_filePath = TEST_RESOURCE_DIR
-                   / std::filesystem::path(
-                         std::string(::testing::UnitTest::GetInstance()->current_test_info()->name()) + ".json"
-                   );
-
         std::ofstream ofs{ m_filePath };
         ofs << schema;
     }
