@@ -43,9 +43,8 @@ std::optional<Validator::ValidationErrors> Validator::validate(const nlohmann::j
         return std::nullopt;
 
     std::ranges::sort(handler.errors, {}, [](const ValidationError& e) { return e.path.to_string(); });
-    const auto [first, last] = std::ranges::unique(handler.errors, [](const auto& lhs, const auto& rhs) {
-        return lhs.path == rhs.path && lhs.message == rhs.message;
-    });
+    const auto [first, last]
+        = std::ranges::unique(handler.errors, [](const auto& lhs, const auto& rhs) { return lhs.path == rhs.path; });
     handler.errors.erase(first, last);
 
     return std::make_optional(std::move(handler.errors));
