@@ -5,7 +5,6 @@
 #include <cstddef>
 #include <filesystem>
 #include <ios>
-#include <span>
 #include <string>
 
 namespace ful::file
@@ -17,10 +16,14 @@ namespace
 /// \brief Describe a type that has the capability to output some data to as byte array.
 template<typename T>
 concept Writable = requires(const T& t) {
-    { t.toByteArray() } -> std::convertible_to<std::span<const std::byte>>;
+    { t.toByteArray().data() } -> std::same_as<const std::byte*>;
+    { t.toByteArray().size() } -> std::convertible_to<std::streamsize>;
+} || requires(const T& t) {
+    { t.toByteArray().data() } -> std::same_as<const char*>;
+    { t.toByteArray().size() } -> std::convertible_to<std::streamsize>;
 };
 
-}
+} // namespace
 
 /// \brief Read the content of a file into a string.
 ///
