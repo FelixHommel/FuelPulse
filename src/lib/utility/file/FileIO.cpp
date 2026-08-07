@@ -23,4 +23,16 @@ std::string readFromFile(const std::filesystem::path& filepath)
     return buffer.str();
 }
 
+void writeToFileImpl(const std::filesystem::path& filepath, const char* data, std::streamsize size)
+{
+    std::ofstream out{ filepath };
+    if(!out)
+        throw std::ios_base::failure("Failure to open file");
+
+    out.write(data, size);
+
+    if(!out)
+        throw std::ios_base::failure("Failure to write file");
+}
+
 } // namespace ful::file
