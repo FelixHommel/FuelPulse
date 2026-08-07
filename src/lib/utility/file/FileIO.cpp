@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <format>
 #include <fstream>
+#include <ios>
 #include <sstream>
 #include <stdexcept>
 #include <string>
