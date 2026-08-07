@@ -12,6 +12,7 @@ add_executable(
     ./fuel/ConfigLoaderTest.cpp
     ./fuel/SQLiteFuelRepositoryTest.cpp
     ./integration/CoreIntegrationTest.cpp
+    ./utility/env/EnvironmentVariableHelperTest.cpp
     ./utility/threading/ThreadingTest.cpp
     ./utility/sqlite/SQLiteConnectionTest.cpp
     ./utility/validation/ValidatorTest.cpp
