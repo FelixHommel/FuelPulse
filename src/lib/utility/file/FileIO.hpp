@@ -39,7 +39,7 @@ void writeToFileImpl(const std::filesystem::path& filepath, const char* data, st
 /// \brief Output a string to a file.
 ///
 /// \param filepath The location where the \p obj is being output to
-/// \param obj The \ref std::string that is being outputed
+/// \param obj The \ref std::string that is being outputted
 // void writeToFile(const std::filesystem::path& filepath, const std::string& obj)
 // {
 //     writeToFileImpl(filepath, obj.c_str(), static_cast<std::streamsize>(obj.size()));
@@ -50,7 +50,7 @@ void writeToFileImpl(const std::filesystem::path& filepath, const char* data, st
 /// \tparam T An object complying with \ref Writable
 ///
 /// \param filepath The location where the \p obj is being output to
-/// \param obj
+/// \param obj The object that is output to the file
 template<Writable T>
 void writeToFile(const std::filesystem::path& filepath, const T& obj)
 {
