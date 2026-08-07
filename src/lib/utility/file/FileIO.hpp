@@ -40,10 +40,10 @@ void writeToFileImpl(const std::filesystem::path& filepath, const char* data, st
 ///
 /// \param filepath The location where the \p obj is being output to
 /// \param obj The \ref std::string that is being outputed
-void writeToFile(const std::filesystem::path& filepath, const std::string& obj)
-{
-    writeToFileImpl(filepath, obj.c_str(), static_cast<std::streamsize>(obj.size()));
-}
+// void writeToFile(const std::filesystem::path& filepath, const std::string& obj)
+// {
+//     writeToFileImpl(filepath, obj.c_str(), static_cast<std::streamsize>(obj.size()));
+// }
 
 /// \brief Output the data of \p T to a file.
 ///
