@@ -13,6 +13,7 @@ add_executable(
     ./fuel/SQLiteFuelRepositoryTest.cpp
     ./integration/CoreIntegrationTest.cpp
     ./utility/env/EnvironmentVariableHelperTest.cpp
+    ./utility/file/FileIOTest.cpp
     ./utility/threading/ThreadingTest.cpp
     ./utility/sqlite/SQLiteConnectionTest.cpp
     ./utility/validation/ValidatorTest.cpp
@@ -27,6 +28,7 @@ target_sources(
             FILES
                 ./testUtility/EnvVarGuard.hpp
                 ./testUtility/RandomNumberGenerator.hpp
+                ./testUtility/TemporaryFile.hpp
                 ./testUtility/ConcurrencyTest.hpp
 )
 
