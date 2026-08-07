@@ -85,6 +85,12 @@ const auto SCHEMA_CONFORM_JSON{ R"(
 
 } // namespace
 
+/// \brief Test that trying to construct a Validator from an invalid JSON schema file.
+TEST(ValidatorFromJsonStringTest, ConstructingFromNonJsonStringThrows)
+{
+    EXPECT_THROW(Validator validator{ std::string(INVALID_SCHEMA) }, std::exception);
+}
+
 /// \brief Test that passing a schema conform document to the validator reports no errors.
 TEST(ValidatorFromJsonStringTest, ValidDocumentReportsNoValidationErrors)
 {
@@ -135,6 +141,48 @@ TEST(ValidatorFromJsonStringTest, MultipleViolationsAreCaught)
     EXPECT_THAT(errors[0].message, ::testing::HasSubstr("does not match regex pattern"));
     EXPECT_THAT(errors[1].path.to_string(), ::testing::HasSubstr("postal_code"));
     EXPECT_THAT(errors[1].message, ::testing::HasSubstr("exceeds maximum"));
+    // NOLINTEND(bugprone-unchecked-optional-access)
+}
+
+/// \brief Test that validating a document that isn't even a JSON object against object schema still reports at least
+///     one error, rather than silently passing.
+TEST(ValidatorFromJsonStringTest, ValidatingNonObjectDocumentReportsError)
+{
+    // NOLINTBEGIN(bugprone-unchecked-optional-access): Not unchecked access
+    const Validator validator{ std::string(VALID_SCHEMA) };
+
+    const auto result{ validator.validate(nlohmann::json::parse("[1, 2, 3]")) };
+
+    ASSERT_TRUE(result.has_value());
+    EXPECT_FALSE(result->empty());
+    // NOLINTEND(bugprone-unchecked-optional-access)
+}
+
+/// \brief Test that duplicate (path, message) validation errors are collapsed into a single error message.
+TEST(ValidatorFromJsonStringTest, DuplicateErrorsAtSamePathAreDeduplicated)
+{
+    // NOLINTBEGIN(bugprone-unchecked-optional-access): Not unchecked access
+    constexpr auto DUPLICATE_ERROR_SCHEMA{ R"(
+{
+    "type": "object",
+    "properties": {
+        "max_stations": {
+            "allOf": [
+                { "type": "integer", "minimum": 5 },
+                { "type": "integer", "minimum": 5 }
+            ]
+        }
+    }
+}
+    )" };
+
+
+    const Validator validator{ std::string(DUPLICATE_ERROR_SCHEMA) };
+
+    const auto result{ validator.validate(nlohmann::json::parse(R"({ "max_stations": 1 })")) };
+
+    ASSERT_TRUE(result.has_value());
+    EXPECT_EQ((*result).size(), 1);
     // NOLINTEND(bugprone-unchecked-optional-access)
 }
 
@@ -192,6 +240,14 @@ TEST_F(ValidatorFromSchemaFileTest, InvalidSchemaFileThrows)
     prepareSchema(INVALID_SCHEMA);
 
     EXPECT_THROW(Validator validator{ m_filePath }, std::exception);
+}
+
+/// \brief Test that trying to load a schema file from a non-existing file throws an exception.
+TEST_F(ValidatorFromSchemaFileTest, NonExistingSchemaFileThrows)
+{
+    const auto MISSING_PATH{ TEST_RESOURCE_DIR / std::filesystem::path("does-not-exist-schema.json") };
+
+    EXPECT_THROW(Validator validator{ MISSING_PATH }, std::exception);
 }
 
 } // namespace ful::testing
