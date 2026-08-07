@@ -31,9 +31,6 @@ void writeToFileImpl(const std::filesystem::path& filepath, const char* data, st
         throw std::ios_base::failure("Failure to open file");
 
     out.write(data, size);
-
-    if(!out)
-        throw std::ios_base::failure("Failure to write file");
 }
 
 } // namespace ful::file
