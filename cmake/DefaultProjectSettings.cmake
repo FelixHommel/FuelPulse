@@ -24,8 +24,6 @@ endif()
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_CXX_SCAN_FOR_MODULES OFF)
 
-option(FUL_DEBUG "Enable debug statements and asserts" ON)
-option(FUL_ENABLE_ASSERTIONS "Enable assertions" ON)
 if(CMAKE_BUILD_TYPE STREQUAL "Release")
     set(FUL_DEBUG OFF CACHE BOOL "" FORCE)
     set(FUL_ENABLE_ASSERTIONS OFF CACHE BOOL "" FORCE)

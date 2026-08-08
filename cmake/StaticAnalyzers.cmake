@@ -1,6 +1,4 @@
 if(NOT CMAKE_BUILD_TYPE STREQUAL "Release")
-    option(FUL_ENABLE_CLANG_TIDY "Enable clang-tidy during compilation" ON)
-
     if(FUL_ENABLE_CLANG_TIDY)
         find_program(CLANGTIDY clang-tidy)
 
@@ -20,12 +18,6 @@ if(NOT CMAKE_BUILD_TYPE STREQUAL "Release")
         message(STATUS "clang-tidy integration disabled")
     endif()
 
-    option(
-        FUL_ENABLE_ADDRESS_SANITIZER
-        "Prepare the build to compile with address sanitizer"
-        ON
-    )
-    option(FUL_ENABLE_VALGRIND "Prepare the build to be used with valgrind" OFF)
     if(NOT (FUL_ENABLE_ADDRESS_SANITIZER AND FUL_ENABLE_VALGRIND))
         if((NOT WIN32) AND FUL_ENABLE_ADDRESS_SANITIZER)
             message(STATUS "configuring asan build")

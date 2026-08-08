@@ -39,7 +39,6 @@ function(set_project_warnings project_name)
         -Wformat=2
     )
 
-    option(FUL_WARNINGS_AS_ERRORS "Treat compiler warnings as errors" ON)
     if(FUL_WARNINGS_AS_ERRORS)
         message(STATUS "Compiling with warnings as errors")
         set(MSVC_WARNINGS ${MSVC_WARNINGS} /WX)

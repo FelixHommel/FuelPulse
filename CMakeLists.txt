@@ -10,7 +10,9 @@ set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-include(cmake/vcpkg-dependencies.cmake)
+include(cmake/Options.cmake)
+include(cmake/CheckStacktrace.cmake)
+include(cmake/VcpkgDependencies.cmake)
 include(cmake/DefaultProjectSettings.cmake)
 include(cmake/CodeCoverage.cmake)
 
