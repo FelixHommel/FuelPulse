@@ -40,16 +40,6 @@ constexpr auto TEST_INVALID_JSON{ R"(
     "report_dir": "reports"
 }
 )" };
-constexpr auto NOT_SCHEMA_CONFORM_JSON{ R"(
-{
-    "max_stations": -1,
-    "postal_code": -1,
-    "search_radius": -1.0,
-    "collection_interval": -1,
-    "database_path": 12,
-    "report_dir": 13
-}
-)" };
 const fuel::FuelPulseConfig BASIC_TEST_JSON_REFERENCE{
     .maxStations = 1,
     .postalCode = 55555,
@@ -152,6 +142,17 @@ TEST(ConfigLoaderApiKeyTest, ApiKeyIsPopulatedFromEnvironmentWhenJsonParsingFail
 ///     default to the default \ref FuelPulseConfig.
 TEST(ConfigLoaderValidationTest, TryLoadNonSchemaConformJson)
 {
+    constexpr auto NOT_SCHEMA_CONFORM_JSON{ R"(
+{
+    "max_stations": -1,
+    "postal_code": -1,
+    "search_radius": -1.0,
+    "collection_interval": -1,
+    "database_path": 12,
+    "report_dir": 13
+}
+    )" };
+
     fuel::FuelPulseConfig config;
 
     ASSERT_NO_THROW(config = fuel::loadConfig(std::string(NOT_SCHEMA_CONFORM_JSON)));
