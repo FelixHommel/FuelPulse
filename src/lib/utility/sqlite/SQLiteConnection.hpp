@@ -36,7 +36,7 @@ public:
     ///
     /// \param databasePath The location of the database on the disc
     /// \param mode (optional) How to open to the database
-    SQLiteConnection(const std::filesystem::path& databasePath, OpenMode mode = OpenMode::ReadWrite);
+    explicit SQLiteConnection(const std::filesystem::path& databasePath, OpenMode mode = OpenMode::ReadWrite);
     ~SQLiteConnection() = default;
 
     SQLiteConnection(const SQLiteConnection&) = delete;

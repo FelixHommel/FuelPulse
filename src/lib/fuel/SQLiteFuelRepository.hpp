@@ -23,7 +23,7 @@ public:
     ///
     /// \param dbLocation Path to the database file
     /// \param mode (optional) How the connection is established
-    SQLiteFuelRepository(
+    explicit SQLiteFuelRepository(
         const std::filesystem::path& dbLocation, SQLiteConnection::OpenMode mode = SQLiteConnection::OpenMode::ReadWrite
     );
     ~SQLiteFuelRepository() override = default;

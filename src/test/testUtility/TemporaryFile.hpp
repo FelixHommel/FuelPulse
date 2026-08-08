@@ -14,7 +14,7 @@ namespace ful::testing
 class TemporaryFile
 {
 public:
-    TemporaryFile(const std::filesystem::path& localFilePath) : m_filepath{ TEST_RESOURCE_DIR / localFilePath }
+    explicit TemporaryFile(const std::filesystem::path& localFilePath) : m_filepath{ TEST_RESOURCE_DIR / localFilePath }
     {
         if(!std::filesystem::exists(m_filepath))
         {

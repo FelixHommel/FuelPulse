@@ -30,8 +30,8 @@ class Validator
 public:
     using ValidationErrors = std::vector<ValidationError>;
 
-    Validator(const std::string& jsonString);
-    Validator(const std::filesystem::path& schemaPath);
+    explicit Validator(const std::string& jsonString);
+    explicit Validator(const std::filesystem::path& schemaPath);
 
     /// \brief Validate the \p doc against the loaded schema.
     ///
