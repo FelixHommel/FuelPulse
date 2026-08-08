@@ -96,7 +96,7 @@ TEST(EnvironmentVariableHelperWriteVarTest, OverwritesExistingValue)
 TEST(EnvironmentVariableHelperUnsetVarTest, RemovesPreviouslySetVariable)
 {
     constexpr auto TEST_VAR_NAME{ "FUL_TEST_UNSET_VAR" };
-    constexpr auto TEST_VAR_VALUE{ "" };
+    constexpr auto TEST_VAR_VALUE{ "initial-valid-value" };
     EnvVarGuard guard{ TEST_VAR_NAME, TEST_VAR_VALUE };
 
     ASSERT_TRUE(env::getVar(TEST_VAR_NAME).has_value());
