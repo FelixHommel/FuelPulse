@@ -76,7 +76,7 @@ TEST(FileIOWriteTest, RoundTripsCharBasedWritable)
     const TemporaryFile tempFile{ makeFileName("_char.txt") };
     constexpr auto TEST_FILE_CONTENT{ "hello test" };
 
-    file::writeToFile(tempFile.path(), CharWritable{ .data = TEST_FILE_CONTENT });
+    file::writeToFile(tempFile.path(), TEST_FILE_CONTENT);
 
     EXPECT_EQ(file::readFromFile(tempFile.path()), TEST_FILE_CONTENT);
 }
@@ -99,8 +99,8 @@ TEST(FileIOWriteTest, OverwritesExistingFileContent)
     constexpr auto ORIGINAL_CONTENT{ "original content" };
     constexpr auto CHANGED_CONTENT{ "changed content" };
 
-    file::writeToFile(tempFile.path(), CharWritable{ .data = ORIGINAL_CONTENT });
-    file::writeToFile(tempFile.path(), CharWritable{ .data = CHANGED_CONTENT });
+    file::writeToFile(tempFile.path(), ORIGINAL_CONTENT);
+    file::writeToFile(tempFile.path(), CHANGED_CONTENT);
 
     EXPECT_EQ(file::readFromFile(tempFile.path()), CHANGED_CONTENT);
 }
@@ -110,7 +110,7 @@ TEST(FileIOWriteTest, WiritingEmptyDataCreatesEmptyFile)
 {
     const TemporaryFile tempFile{ makeFileName("_emptyData.txt") };
 
-    file::writeToFile(tempFile.path(), CharWritable{ .data = "" });
+    file::writeToFile(tempFile.path(), "");
 
     EXPECT_TRUE(file::readFromFile(tempFile.path()).empty());
 }
@@ -120,7 +120,7 @@ TEST(FileIOWriteTest, ThrowsWhenParentDirectoryDoesNotExist)
 {
     const auto PATH{ TEST_RESOURCE_DIR / std::filesystem::path("no-such-directory") / "file.txt" };
 
-    EXPECT_THROW(file::writeToFile(PATH, CharWritable{ .data = "data" }), std::ios_base::failure);
+    EXPECT_THROW(file::writeToFile(PATH, "data"), std::ios_base::failure);
 }
 
 } // namespace ful::testing

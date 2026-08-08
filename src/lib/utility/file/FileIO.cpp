@@ -1,15 +1,31 @@
 #include "FileIO.hpp"
 
+#include <cstddef>
 #include <filesystem>
 #include <format>
 #include <fstream>
 #include <ios>
+#include <span>
 #include <sstream>
 #include <stdexcept>
 #include <string>
 
 namespace ful::file
 {
+
+namespace detail
+{
+
+void writeToFileImpl(const std::filesystem::path& filepath, std::span<const std::byte> data)
+{
+    std::ofstream out{ filepath };
+    if(!out)
+        throw std::ios_base::failure("Failure to open file");
+
+    out.write(reinterpret_cast<const char*>(data.data()), static_cast<std::streamsize>(data.size()));
+}
+
+} // namespace detail
 
 std::string readFromFile(const std::filesystem::path& filepath)
 {
@@ -22,15 +38,6 @@ std::string readFromFile(const std::filesystem::path& filepath)
     buffer << file.rdbuf();
 
     return buffer.str();
-}
-
-void writeToFileImpl(const std::filesystem::path& filepath, const char* data, std::streamsize size)
-{
-    std::ofstream out{ filepath };
-    if(!out)
-        throw std::ios_base::failure("Failure to open file");
-
-    out.write(data, size);
 }
 
 } // namespace ful::file
