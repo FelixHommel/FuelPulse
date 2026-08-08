@@ -1,6 +1,7 @@
 #include "fuel/ConfigLoader.hpp"
 #include "fuel/FuelPulseConfig.hpp"
 #include "testUtility/EnvVarGuard.hpp"
+#include "testUtility/TemporaryFile.hpp"
 #include "utility/env/EnvironmentVariableHelper.hpp"
 
 #include <gtest/gtest.h>
@@ -68,6 +69,15 @@ TEST(ConfigLoaderTest, LoadConfigFromString)
     EXPECT_EQ(conf, BASIC_TEST_JSON_REFERENCE);
 }
 
+/// \brief Test that an empty input string is not causing fatal issues but instead returns a default config.
+TEST(ConfigLoaderTest, LoadingEmptyStringFallsBackToDefault)
+{
+    fuel::FuelPulseConfig config;
+
+    ASSERT_NO_THROW(config = fuel::loadConfig(std::string{}));
+    EXPECT_EQ(config, fuel::FuelPulseConfig{});
+}
+
 /// \brief Test that trying to load a JSON string that is not valid JSON format should not throw but return a default \ref FuelPulseConfig.
 TEST(ConfigLoaderTest, LoadingInvalidConfigThrows)
 {
@@ -77,15 +87,35 @@ TEST(ConfigLoaderTest, LoadingInvalidConfigThrows)
     EXPECT_EQ(config, fuel::FuelPulseConfig{});
 }
 
+/// \brief Test that a JSON document missing a key entirely is still handled gracefully by falling back to the defaults
+///     instead of propagating the \ref json::out_of_range exception thrown by from_json's at(…) method.
+TEST(ConfigLoaderTest, DocumentMissingKeyNotCaughtBySchemaFallsBackToDefault)
+{
+    constexpr auto MISSING_KEY_JSON{ R"(
+{
+    "postal_code": 55555,
+    "search_radius": 1.0,
+    "collection_interval": 1,
+    "database_path": "test.db3",
+    "report_dir": "reports"
+}
+    )" };
+
+    fuel::FuelPulseConfig config;
+
+    ASSERT_NO_THROW(config = fuel::loadConfig(std::string(MISSING_KEY_JSON)));
+    EXPECT_EQ(config.maxStations, fuel::FuelPulseConfig{}.maxStations);
+}
+
 /// \brief Test loading the API key from an environment variable where the environment variable exists should populate
 ///     the optional in \ref FuelPulseConfig.
 TEST(ConfigLoaderApiKeyTest, ApiKeyIsPopulatedFromEnvironmentWhenPresent)
 {
+    // NOLINTBEGIN(bugprone-unchecked-optional-access): Not unchecked
     EnvVarGuard guard{ "TANKER_KOENIG_API_KEY", "test-key-1" };
 
     const auto config{ fuel::loadConfig(std::string(BASIC_TEST_JSON)) };
 
-    // NOLINTBEGIN(bugprone-unchecked-optional-access): Not unchecked
     EXPECT_TRUE(config.apiKey.has_value());
     EXPECT_EQ(config.apiKey.value(), "test-key-1");
     // NOLINTEND(bugprone-unchecked-optional-access)
@@ -101,6 +131,21 @@ TEST(ConfigLoaderApiKeyTest, ApiKeyIsNotPopulatedFromEnvironmentWhenNotPresent)
     const auto config{ fuel::loadConfig(std::string(BASIC_TEST_JSON)) };
 
     EXPECT_FALSE(config.apiKey.has_value());
+}
+
+/// \brief Test that API key is still populated from the environment even when the rest of the JSON fails to parse.
+TEST(ConfigLoaderApiKeyTest, ApiKeyIsPopulatedFromEnvironmentWhenJsonParsingFails)
+{
+    // NOLINTBEGIN(bugprone-unchecked-optional-access): Not unchecked
+    constexpr auto TEST_API_KEY_VALUE{ "test-key-error-path" };
+    EnvVarGuard guard{ "TANKER_KOENIG_API_KEY", TEST_API_KEY_VALUE };
+
+    const auto config{ fuel::loadConfig(std::string(TEST_INVALID_JSON)) };
+
+    ASSERT_TRUE(config.apiKey.has_value());
+    EXPECT_EQ(*config.apiKey, TEST_API_KEY_VALUE);
+    EXPECT_EQ(config.maxStations, fuel::FuelPulseConfig{}.maxStations);
+    // NOLINTEND(bugprone-unchecked-optional-access)
 }
 
 /// \brief Loading a config from a JSON document that does not adhere to the schema should not throw any exceptions and
@@ -159,6 +204,21 @@ TEST_F(ConfigLoaderFromFileTest, LoadingFromNonExistingFileThrowsException)
     fuel::FuelPulseConfig config;
 
     ASSERT_NO_THROW(config = fuel::loadConfig(m_filePath));
+    EXPECT_EQ(config, fuel::FuelPulseConfig{});
+}
+
+/// \brief Test that loading a config from a file that exists but contains invalid JSON content falls back to defaults.
+TEST_F(ConfigLoaderFromFileTest, LoadingFileWithInvalidJsonContentFallsBackToDefault)
+{
+    TemporaryFile tempFile{ "invalidJsonFile.json" };
+
+    {
+        std::ofstream out{ tempFile.path() };
+        out << "{ this is invalid json ";
+    }
+
+    fuel::FuelPulseConfig config;
+    EXPECT_NO_THROW(config = fuel::loadConfig(tempFile.path()));
     EXPECT_EQ(config, fuel::FuelPulseConfig{});
 }
 
