@@ -1,7 +1,7 @@
 # FuelPulse
 
 ![Build](https://github.com/FelixHommel/FuelPulse/actions/workflows/build.yml/badge.svg)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/2bb4b705edb946539e555f2f78e86446)](https://app.codacy.com/gh/FelixHommel/FuelPulse/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/2bb4b705edb946539e555f2f78e86446)](https://app.codacy.com/gh/FelixHommel/FuelPulse/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
 
 ## Motivation
 
