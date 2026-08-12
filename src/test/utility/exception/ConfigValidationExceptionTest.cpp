@@ -4,6 +4,7 @@
 
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <nlohmann/json_fwd.hpp>
 
 #include <exception>
 #include <source_location>
@@ -31,6 +32,22 @@ TEST(ConfigValidationExceptionTest, StoreEmptyErrorList)
     EXPECT_TRUE(exc.errors().empty());
 }
 
+/// \brief Test that \ref ConfigValidationException stores the errors it was provided correctly.
+TEST(ConfigValidationException, StoreErrors)
+{
+    constexpr auto PTR_PATH{ "/test" };
+    constexpr auto MESSAGE{ "test message" };
+    const Validator::ValidationErrors ERRORS{
+        { .path = nlohmann::json::json_pointer{ PTR_PATH }, .message = MESSAGE }
+    };
+
+    const auto exc{ ConfigValidationException::create(ERRORS) };
+
+    ASSERT_EQ(exc.errors().size(), 1);
+    EXPECT_EQ(exc.errors().at(0).path.to_string(), ERRORS.at(0).path.to_string());
+    EXPECT_EQ(exc.errors().at(0).message, ERRORS.at(0).message);
+}
+
 /// \brief Test that \ref ConfigValidationException stores the \ref std::source_location correctly.
 TEST(ConfigValidationExceptionTest, StoreLocation)
 {
@@ -39,6 +56,58 @@ TEST(ConfigValidationExceptionTest, StoreLocation)
     EXPECT_THAT(exc.where().file_name(), ::testing::HasSubstr(LOCATION.file_name()));
     EXPECT_THAT(exc.where().function_name(), ::testing::HasSubstr(LOCATION.function_name()));
     EXPECT_THAT(exc.where().line(), LOCATION.line());
+}
+
+/// \brief Test that \ref ConfigValidationException stores and uses a single \ref ValidationError correctly.
+TEST(ConfigValidationExceptionTest, SingleErrorMessageContainsPathAndMessage)
+{
+    constexpr auto PTR_PATH{ "/test" };
+    constexpr auto MESSAGE{ "test message" };
+    const Validator::ValidationErrors ERRORS{
+        { .path = nlohmann::json::json_pointer{ PTR_PATH }, .message = MESSAGE }
+    };
+
+    const auto exc{ ConfigValidationException::create(ERRORS) };
+
+    EXPECT_THAT(exc.message(), ::testing::HasSubstr(PTR_PATH));
+    EXPECT_THAT(exc.message(), ::testing::HasSubstr(MESSAGE));
+}
+
+/// \brief Test that \ref ConfigValidationException stores and uses multiple \ref ValidationError correctly.
+TEST(ConfigValidationExceptionTest, MultipleErrorsAllAppearInMessage)
+{
+    constexpr auto PTR_PATH_BASE{ "/test_" };
+    constexpr auto MESSAGE_BASE{ "test_message_" };
+    const Validator::ValidationErrors ERRORS{
+        { .path = nlohmann::json::json_pointer{ PTR_PATH_BASE + std::to_string(1) },
+         .message = MESSAGE_BASE + std::to_string(1) },
+        { .path = nlohmann::json::json_pointer{ PTR_PATH_BASE + std::to_string(2) },
+         .message = MESSAGE_BASE + std::to_string(2) },
+    };
+
+    const auto exc{ ConfigValidationException::create(ERRORS) };
+
+    for(const auto& e : ERRORS)
+    {
+        EXPECT_THAT(exc.message(), ::testing::HasSubstr(e.path.to_string()));
+        EXPECT_THAT(exc.message(), ::testing::HasSubstr(e.message));
+    }
+}
+
+/// \brief Test that \ref ConfigValidationException includes the validation errors in the
+///     \ref ConfigValidationException::what() message.
+TEST(ConfigValidationExceptionTest, WhatMessageContainsErrors)
+{
+    constexpr auto PTR_PATH{ "/test" };
+    constexpr auto MESSAGE{ "test message" };
+    const Validator::ValidationErrors ERRORS{
+        { .path = nlohmann::json::json_pointer{ PTR_PATH }, .message = MESSAGE }
+    };
+
+    const auto exc{ ConfigValidationException::create(ERRORS) };
+
+    EXPECT_THAT(exc.what(), ::testing::HasSubstr(PTR_PATH));
+    EXPECT_THAT(exc.what(), ::testing::HasSubstr(MESSAGE));
 }
 
 /// \brief Test that \ref ConfigValidationException can be copy-constructed.
