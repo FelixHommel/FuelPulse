@@ -2,16 +2,17 @@
 
 #include "fuel/FuelPulseConfig.hpp"
 #include "utility/env/EnvironmentVariableHelper.hpp"
+#include "utility/exception/ConfigValidationException.hpp"
+#include "utility/exception/FileIOException.hpp"
 #include "utility/file/FileIO.hpp"
 #include "utility/validation/Validator.hpp"
 
+#include <nlohmann/detail/exceptions.hpp>
 #include <nlohmann/json_fwd.hpp>
 #include <spdlog/spdlog.h>
 
-#include <exception>
 #include <filesystem>
 #include <optional>
-#include <stdexcept>
 #include <string>
 #include <utility>
 
@@ -36,19 +37,35 @@ std::optional<std::string> loadApiKeyFromEnv()
 
 } // namespace
 
+namespace detail
+{
+
+void validateConfigDoc(const nlohmann::json& doc)
+{
+    static Validator validator{ FUL_ROOT / std::filesystem::path("resources/ConfigSchema.json") };
+
+    if(auto results{ validator.validate(doc) }; results.has_value())
+        throw ConfigValidationException::create(std::move(*results));
+}
+
+} // namespace detail
+
 FuelPulseConfig loadConfig(const std::filesystem::path& configPath)
 {
-    FuelPulseConfig config;
+    std::optional<std::string> doc;
+
     try
     {
-        config = loadConfig(file::readFromFile(configPath));
+        doc = std::make_optional(file::readFromFile(configPath));
     }
-    catch(const std::exception& e)
+    catch(const FileIOException& e)
     {
-        spdlog::warn("Failed to load the configuration from the following location: {}", configPath.string());
+        spdlog::warn(e.what());
+        spdlog::warn("Proceeding with default values in the config.");
+        doc = std::nullopt;
     }
 
-    return config;
+    return doc.has_value() ? loadConfig(*doc) : FuelPulseConfig{};
 }
 
 FuelPulseConfig loadConfig(const std::string& json)
@@ -58,22 +75,19 @@ FuelPulseConfig loadConfig(const std::string& json)
     {
         const auto configJson = nlohmann::json::parse(json);
 
-        Validator validator{ FUL_ROOT / std::filesystem::path("resources/ConfigSchema.json") };
-        if(auto results{ validator.validate(configJson) }; results.has_value())
-        {
-            spdlog::error("Config validation failed.");
-
-            for(const auto& error : *results)
-                spdlog::warn("{}: {}", error.path.to_string(), error.message);
-
-            throw std::runtime_error("");
-        }
+        detail::validateConfigDoc(configJson);
 
         config = configJson.get<FuelPulseConfig>();
     }
-    catch(const std::exception& e)
+    catch(const nlohmann::detail::parse_error& e)
     {
-        spdlog::warn("Failed to load the configuration for the following reason: {}", e.what());
+        spdlog::warn("Failed to load the configuration file for the following reason: {}", e.what());
+        spdlog::warn("Proceeding with default values in the config.");
+        config = {};
+    }
+    catch(const ConfigValidationException& e)
+    {
+        spdlog::warn("{}", e.what());
         spdlog::info("Proceeding with default values in the config.");
         config = {};
     }

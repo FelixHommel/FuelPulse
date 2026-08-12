@@ -10,6 +10,11 @@ add_library(
     ./fuel/FuelPulseConfig.cpp
     ./fuel/SQLiteFuelRepository.cpp
     ./utility/env/EnvironmentVariableHelper.cpp
+    ./utility/exception/ConfigValidationException.cpp
+    ./utility/exception/Exception.cpp
+    ./utility/exception/FileIOException.cpp
+    ./utility/exception/SQLiteAccessException.cpp
+    ./utility/exception/SQLiteConnectionException.cpp
     ./utility/file/FileIO.cpp
     ./utility/logging/LoggerFactory.cpp
     ./utility/sqlite/SQLiteConnection.cpp
@@ -35,6 +40,12 @@ target_sources(
                 ./report/IReport.hpp
                 ./utility/Assert.hpp
                 ./utility/env/EnvironmentVariableHelper.hpp
+                ./utility/exception/ConfigValidationException.hpp
+                ./utility/exception/Exception.hpp
+                ./utility/exception/FileIOException.hpp
+                ./utility/exception/SQLiteAccessException.hpp
+                ./utility/exception/SQLiteConnectionException.hpp
+                ./utility/exception/Stacktrace.hpp
                 ./utility/file/FileIO.hpp
                 ./utility/hash/HashCombine.hpp
                 ./utility/logging/LoggerFactory.hpp

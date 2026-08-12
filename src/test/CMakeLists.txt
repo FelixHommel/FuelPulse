@@ -13,6 +13,11 @@ add_executable(
     ./fuel/SQLiteFuelRepositoryTest.cpp
     ./integration/CoreIntegrationTest.cpp
     ./utility/env/EnvironmentVariableHelperTest.cpp
+    ./utility/exception/ConfigValidationExceptionTest.cpp
+    ./utility/exception/ExceptionTest.cpp
+    ./utility/exception/FileIOExceptionTest.cpp
+    ./utility/exception/SQLiteAccessExceptionTest.cpp
+    ./utility/exception/SQLiteConnectionExceptionTest.cpp
     ./utility/file/FileIOTest.cpp
     ./utility/threading/ThreadingTest.cpp
     ./utility/sqlite/SQLiteConnectionTest.cpp

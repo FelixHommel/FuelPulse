@@ -50,21 +50,23 @@ public:
     [[nodiscard]] bool isOpen() const noexcept;
     /// \brief Query the \ref OpenMode that was used to open the database connection.
     ///
-    /// \throws \ref std::logic_error if the \ref SQLiteConnection is closed
+    /// \throws A \ref SQLiteConnectionException if the \ref SQLiteConnection is closed
     [[nodiscard]] OpenMode mode() const;
     /// \brief Get the handle to the \ref SQLite::Database object
     ///
-    /// \throws \ref std::logic_error if the \ref SQLiteConnection is closed
+    /// \throws A \ref SQLiteConnectionException if the \ref SQLiteConnection is closed
     [[nodiscard]] SQLite::Database& database();
     /// \brief Get the handle to the \ref SQLite::Database object
     ///
-    /// \throws \ref std::logic_error if the \ref SQLiteConnection is closed
+    /// \throws A \ref SQLiteConnectionException if the \ref SQLiteConnection is closed
     [[nodiscard]] SQLite::Database& database() const;
 
     /// \brief Open a connection to a database.
     ///
     /// \param databasePath Path to the database on the disk
     /// \param mode (optional) How to open to the database
+    ///
+    /// \throws A \ref SQLiteConnectionException if SQLite is unable to open the database at \p databasePath
     void open(const std::filesystem::path& databasePath, OpenMode mode = OpenMode::ReadWrite);
     /// \brief Close a connection to a database.
     void close();

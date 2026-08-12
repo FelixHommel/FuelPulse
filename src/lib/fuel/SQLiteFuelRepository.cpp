@@ -1,6 +1,7 @@
 #include "SQLiteFuelRepository.hpp"
 
 #include "fuel/Domain.hpp"
+#include "utility/exception/SQLiteAccessException.hpp"
 #include "utility/sqlite/SQLiteConnection.hpp"
 
 #include "SQLiteCpp/Statement.h"
@@ -10,7 +11,6 @@
 #include <cstdint>
 #include <filesystem>
 #include <optional>
-#include <stdexcept>
 #include <vector>
 
 namespace
@@ -154,7 +154,8 @@ std::vector<Station> SQLiteFuelRepository::loadStations()
 ///
 /// If the database does not have the required tables, the tables will be created.
 ///
-/// \throws If the connection to the database is not open or it can't write to the database if it needs to create the tables
+/// \throws A \ref SQLiteConnectionException if the connection to the database is not open or it can't write to the
+///     database if it needs to create the tables
 void SQLiteFuelRepository::ensureTableLayout() const
 {
     ensureConnectionOpen();
@@ -174,25 +175,25 @@ void SQLiteFuelRepository::ensureTableLayout() const
 
 /// \brief Check that the connection to the database is open.
 ///
-/// \throws A \ref std::runtime_error if the connection is currently not open
+/// \throws A \ref SQLiteConnectionException if the connection is currently not open
 void SQLiteFuelRepository::ensureConnectionOpen() const
 {
     if(!m_connection.isOpen())
-        throw std::runtime_error("Repository is not connected to a database");
+        throw SQLiteAccessException::create("Repository is not connected to a database");
 }
 
 /// \brief Check that the connection to the database is in read-write mode.
 ///
-/// \throws A \ref std::runtime_error if the connection is currently not in read-write mode
+/// \throws A \ref SQLiteConnectionException if the connection is currently not in read-write mode
 void SQLiteFuelRepository::ensureConnectionReadWrite() const
 {
     if(m_connection.mode() != SQLiteConnection::OpenMode::ReadWrite)
-        throw std::runtime_error("Repository is not connected in read-write mode");
+        throw SQLiteAccessException::create("Repository is connected in read-only mode, unable to write data");
 }
 
 /// \brief Check that the connection to the database is open and in read-write mode.
 ///
-/// \throws A \ref std::runtime_error if the connection is currently not open in read-write mode
+/// \throws A \ref SQLiteConnectionException if the connection is currently not open in read-write mode
 void SQLiteFuelRepository::ensureConnectionOpenReadWrite() const
 {
     ensureConnectionOpen();

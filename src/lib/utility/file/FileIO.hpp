@@ -39,7 +39,7 @@ void writeToFileImpl(const std::filesystem::path& filepath, std::span<const std:
 ///
 /// \returns A \ref std::string containing the content of the file at \p filepath
 ///
-/// \throws A \ref std::runtime_error if the file does not exist
+/// \throws A \ref FileIOException if the file does not exist
 [[nodiscard]] std::string readFromFile(const std::filesystem::path& filepath);
 
 /// \brief Output the data of \p T to a file.
@@ -51,9 +51,7 @@ void writeToFileImpl(const std::filesystem::path& filepath, std::span<const std:
 template<ByteWritable T>
 void writeToFile(const std::filesystem::path& filepath, const T& obj)
 {
-    const auto bytes{ obj.toByteArray() };
-
-    detail::writeToFileImpl(filepath, std::span{ bytes });
+    detail::writeToFileImpl(filepath, obj.toByteArray());
 }
 
 /// \brief Output a string to a file.

@@ -1,10 +1,12 @@
 #include "SQLiteConnection.hpp"
 
+#include "utility/exception/SQLiteConnectionException.hpp"
+
 #include <SQLiteCpp/Database.h>
+#include <SQLiteCpp/Exception.h>
 
 #include <filesystem>
 #include <memory>
-#include <stdexcept>
 
 namespace ful
 {
@@ -26,7 +28,7 @@ bool SQLiteConnection::isOpen() const noexcept
 SQLiteConnection::OpenMode SQLiteConnection::mode() const
 {
     if(!m_database)
-        throw std::logic_error("Database connection is not open");
+        throw SQLiteConnectionException::create("Database connection is not open");
 
     return m_mode;
 }
@@ -34,7 +36,7 @@ SQLiteConnection::OpenMode SQLiteConnection::mode() const
 SQLite::Database& SQLiteConnection::database()
 {
     if(!m_database)
-        throw std::logic_error("Database connection is not open");
+        throw SQLiteConnectionException::create("Database connection is not open");
 
     return *m_database;
 }
@@ -42,16 +44,23 @@ SQLite::Database& SQLiteConnection::database()
 SQLite::Database& SQLiteConnection::database() const
 {
     if(!m_database)
-        throw std::logic_error("Database connection is not open");
+        throw SQLiteConnectionException::create("Database connection is not open");
 
     return *m_database;
 }
 
 void SQLiteConnection::open(const std::filesystem::path& databasePath, OpenMode mode)
 {
-    m_database
-        = std::make_unique<SQLite::Database>(databasePath.string(), SQLiteConnection::openModeToSQLiteFlag(mode));
-    m_mode = mode;
+    try
+    {
+        m_database
+            = std::make_unique<SQLite::Database>(databasePath.string(), SQLiteConnection::openModeToSQLiteFlag(mode));
+        m_mode = mode;
+    }
+    catch(const SQLite::Exception& e)
+    {
+        throw SQLiteConnectionException::create(e.what(), databasePath);
+    }
 }
 
 void SQLiteConnection::close()

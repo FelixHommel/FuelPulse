@@ -1,10 +1,11 @@
 #include "utility/sqlite/SQLiteConnection.hpp"
+#include "utility/exception/SQLiteConnectionException.hpp"
 
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include <SQLiteCpp/Database.h>
 
-#include <exception>
 #include <filesystem>
 #include <tuple>
 
@@ -25,8 +26,14 @@ TEST(SQLiteConnectionConstructionTest, CreateConnectionObjectWithoutOpeningConne
     SQLiteConnection conn{};
 
     EXPECT_FALSE(conn.isOpen());
-    EXPECT_THROW(std::ignore = conn.mode(), std::exception);
-    EXPECT_THROW(std::ignore = conn.database(), std::exception);
+    EXPECT_THAT(
+        [&conn] { std::ignore = conn.mode(); },
+        ::testing::ThrowsMessage<SQLiteConnectionException>(::testing::HasSubstr("not open"))
+    );
+    EXPECT_THAT(
+        [&conn] { std::ignore = conn.database(); },
+        ::testing::ThrowsMessage<SQLiteConnectionException>(::testing::HasSubstr("not open"))
+    );
 }
 
 /// \brief When a new \ref SQLiteConnection object is created and provided with a path to the database, the connection
@@ -85,7 +92,10 @@ TEST_F(SQLiteConnectionTest, TryOpenConnectionAtInvalidLocation)
 {
     ASSERT_FALSE(m_connection.isOpen());
 
-    EXPECT_THROW(m_connection.open("non-existing-path/test.db3"), std::exception);
+    EXPECT_THAT(
+        [this] { m_connection.open("non-existing-path/test.db3"); },
+        ::testing::ThrowsMessage<SQLiteConnectionException>(::testing::HasSubstr("non-existing-path/test.db3"))
+    );
 
     EXPECT_FALSE(m_connection.isOpen());
 }
@@ -117,7 +127,10 @@ TEST_F(SQLiteConnectionTest, ConstRefAccessOnDisconnectedDatabase)
 {
     const auto& dbRef{ m_connection };
 
-    EXPECT_THROW(std::ignore = dbRef.database(), std::exception);
+    EXPECT_THAT(
+        [&dbRef] { std::ignore = dbRef.database(); },
+        ::testing::ThrowsMessage<SQLiteConnectionException>(::testing::HasSubstr("not open"))
+    );
 }
 
 /// \brief Test the \ref SQLiteConnection::OpenMode functionality.

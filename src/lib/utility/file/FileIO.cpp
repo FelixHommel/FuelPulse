@@ -1,13 +1,13 @@
 #include "FileIO.hpp"
 
+#include "utility/exception/FileIOException.hpp"
+
 #include <cstddef>
 #include <filesystem>
-#include <format>
 #include <fstream>
 #include <ios>
 #include <span>
 #include <sstream>
-#include <stdexcept>
 #include <string>
 
 namespace ful::file
@@ -20,7 +20,7 @@ void writeToFileImpl(const std::filesystem::path& filepath, std::span<const std:
 {
     std::ofstream out{ filepath };
     if(!out)
-        throw std::ios_base::failure("Failure to open file");
+        throw FileIOException::create(filepath, "Failure to open file");
 
     out.write(reinterpret_cast<const char*>(data.data()), static_cast<std::streamsize>(data.size()));
 }
@@ -30,7 +30,7 @@ void writeToFileImpl(const std::filesystem::path& filepath, std::span<const std:
 std::string readFromFile(const std::filesystem::path& filepath)
 {
     if(!std::filesystem::exists(filepath))
-        throw std::runtime_error(std::format("There is no file at the following location: {}", filepath.string()));
+        throw FileIOException::create(filepath, "There is no file at the specified location");
 
     std::ifstream file{ filepath };
 

@@ -30,7 +30,13 @@ class Validator
 public:
     using ValidationErrors = std::vector<ValidationError>;
 
+    /// \brief Create a new \ref Validator from a JSON string.
+    ///
+    /// \throws A \ref Exception if there are issues with parsing \p jsonString
     explicit Validator(const std::string& jsonString);
+    /// \brief Create a new \ref Validator from a File on disk.
+    ///
+    /// \throws A \ref FileIOException if there is an issue reading the File at \p schemaPath
     explicit Validator(const std::filesystem::path& schemaPath);
 
     /// \brief Validate the \p doc against the loaded schema.

@@ -1,14 +1,14 @@
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include "testUtility/TemporaryFile.hpp"
+#include "utility/exception/FileIOException.hpp"
 #include "utility/file/FileIO.hpp"
 
 #include <cstddef>
 #include <filesystem>
 #include <fstream>
-#include <ios>
 #include <span>
-#include <stdexcept>
 #include <string>
 #include <string_view>
 #include <tuple>
@@ -44,7 +44,12 @@ struct CharWritable
 /// \brief Attempting to read from a file that does not exist should throw an exception.
 TEST(FileIOReadTest, ThrowsWhenFileDoesNotExist)
 {
-    EXPECT_THROW(std::ignore = file::readFromFile("definetly-does-not-exist.txt"), std::runtime_error);
+    constexpr auto TEST_FILE_PATH{ "definetly-does-not-exist.txt" };
+
+    EXPECT_THAT(
+        [&TEST_FILE_PATH] { std::ignore = file::readFromFile(TEST_FILE_PATH); },
+        ::testing::ThrowsMessage<FileIOException>(::testing::HasSubstr(TEST_FILE_PATH))
+    );
 }
 
 /// \brief Test that reading an existing file does return the exact same content that is written in the file.
@@ -120,7 +125,10 @@ TEST(FileIOWriteTest, ThrowsWhenParentDirectoryDoesNotExist)
 {
     const auto PATH{ TEST_RESOURCE_DIR / std::filesystem::path("no-such-directory") / "file.txt" };
 
-    EXPECT_THROW(file::writeToFile(PATH, "data"), std::ios_base::failure);
+    EXPECT_THAT(
+        [&PATH] { file::writeToFile(PATH, "data"); },
+        ::testing::ThrowsMessage<FileIOException>(::testing::HasSubstr(PATH))
+    );
 }
 
 } // namespace ful::testing

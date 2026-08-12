@@ -2,12 +2,13 @@
 #include "fuel/Domain.hpp"
 #include "fuel/IFuelRepository.hpp"
 #include "testUtility/RandomNumberGenerator.hpp"
+#include "utility/exception/SQLiteAccessException.hpp"
 #include "utility/sqlite/SQLiteConnection.hpp"
 
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
 #include <chrono>
-#include <exception>
 #include <filesystem>
 #include <memory>
 #include <optional>
@@ -298,11 +299,16 @@ TEST_F(SQLiteFuelRepositoryReadOnlyTest, ReadOnlyRepositoryCantStoreAnything)
 {
     fuel::SQLiteFuelRepository readOnly{ m_dbPath, SQLiteConnection::OpenMode::ReadOnly };
 
-    EXPECT_THROW(
-        readOnly.store(::makeMeasurement("station-1", ::truncateToMillis(std::chrono::system_clock::now()))),
-        std::exception
+    EXPECT_THAT(
+        [&readOnly] {
+            readOnly.store(::makeMeasurement("station-1", ::truncateToMillis(std::chrono::system_clock::now())));
+        },
+        ::testing::ThrowsMessage<SQLiteAccessException>(::testing::HasSubstr("read-only"))
     );
-    EXPECT_THROW(readOnly.storeStation(::makeStation()), std::exception);
+    EXPECT_THAT(
+        [&readOnly] { readOnly.storeStation(::makeStation()); },
+        ::testing::ThrowsMessage<SQLiteAccessException>(::testing::HasSubstr("read-only"))
+    );
 }
 
 } // namespace ful::testing

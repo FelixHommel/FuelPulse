@@ -5,7 +5,9 @@
 
 #include <nlohmann/json_fwd.hpp>
 
-#include <exception>
+#include "utility/exception/Exception.hpp"
+#include "utility/exception/FileIOException.hpp"
+
 #include <filesystem>
 #include <fstream>
 #include <memory>
@@ -88,7 +90,10 @@ const auto SCHEMA_CONFORM_JSON{ R"(
 /// \brief Test that trying to construct a Validator from an invalid JSON schema file.
 TEST(ValidatorFromJsonStringTest, ConstructingFromNonJsonStringThrows)
 {
-    EXPECT_THROW(Validator validator{ std::string(INVALID_SCHEMA) }, std::exception);
+    EXPECT_THAT(
+        [] { Validator validator{ std::string(INVALID_SCHEMA) }; },
+        ::testing::ThrowsMessage<Exception>(::testing::HasSubstr("syntax error"))
+    );
 }
 
 /// \brief Test that passing a schema conform document to the validator reports no errors.
@@ -239,7 +244,10 @@ TEST_F(ValidatorFromSchemaFileTest, InvalidSchemaFileThrows)
 {
     prepareSchema(INVALID_SCHEMA);
 
-    EXPECT_THROW(Validator validator{ m_filePath }, std::exception);
+    EXPECT_THAT(
+        [this] { Validator validator{ m_filePath }; },
+        ::testing::ThrowsMessage<Exception>(::testing::HasSubstr("syntax error"))
+    );
 }
 
 /// \brief Test that trying to load a schema file from a non-existing file throws an exception.
@@ -247,7 +255,10 @@ TEST_F(ValidatorFromSchemaFileTest, NonExistingSchemaFileThrows)
 {
     const auto MISSING_PATH{ TEST_RESOURCE_DIR / std::filesystem::path("does-not-exist-schema.json") };
 
-    EXPECT_THROW(Validator validator{ MISSING_PATH }, std::exception);
+    EXPECT_THAT(
+        [&MISSING_PATH] { Validator validator{ MISSING_PATH }; },
+        ::testing::ThrowsMessage<FileIOException>(::testing::HasSubstr(MISSING_PATH))
+    );
 }
 
 } // namespace ful::testing

@@ -1,13 +1,14 @@
 #include "Validator.hpp"
 
+#include "utility/exception/Exception.hpp"
 #include "utility/file/FileIO.hpp"
 
+#include <nlohmann/detail/exceptions.hpp>
 #include <nlohmann/json-schema.hpp>
 #include <nlohmann/json_fwd.hpp>
 #include <spdlog/spdlog.h>
 
 #include <algorithm>
-#include <exception>
 #include <filesystem>
 #include <optional>
 #include <string>
@@ -25,10 +26,10 @@ Validator::Validator(const std::string& jsonString)
 
         m_validator.set_root_schema(schemaDoc);
     }
-    catch(const std::exception& e)
+    catch(const nlohmann::detail::parse_error& e)
     {
         spdlog::error("Could not load the schema: {}", e.what());
-        throw e;
+        throw Exception{ e.what() };
     }
 }
 
