@@ -24,7 +24,7 @@ constexpr auto LOCATION{ std::source_location::current() };
 } // namespace
 
 /// \brief Test that \ref SQLiteConnectionException can be created without specifying a database path.
-TEST(SQLiteConnectionExceptionTest, CreateMessageWithoutDatabsePath)
+TEST(SQLiteConnectionExceptionTest, CreateMessageWithoutDatabasePath)
 {
     const auto exc{ SQLiteConnectionException::create(MESSAGE) };
 
@@ -33,7 +33,7 @@ TEST(SQLiteConnectionExceptionTest, CreateMessageWithoutDatabsePath)
 }
 
 /// \brief Test that \ref SQLiteConnectionException can be created with specifying a database path.
-TEST(SQLiteConnectionExceptionTest, CreateMessageWithDatabsePath)
+TEST(SQLiteConnectionExceptionTest, CreateMessageWithDatabasePath)
 {
     // NOLINTBEGIN(bugprone-unchecked-optional-access)
     const auto exc{ SQLiteConnectionException::create(MESSAGE, DB_PATH) };
@@ -126,7 +126,7 @@ TEST(SQLiteConnectionExceptionTest, CopyConstructionWithoutDatabasePath)
 /// \brief Test that \ref SQLiteConnectionException is copy-constructible when a database path is specified.
 TEST(SQLiteConnectionExceptionTest, CopyConstructionWithDatabasePath)
 {
-    const auto original{ SQLiteConnectionException::create(MESSAGE) };
+    const auto original{ SQLiteConnectionException::create(MESSAGE, DB_PATH) };
     const auto copy{ original };
 
     EXPECT_EQ(copy.message(), original.message());
@@ -159,7 +159,7 @@ TEST(SQLiteConnectionExceptionTest, MoveConstructionWithoutDatabasePath)
 }
 
 /// \brief Test that \ref SQLiteConnectionException is move-constructible when a database path is specified.
-TEST(SQLiteConnectionExceptionTest, MoveConstructionWitDatabasePath)
+TEST(SQLiteConnectionExceptionTest, MoveConstructionWithDatabasePath)
 {
     // NOLINTBEGIN(bugprone-unchecked-optional-access)
     auto original{ SQLiteConnectionException::create(MESSAGE, DB_PATH) };
