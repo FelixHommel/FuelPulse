@@ -34,7 +34,7 @@ public:
     );
 
 private:
-    SQLiteAccessException(Exception exception);
+    explicit SQLiteAccessException(Exception exception);
 };
 
 } // namespace ful

@@ -43,7 +43,7 @@ public:
 private:
     std::optional<std::filesystem::path> m_dbPath;
 
-    SQLiteConnectionException(Exception exception);
+    explicit SQLiteConnectionException(Exception exception);
     SQLiteConnectionException(Exception exception, std::optional<std::filesystem::path> dbPath);
 };
 
