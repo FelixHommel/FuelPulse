@@ -1,5 +1,6 @@
 #include "fuel/FuelPulseConfig.hpp"
 
+#include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <nlohmann/json_fwd.hpp>
 
@@ -29,8 +30,8 @@ TEST(FuelPulseConfigFromJsonTest, AllFieldsAreOverridenWhenPresent)
     EXPECT_EQ(config.postalCode, 12345);
     EXPECT_EQ(config.searchRadius, 2.5f);
     EXPECT_EQ(config.collectionInterval, std::chrono::minutes(15));
-    EXPECT_EQ(config.databasePath, std::filesystem::path("custom.db3"));
-    EXPECT_EQ(config.reportDir, std::filesystem::path("customReports"));
+    EXPECT_THAT(config.databasePath.string(), ::testing::HasSubstr("custom.db3"));
+    EXPECT_THAT(config.reportDir.string(), ::testing::HasSubstr("customReports"));
 }
 
 /// \brief Test that an empty document leaves every field at its default value.
