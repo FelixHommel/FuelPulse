@@ -48,7 +48,7 @@ TEST(FileIOReadTest, ThrowsWhenFileDoesNotExist)
 
     EXPECT_THAT(
         [&TEST_FILE_PATH] { std::ignore = file::readFromFile(TEST_FILE_PATH); },
-        ::testing::ThrowsMessage<FileIOException>(::testing::HasSubstr(TEST_FILE_PATH))
+        ::testing::ThrowsMessage<FileIOException>(::testing::HasSubstr(std::string_view{ TEST_FILE_PATH }))
     );
 }
 
@@ -127,7 +127,7 @@ TEST(FileIOWriteTest, ThrowsWhenParentDirectoryDoesNotExist)
 
     EXPECT_THAT(
         [&PATH] { file::writeToFile(PATH, "data"); },
-        ::testing::ThrowsMessage<FileIOException>(::testing::HasSubstr(PATH))
+        ::testing::ThrowsMessage<FileIOException>(::testing::HasSubstr(PATH.string()))
     );
 }
 
