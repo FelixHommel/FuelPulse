@@ -13,7 +13,7 @@ namespace ful::testing
 /// \brief Test that a document that specifies every field overrides every field of the default config.
 TEST(FuelPulseConfigFromJsonTest, AllFieldsAreOverridenWhenPresent)
 {
-    const auto json{ nlohmann::json::parse(R"(
+    const auto json = nlohmann::json::parse(R"(
 {
     "max_stations": 3,
     "postal_code": 12345,
@@ -22,7 +22,7 @@ TEST(FuelPulseConfigFromJsonTest, AllFieldsAreOverridenWhenPresent)
     "database_path": "custom.db3",
     "report_dir": "customReports"
 }
-    )") };
+    )");
 
     const auto config{ json.get<fuel::FuelPulseConfig>() };
 
