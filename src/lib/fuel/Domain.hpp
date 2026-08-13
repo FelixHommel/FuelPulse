@@ -48,6 +48,7 @@ struct Measurement
 
 } // namespace ful::fuel
 
+// NOLINTBEGIN(cert-dcl58-cpp): modifying std namespace for hash overload is accepted
 namespace std
 {
 
@@ -95,5 +96,6 @@ struct hash<ful::fuel::Measurement>
 };
 
 } // namespace std
+// NOLINTEND(cert-dcl58-cpp)
 
 #endif // !FUL_SRC_LIB_FUEL_DOMAIN_HPP
