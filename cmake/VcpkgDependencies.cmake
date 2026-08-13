@@ -1,3 +1,5 @@
+find_package(cpr CONFIG REQUIRED)
+
 find_package(GTest CONFIG REQUIRED)
 
 find_package(nlohmann_json CONFIG REQUIRED)

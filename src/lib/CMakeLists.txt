@@ -9,6 +9,7 @@ add_library(
     ./fuel/ConfigLoader.cpp
     ./fuel/FuelPulseConfig.cpp
     ./fuel/SQLiteFuelRepository.cpp
+    ./fuel/TankerKoenigCollector.cpp
     ./utility/env/EnvironmentVariableHelper.cpp
     ./utility/exception/ConfigValidationException.cpp
     ./utility/exception/Exception.cpp
@@ -37,6 +38,7 @@ target_sources(
                 ./fuel/FuelPulseConfig.hpp
                 ./fuel/IFuelRepository.hpp
                 ./fuel/SQLiteFuelRepository.hpp
+                ./fuel/TankerKoenigCollector.hpp
                 ./report/IReport.hpp
                 ./utility/Assert.hpp
                 ./utility/env/EnvironmentVariableHelper.hpp
@@ -74,6 +76,7 @@ target_link_libraries(
     ${NAME}
     PUBLIC spdlog::spdlog SQLiteCpp
     PRIVATE
+        cpr::cpr
         nlohmann_json::nlohmann_json
         nlohmann_json_schema_validator::validator
 )

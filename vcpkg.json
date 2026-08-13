@@ -1,5 +1,6 @@
 {
   "dependencies": [
+    "cpr",
     "gtest",
     "json-schema-validator",
     "nlohmann-json",
