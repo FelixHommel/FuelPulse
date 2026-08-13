@@ -23,14 +23,18 @@ SQLiteConnectionException SQLiteConnectionException::create(
     std::string_view reason, std::filesystem::path dbPath, std::source_location loc
 )
 {
-    return dbPath.empty() ?
-        SQLiteConnectionException{
+    if(dbPath.empty())
+    {
+        return SQLiteConnectionException{
             Exception{ std::format("SQLite Connection error: {}", reason), loc }
-        } :
-        SQLiteConnectionException{
-            Exception{ std::format("[{}] SQLite Connection error: {}", dbPath.string(), reason), loc },
-            std::make_optional(std::move(dbPath))
         };
+    }
+
+    auto message{ std::format("[{}] SQLite Connection error: {}", dbPath.string(), reason) };
+    return SQLiteConnectionException{
+        Exception{ std::move(message), loc },
+        std::make_optional(std::move(dbPath))
+    };
 }
 
 } // namespace ful
