@@ -90,11 +90,13 @@ TEST_F(SQLiteConnectionTest, OpenConnectionToDatabase)
 /// \brief Test that \ref SQLiteConnection::open throws when trying to connect to a database at an invalid location.
 TEST_F(SQLiteConnectionTest, TryOpenConnectionAtInvalidLocation)
 {
+    const auto DB_PATH{ std::filesystem::path("non-existing-path/test.db3") };
+
     ASSERT_FALSE(m_connection.isOpen());
 
     EXPECT_THAT(
-        [this] { m_connection.open("non-existing-path/test.db3"); },
-        ::testing::ThrowsMessage<SQLiteConnectionException>(::testing::HasSubstr("non-existing-path/test.db3"))
+        [&] { m_connection.open(DB_PATH); },
+        ::testing::ThrowsMessage<SQLiteConnectionException>(::testing::HasSubstr(DB_PATH.string()))
     );
 
     EXPECT_FALSE(m_connection.isOpen());
