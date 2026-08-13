@@ -34,10 +34,10 @@ target_sources(
     PRIVATE
         FILE_SET HEADERS
             FILES
+                ./testUtility/ConcurrencyTest.hpp
                 ./testUtility/EnvVarGuard.hpp
                 ./testUtility/RandomNumberGenerator.hpp
                 ./testUtility/TemporaryFile.hpp
-                ./testUtility/ConcurrencyTest.hpp
 )
 
 target_compile_features(${NAME} PRIVATE cxx_std_23)
