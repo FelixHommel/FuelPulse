@@ -7,6 +7,7 @@
 #include <exception>
 #include <source_location>
 #include <string>
+#include <string_view>
 #include <type_traits>
 #include <utility>
 
@@ -26,7 +27,7 @@ TEST(SQLiteAccessExceptionTest, StoreMessage)
 {
     const auto exc{ SQLiteAccessException::create(MESSAGE) };
 
-    EXPECT_THAT(exc.message(), ::testing::HasSubstr(MESSAGE));
+    EXPECT_THAT(exc.message(), ::testing::HasSubstr(std::string_view{ MESSAGE }));
 }
 
 /// \brief Test that \ref SQLiteAccessException stores the correct call location.
@@ -44,7 +45,7 @@ TEST(SQLiteAccessExceptionTest, WhatContainsMessage)
 {
     const auto exc{ SQLiteAccessException::create(MESSAGE) };
 
-    EXPECT_THAT(exc.what(), ::testing::HasSubstr(MESSAGE));
+    EXPECT_THAT(exc.what(), ::testing::HasSubstr(std::string_view{ MESSAGE }));
 }
 
 /// \brief Test that \ref SQLiteAccessException contains the \ref std::source_location message in \ref Exception::what().
@@ -52,8 +53,8 @@ TEST(SQLiteAccessExceptionTest, WhatContainsSourceLocation)
 {
     const auto exc{ SQLiteAccessException::create(MESSAGE, LOCATION) };
 
-    EXPECT_THAT(exc.what(), ::testing::HasSubstr(LOCATION.file_name()));
-    EXPECT_THAT(exc.what(), ::testing::HasSubstr(LOCATION.function_name()));
+    EXPECT_THAT(exc.what(), ::testing::HasSubstr(std::string_view{ LOCATION.file_name() }));
+    EXPECT_THAT(exc.what(), ::testing::HasSubstr(std::string_view{ LOCATION.function_name() }));
 }
 
 /// \brief Test that \ref SQLiteAccessException handles an empty user-supplied Message correctly.
@@ -97,9 +98,13 @@ TEST(SQLiteAccessExceptionTest, CanBeCaughtAsStdException)
     ASSERT_TRUE((std::is_base_of_v<std::exception, SQLiteAccessException>));
     ASSERT_TRUE((std::is_base_of_v<Exception, SQLiteAccessException>));
     EXPECT_THAT(
-        [] { throw Exception{ MESSAGE }; }, ::testing::ThrowsMessage<std::exception>(::testing::HasSubstr(MESSAGE))
+        [] { throw Exception{ MESSAGE }; },
+        ::testing::ThrowsMessage<std::exception>(::testing::HasSubstr(std::string_view{ MESSAGE }))
     );
-    EXPECT_THAT([] { throw Exception{ MESSAGE }; }, ::testing::ThrowsMessage<Exception>(::testing::HasSubstr(MESSAGE)));
+    EXPECT_THAT(
+        [] { throw Exception{ MESSAGE }; },
+        ::testing::ThrowsMessage<Exception>(::testing::HasSubstr(std::string_view{ MESSAGE }))
+    );
 }
 
 } // namespace ful::testing

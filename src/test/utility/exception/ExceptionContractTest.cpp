@@ -12,6 +12,7 @@
 #include <exception>
 #include <source_location>
 #include <string>
+#include <string_view>
 #include <type_traits>
 #include <utility>
 
@@ -40,7 +41,7 @@ TYPED_TEST(ExceptionContractTest, StoresMessage)
 {
     const auto exc{ ExceptionTraits<TypeParam>::make(MESSAGE, LOCATION) };
 
-    // EXPECT_EQ(exc.message(), ::testing::HasSubstr(MESSAGE)); // FIXME: For some reason causes comp-op overload issue
+    // EXPECT_EQ(exc.message(), ::testing::HasSubstr(std::string_view{ MESSAGE })); // FIXME: For some reason causes comp-op overload issue
 }
 
 /// \brief The user-supplied message must be discoverable in what().
@@ -48,7 +49,7 @@ TYPED_TEST(ExceptionContractTest, WhatContainsMessage)
 {
     const auto exc{ ExceptionTraits<TypeParam>::make(MESSAGE, LOCATION) };
 
-    EXPECT_THAT(exc.what(), ::testing::HasSubstr(MESSAGE));
+    EXPECT_THAT(exc.what(), ::testing::HasSubstr(std::string_view{ MESSAGE }));
 }
 
 /// \brief The captured \ref std::source_location must match where the exception was created.
@@ -56,7 +57,7 @@ TYPED_TEST(ExceptionContractTest, StoresSourceLocation)
 {
     const auto exc{ ExceptionTraits<TypeParam>::make(MESSAGE, LOCATION) };
 
-    EXPECT_THAT(exc.where().file_name(), ::testing::HasSubstr(LOCATION.file_name()));
+    EXPECT_THAT(exc.where().file_name(), ::testing::HasSubstr(std::string_view{ LOCATION.file_name() }));
     EXPECT_EQ(exc.where().function_name(), LOCATION.function_name());
     EXPECT_EQ(exc.where().line(), LOCATION.line());
 }
@@ -66,8 +67,8 @@ TYPED_TEST(ExceptionContractTest, WhatContainsSourceLocation)
 {
     const auto exc{ ExceptionTraits<TypeParam>::make(MESSAGE, LOCATION) };
 
-    EXPECT_THAT(exc.what(), ::testing::HasSubstr(LOCATION.file_name()));
-    EXPECT_THAT(exc.what(), ::testing::HasSubstr(LOCATION.function_name()));
+    EXPECT_THAT(exc.what(), ::testing::HasSubstr(std::string_view{ LOCATION.file_name() }));
+    EXPECT_THAT(exc.what(), ::testing::HasSubstr(std::string_view{ LOCATION.function_name() }));
 }
 
 /// \brief An empty user-supplied message must not crash construction or leave what() in an invalid state.
@@ -116,11 +117,11 @@ TYPED_TEST(ExceptionContractTest, ThrowableAndCatchableAsBaseType)
 {
     EXPECT_THAT(
         [] { throw ExceptionTraits<TypeParam>::make(MESSAGE, LOCATION); },
-        ::testing::ThrowsMessage<std::exception>(::testing::HasSubstr(MESSAGE))
+        ::testing::ThrowsMessage<std::exception>(::testing::HasSubstr(std::string_view{ MESSAGE }))
     );
     EXPECT_THAT(
         [] { throw ExceptionTraits<TypeParam>::make(MESSAGE, LOCATION); },
-        ::testing::ThrowsMessage<Exception>(::testing::HasSubstr(MESSAGE))
+        ::testing::ThrowsMessage<Exception>(::testing::HasSubstr(std::string_view{ MESSAGE }))
     );
 }
 

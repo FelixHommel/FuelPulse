@@ -7,6 +7,7 @@
 #include <exception>
 #include <filesystem>
 #include <source_location>
+#include <string_view>
 #include <type_traits>
 #include <utility>
 
@@ -27,7 +28,7 @@ TEST(FileIOExceptionTest, StoreMessage)
 {
     const auto exc{ FileIOException::create(PATH, MESSAGE) };
 
-    EXPECT_THAT(exc.message(), ::testing::HasSubstr(MESSAGE));
+    EXPECT_THAT(exc.message(), ::testing::HasSubstr(std::string_view{ MESSAGE }));
 }
 
 /// \brief Test that \ref FileIOException stores the \ref std::source_location.
@@ -35,8 +36,8 @@ TEST(FileIOExceptionTest, StoreSourceLocation)
 {
     const auto exc{ FileIOException::create(PATH, MESSAGE, LOCATION) };
 
-    EXPECT_THAT(exc.where().file_name(), ::testing::HasSubstr(LOCATION.file_name()));
-    EXPECT_THAT(exc.where().function_name(), ::testing::HasSubstr(LOCATION.function_name()));
+    EXPECT_THAT(exc.where().file_name(), ::testing::HasSubstr(std::string_view{ LOCATION.file_name() }));
+    EXPECT_THAT(exc.where().function_name(), ::testing::HasSubstr(std::string_view{ LOCATION.function_name() }));
     EXPECT_THAT(exc.where().line(), LOCATION.line());
 }
 
@@ -54,7 +55,7 @@ TEST(FileIOExceptionTest, WhatContainsMessage)
     const auto exc{ FileIOException::create(PATH, MESSAGE) };
 
     EXPECT_THAT(exc.what(), ::testing::HasSubstr("File I/O"));
-    EXPECT_THAT(exc.what(), ::testing::HasSubstr(MESSAGE));
+    EXPECT_THAT(exc.what(), ::testing::HasSubstr(std::string_view{ MESSAGE }));
 }
 
 /// \brief Test that \ref FileIOException provides the \ref std::source_location in \ref FileIOException::what().
@@ -62,8 +63,8 @@ TEST(FileIOExceptionTest, WhatContainsSourceLocation)
 {
     const auto exc{ FileIOException::create(PATH, MESSAGE, LOCATION) };
 
-    EXPECT_THAT(exc.what(), ::testing::HasSubstr(LOCATION.file_name()));
-    EXPECT_THAT(exc.what(), ::testing::HasSubstr(LOCATION.function_name()));
+    EXPECT_THAT(exc.what(), ::testing::HasSubstr(std::string_view{ LOCATION.file_name() }));
+    EXPECT_THAT(exc.what(), ::testing::HasSubstr(std::string_view{ LOCATION.function_name() }));
 }
 
 /// \brief Test that \ref FileIOException provides a message even with no specific user-supplied message.
@@ -115,9 +116,13 @@ TEST(FileIOExceptionTest, CanBeCaughtAsStdException)
     ASSERT_TRUE((std::is_base_of_v<std::exception, FileIOException>));
     ASSERT_TRUE((std::is_base_of_v<Exception, FileIOException>));
     EXPECT_THAT(
-        [] { throw Exception{ MESSAGE }; }, ::testing::ThrowsMessage<std::exception>(::testing::HasSubstr(MESSAGE))
+        [] { throw Exception{ MESSAGE }; },
+        ::testing::ThrowsMessage<std::exception>(::testing::HasSubstr(std::string_view{ MESSAGE }))
     );
-    EXPECT_THAT([] { throw Exception{ MESSAGE }; }, ::testing::ThrowsMessage<Exception>(::testing::HasSubstr(MESSAGE)));
+    EXPECT_THAT(
+        [] { throw Exception{ MESSAGE }; },
+        ::testing::ThrowsMessage<Exception>(::testing::HasSubstr(std::string_view{ MESSAGE }))
+    );
 }
 
 } // namespace ful::testing

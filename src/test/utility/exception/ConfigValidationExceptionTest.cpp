@@ -9,6 +9,7 @@
 #include <exception>
 #include <source_location>
 #include <string>
+#include <string_view>
 #include <type_traits>
 #include <utility>
 
@@ -53,8 +54,8 @@ TEST(ConfigValidationExceptionTest, StoreLocation)
 {
     const auto exc{ ConfigValidationException::create({}, LOCATION) };
 
-    EXPECT_THAT(exc.where().file_name(), ::testing::HasSubstr(LOCATION.file_name()));
-    EXPECT_THAT(exc.where().function_name(), ::testing::HasSubstr(LOCATION.function_name()));
+    EXPECT_THAT(exc.where().file_name(), ::testing::HasSubstr(std::string_view{ LOCATION.file_name() }));
+    EXPECT_THAT(exc.where().function_name(), ::testing::HasSubstr(std::string_view{ LOCATION.function_name() }));
     EXPECT_THAT(exc.where().line(), LOCATION.line());
 }
 
@@ -69,8 +70,8 @@ TEST(ConfigValidationExceptionTest, SingleErrorMessageContainsPathAndMessage)
 
     const auto exc{ ConfigValidationException::create(ERRORS) };
 
-    EXPECT_THAT(exc.message(), ::testing::HasSubstr(PTR_PATH));
-    EXPECT_THAT(exc.message(), ::testing::HasSubstr(MESSAGE));
+    EXPECT_THAT(exc.message(), ::testing::HasSubstr(std::string_view{ PTR_PATH }));
+    EXPECT_THAT(exc.message(), ::testing::HasSubstr(std::string_view{ MESSAGE }));
 }
 
 /// \brief Test that \ref ConfigValidationException stores and uses multiple \ref ValidationError correctly.
@@ -106,8 +107,8 @@ TEST(ConfigValidationExceptionTest, WhatMessageContainsErrors)
 
     const auto exc{ ConfigValidationException::create(ERRORS) };
 
-    EXPECT_THAT(exc.what(), ::testing::HasSubstr(PTR_PATH));
-    EXPECT_THAT(exc.what(), ::testing::HasSubstr(MESSAGE));
+    EXPECT_THAT(exc.what(), ::testing::HasSubstr(std::string_view{ PTR_PATH }));
+    EXPECT_THAT(exc.what(), ::testing::HasSubstr(std::string_view{ MESSAGE }));
 }
 
 /// \brief Test that \ref ConfigValidationException can be copy-constructed.

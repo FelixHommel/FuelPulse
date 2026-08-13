@@ -6,6 +6,7 @@
 #include <exception>
 #include <source_location>
 #include <string>
+#include <string_view>
 #include <type_traits>
 #include <utility>
 
@@ -43,7 +44,7 @@ TEST(ExceptionTest, WhatContainsMessage)
 {
     const Exception exc{ MESSAGE };
 
-    EXPECT_THAT(exc.what(), ::testing::HasSubstr(MESSAGE));
+    EXPECT_THAT(exc.what(), ::testing::HasSubstr(std::string_view{ MESSAGE }));
 }
 
 /// \brief Test that \ref Exception contains the \ref std::source_location message in \ref Exception::what().
@@ -51,8 +52,8 @@ TEST(ExceptionTest, WhatContainsSourceLocation)
 {
     const Exception exc{ MESSAGE, LOCATION };
 
-    EXPECT_THAT(exc.what(), ::testing::HasSubstr(LOCATION.file_name()));
-    EXPECT_THAT(exc.what(), ::testing::HasSubstr(LOCATION.function_name()));
+    EXPECT_THAT(exc.what(), ::testing::HasSubstr(std::string_view{ LOCATION.file_name() }));
+    EXPECT_THAT(exc.what(), ::testing::HasSubstr(std::string_view{ LOCATION.function_name() }));
 }
 
 /// \brief Test that \ref Exception handles an empty user-supplied Message correctly.
@@ -94,7 +95,8 @@ TEST(ExceptionTest, CanBeCaughtAsStdException)
 {
     ASSERT_TRUE((std::is_base_of_v<std::exception, Exception>));
     EXPECT_THAT(
-        [] { throw Exception{ MESSAGE }; }, ::testing::ThrowsMessage<std::exception>(::testing::HasSubstr(MESSAGE))
+        [] { throw Exception{ MESSAGE }; },
+        ::testing::ThrowsMessage<std::exception>(::testing::HasSubstr(std::string_view{ MESSAGE }))
     );
 }
 

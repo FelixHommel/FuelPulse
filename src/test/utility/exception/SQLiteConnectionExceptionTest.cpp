@@ -8,6 +8,7 @@
 #include <filesystem>
 #include <optional>
 #include <source_location>
+#include <string_view>
 #include <type_traits>
 #include <utility>
 
@@ -49,7 +50,7 @@ TEST(SQLiteConnectionExceptionTest, StoreMessage)
     const auto exc{ SQLiteConnectionException::create(MESSAGE) };
 
     EXPECT_THAT(exc.message(), ::testing::HasSubstr("SQLite Connection"));
-    EXPECT_THAT(exc.message(), ::testing::HasSubstr(MESSAGE));
+    EXPECT_THAT(exc.message(), ::testing::HasSubstr(std::string_view{ MESSAGE }));
 }
 
 /// \brief Test that \ref SQLiteConnectionException stores the \ref std::source_location.
@@ -57,8 +58,8 @@ TEST(SQLiteConnectionExceptionTest, StoreLocation)
 {
     const auto exc{ SQLiteConnectionException::create(MESSAGE, DB_PATH, LOCATION) };
 
-    EXPECT_THAT(exc.where().file_name(), ::testing::HasSubstr(LOCATION.file_name()));
-    EXPECT_THAT(exc.where().function_name(), ::testing::HasSubstr(LOCATION.function_name()));
+    EXPECT_THAT(exc.where().file_name(), ::testing::HasSubstr(std::string_view{ LOCATION.file_name() }));
+    EXPECT_THAT(exc.where().function_name(), ::testing::HasSubstr(std::string_view{ LOCATION.function_name() }));
     EXPECT_THAT(exc.where().line(), LOCATION.line());
 }
 
@@ -67,7 +68,7 @@ TEST(SQLiteConnectionExceptionTest, WhatContainsMessage)
 {
     const auto exc{ SQLiteConnectionException::create(MESSAGE) };
 
-    EXPECT_THAT(exc.what(), ::testing::HasSubstr(MESSAGE));
+    EXPECT_THAT(exc.what(), ::testing::HasSubstr(std::string_view{ MESSAGE }));
 }
 
 /// \brief Test that \ref SQLiteConnectionException::what() contains the \ref std::source_location.
@@ -75,8 +76,8 @@ TEST(SQLiteConnectionExceptionTest, WhatContainsLocation)
 {
     const auto exc{ SQLiteConnectionException::create(MESSAGE) };
 
-    EXPECT_THAT(exc.what(), ::testing::HasSubstr(LOCATION.file_name()));
-    EXPECT_THAT(exc.what(), ::testing::HasSubstr(LOCATION.function_name()));
+    EXPECT_THAT(exc.what(), ::testing::HasSubstr(std::string_view{ LOCATION.file_name() }));
+    EXPECT_THAT(exc.what(), ::testing::HasSubstr(std::string_view{ LOCATION.function_name() }));
 }
 
 /// \brief Test that \ref SQLiteConnectionException::what() contains the database path if one was specified.
@@ -84,7 +85,7 @@ TEST(SQLiteConnectionExceptionTest, WhatContainsDatabaseLocationIfSupplied)
 {
     const auto exc{ SQLiteConnectionException::create(MESSAGE, DB_PATH) };
 
-    EXPECT_THAT(exc.what(), ::testing::HasSubstr(DB_PATH));
+    EXPECT_THAT(exc.what(), ::testing::HasSubstr(DB_PATH.string()));
 }
 
 /// \brief Test that \ref SQLiteConnectionException handles an empty user-supplied message correctly when no database
@@ -107,7 +108,7 @@ TEST(SQLiteConnectionExceptionTest, HandleEmptyMessageWithDatabasePath)
     ASSERT_FALSE(exc.message().empty());
     EXPECT_NE(exc.what(), nullptr);
     EXPECT_THAT(exc.what(), ::testing::HasSubstr("SQLite Connection error"));
-    EXPECT_THAT(exc.what(), ::testing::HasSubstr(DB_PATH));
+    EXPECT_THAT(exc.what(), ::testing::HasSubstr(DB_PATH.string()));
 }
 /// \brief Test that \ref SQLiteConnectionException is copy-constructible when no database path is specified.
 TEST(SQLiteConnectionExceptionTest, CopyConstructionWithoutDatabasePath)
@@ -188,9 +189,13 @@ TEST(SQLiteConnectionExceptionTest, CanBeCaughtAsStdException)
     ASSERT_TRUE((std::is_base_of_v<std::exception, SQLiteConnectionException>));
     ASSERT_TRUE((std::is_base_of_v<Exception, SQLiteConnectionException>));
     EXPECT_THAT(
-        [] { throw Exception{ MESSAGE }; }, ::testing::ThrowsMessage<std::exception>(::testing::HasSubstr(MESSAGE))
+        [] { throw Exception{ MESSAGE }; },
+        ::testing::ThrowsMessage<std::exception>(::testing::HasSubstr(std::string_view{ MESSAGE }))
     );
-    EXPECT_THAT([] { throw Exception{ MESSAGE }; }, ::testing::ThrowsMessage<Exception>(::testing::HasSubstr(MESSAGE)));
+    EXPECT_THAT(
+        [] { throw Exception{ MESSAGE }; },
+        ::testing::ThrowsMessage<Exception>(::testing::HasSubstr(std::string_view{ MESSAGE }))
+    );
 }
 
 } // namespace ful::testing

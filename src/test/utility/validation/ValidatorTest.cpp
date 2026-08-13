@@ -257,7 +257,7 @@ TEST_F(ValidatorFromSchemaFileTest, NonExistingSchemaFileThrows)
 
     EXPECT_THAT(
         [&MISSING_PATH] { Validator validator{ MISSING_PATH }; },
-        ::testing::ThrowsMessage<FileIOException>(::testing::HasSubstr(MISSING_PATH))
+        ::testing::ThrowsMessage<FileIOException>(::testing::HasSubstr(MISSING_PATH.string()))
     );
 }
 
