@@ -26,6 +26,7 @@ add_executable(
     ./utility/logging/LoggerFactoryTest.cpp
     ./utility/sqlite/SQLiteConnectionTest.cpp
     ./utility/validation/ValidatorTest.cpp
+    ./utility/AssertTest.cpp
     ./utility/StringOperationsTest.cpp
     ./testUtility/ConcurrencyTest.cpp
 )
