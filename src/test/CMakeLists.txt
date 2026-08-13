@@ -17,6 +17,7 @@ add_executable(
     ./utility/env/EnvironmentVariableHelperTest.cpp
     ./utility/exception/ConfigValidationExceptionTest.cpp
     ./utility/exception/ExceptionTest.cpp
+    ./utility/exception/ExceptionContractTest.cpp
     ./utility/exception/FileIOExceptionTest.cpp
     ./utility/exception/SQLiteAccessExceptionTest.cpp
     ./utility/exception/SQLiteConnectionExceptionTest.cpp
@@ -38,6 +39,7 @@ target_sources(
             FILES
                 ./testUtility/ConcurrencyTest.hpp
                 ./testUtility/EnvVarGuard.hpp
+                ./testUtility/ExceptionTestTraits.hpp
                 ./testUtility/RandomNumberGenerator.hpp
                 ./testUtility/TemporaryFile.hpp
 )
