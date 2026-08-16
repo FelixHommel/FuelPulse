@@ -39,6 +39,7 @@ target_sources(
                 ./fuel/FuelPulseConfig.hpp
                 ./fuel/IFuelRepository.hpp
                 ./fuel/SQLiteFuelRepository.hpp
+                ./fuel/TankerKoenigAPIParser.hpp
                 ./fuel/TankerKoenigCollector.hpp
                 ./report/IReport.hpp
                 ./utility/Assert.hpp
