@@ -8,6 +8,7 @@ add_library(
     ./core/EventBus.cpp
     ./fuel/ConfigLoader.cpp
     ./fuel/FuelPulseConfig.cpp
+    ./fuel/TankerKoenigAPIParser.cpp
     ./fuel/SQLiteFuelRepository.cpp
     ./utility/env/EnvironmentVariableHelper.cpp
     ./utility/exception/ConfigValidationException.cpp
