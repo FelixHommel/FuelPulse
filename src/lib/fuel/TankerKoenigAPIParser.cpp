@@ -44,11 +44,12 @@ std::vector<Measurement> parseStationPrices(const std::string& jsonRaw)
 
     std::vector<Measurement> result;
 
+    const auto timestamp{ detail::parseTimestamp(json["timestamp"].get<std::string>()) };
     for(const auto& s : json["stations"])
     {
         result.emplace_back(
             s["id"],
-            detail::parseTimestamp(json["timestamp"].get<std::string>()),
+            timestamp,
             parseFuelPrice<FuelType::E5>(s),
             parseFuelPrice<FuelType::E10>(s),
             parseFuelPrice<FuelType::Diesel>(s)
