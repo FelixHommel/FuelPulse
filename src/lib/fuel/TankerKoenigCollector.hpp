@@ -31,8 +31,8 @@ namespace ful::fuel
 /// \tparam T The possible type.
 template<typename T>
 concept TankerKoenigGateway = requires(const T& t, const std::string& apiKey, unsigned int postalCode) {
-    std::is_default_constructible_v<T>;
-    std::is_move_constructible_v<T>;
+    requires std::is_default_constructible_v<T>;
+    requires std::is_move_constructible_v<T>;
 
     { t.fetchPrices(apiKey, postalCode) } -> std::same_as<std::string>;
 };
