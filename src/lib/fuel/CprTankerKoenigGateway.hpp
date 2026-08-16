@@ -4,6 +4,7 @@
 #include <cpr/api.h>
 #include <cpr/cprtypes.h>
 #include <cpr/parameters.h>
+#include <cpr/timeout.h>
 
 #include <stdexcept>
 #include <string>
@@ -21,6 +22,8 @@ constexpr auto HTTP_UNAUTHORIZED{ 401l };
 constexpr auto HTTP_NOT_FOUND{ 404l };
 constexpr auto HTTP_INTERNAL_SERVER_ERROR{ 500l };
 constexpr auto HTTP_SERVICE_UNAVAILABLE{ 503l };
+
+constexpr auto TIMEOUT_MS{ 60000 };
 
 } // namespace
 
@@ -44,7 +47,8 @@ public:
         const auto curlResponse{
             cpr::Get(
                 cpr::Url{ REQUEST_URL },
-                cpr::Parameters{ { "apikey", apiKey }, { "postalcode", std::to_string(postalCode) } }
+                cpr::Parameters{ { "apikey", apiKey }, { "postalcode", std::to_string(postalCode) } },
+                cpr::Timeout{ TIMEOUT_MS }
             )
         };
 
