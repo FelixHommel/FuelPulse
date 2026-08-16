@@ -44,7 +44,7 @@ public:
     /// \returns A \ref std::string containing the raw response of the API
     [[nodiscard]] std::string fetchPrices(const std::string& apiKey, unsigned int postalCode) const
     {
-        const auto curlResponse{
+        auto curlResponse{
             cpr::Get(
                 cpr::Url{ REQUEST_URL },
                 cpr::Parameters{ { "apikey", apiKey }, { "postalcode", std::to_string(postalCode) } },
