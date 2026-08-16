@@ -63,7 +63,7 @@ std::optional<PriceCents> parseFuelPrice(const nlohmann::json& station)
         if(!currentType.contains(TARGET_TYPE))
             continue;
 
-        return std::make_optional(static_cast<unsigned int>(std::floor(fuelObj["price"].get<float>() * TO_CENTS_MOD)));
+        return std::make_optional(static_cast<unsigned int>(std::round(fuelObj["price"].get<double>() * TO_CENTS_MOD)));
     }
 
     return std::nullopt;
