@@ -9,7 +9,6 @@ add_library(
     ./fuel/ConfigLoader.cpp
     ./fuel/FuelPulseConfig.cpp
     ./fuel/SQLiteFuelRepository.cpp
-    ./fuel/TankerKoenigCollector.cpp
     ./utility/env/EnvironmentVariableHelper.cpp
     ./utility/exception/ConfigValidationException.cpp
     ./utility/exception/Exception.cpp
@@ -34,6 +33,7 @@ target_sources(
                 ./core/EventBus.hpp
                 ./core/Scheduler.hpp
                 ./fuel/ConfigLoader.hpp
+                ./fuel/CprTankerKoenigGateway.hpp
                 ./fuel/Domain.hpp
                 ./fuel/FuelPulseConfig.hpp
                 ./fuel/IFuelRepository.hpp
@@ -53,6 +53,7 @@ target_sources(
                 ./utility/logging/LoggerFactory.hpp
                 ./utility/sqlite/SQLiteConnection.hpp
                 ./utility/StringOperations.hpp
+                ./utility/threading/SemaphoreReleaseGuard.hpp
                 ./utility/threading/Threading.hpp
                 ./utility/threading/ThreadingDetail.hpp
                 ./utility/validation/Validator.hpp

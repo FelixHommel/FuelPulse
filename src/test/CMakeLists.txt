@@ -38,6 +38,7 @@ target_sources(
         FILE_SET HEADERS
             FILES
                 ./testUtility/ConcurrencyTest.hpp
+                ./testUtility/ControllableTankerKoenigGateway.hpp
                 ./testUtility/EnvVarGuard.hpp
                 ./testUtility/ExceptionTestTraits.hpp
                 ./testUtility/RandomNumberGenerator.hpp
