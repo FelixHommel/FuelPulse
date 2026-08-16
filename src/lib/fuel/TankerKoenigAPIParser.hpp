@@ -21,6 +21,10 @@ namespace ful::fuel
 namespace detail
 {
 
+/// \brief Enum to describe the different types of fuels that are supported.
+///
+/// \author Felix Hommel
+/// \date 8/16/2026
 enum class FuelType : std::uint8_t
 {
     Diesel,
@@ -28,6 +32,11 @@ enum class FuelType : std::uint8_t
     E5
 };
 
+/// \brief Convert a \ref FuelType to \ref std::string.
+///
+/// \param t The \ref FuelType that is being converted
+///
+/// \returns The \ref std::string representation of \p t
 [[nodiscard]] constexpr std::string fuelTypeToString(FuelType t)
 {
     switch(t)
@@ -42,8 +51,20 @@ enum class FuelType : std::uint8_t
     }
 }
 
+/// \brief Parse an ISO-8601 timestamp to \ref std::chrono::system_clock::time_point.
+///
+/// \param timestamp The \ref std::string containing the timestamp in ISO-8601 format
+///
+/// \returns A \ref std::chrono::system_clock::time_point from \p timestamp
 std::chrono::system_clock::time_point parseTimestamp(std::string timestamp);
 
+/// \brief Extract the fuel price for \p T from \p station.
+///
+/// \tparam The \ref FuelType for which the price is extracted
+///
+/// \param station A \ref nlohmann::json document that contains the data of a single station.
+///
+/// \returns A \ref std::optional containing the price of \p T, \ref std::nullopt if the station does not offer \p T
 template<FuelType T>
 std::optional<PriceCents> parseFuelPrice(const nlohmann::json& station)
 {
