@@ -14,12 +14,12 @@
 #include <spdlog/logger.h>
 
 #include <atomic>
+#include <concepts>
 #include <exception>
 #include <memory>
 #include <mutex>
 #include <semaphore>
 #include <string>
-#include <type_traits>
 #include <utility>
 #include <vector>
 
@@ -30,12 +30,10 @@ namespace ful::fuel
 ///
 /// \tparam T The possible type.
 template<typename T>
-concept TankerKoenigGateway = requires(const T& t, const std::string& apiKey, unsigned int postalCode) {
-    requires std::is_default_constructible_v<T>;
-    requires std::is_move_constructible_v<T>;
-
-    { t.fetchPrices(apiKey, postalCode) } -> std::same_as<std::string>;
-};
+concept TankerKoenigGateway
+    = std::movable<T> && requires(const T& t, const std::string& apiKey, unsigned int postalCode) {
+          { t.fetchPrices(apiKey, postalCode) } -> std::same_as<std::string>;
+      };
 
 /// \brief Collect fuel price data from the TankerKoenig API and save the data to a \ref IFuelRepository.
 ///
@@ -51,13 +49,26 @@ class TankerKoenigCollector : public ICollector
 public:
     /// \brief Create a new \ref TankerKoenigCollector.
     ///
+    /// This constructor type uses a default-constructed \p GatewayT object.
+    ///
     /// \param apiKey The API key for the TankerKoenig API
     /// \param postalCode The postalCode around which to gather the fuel prices
     /// \param repo The \ref IFuelRepository where the fuel prices are saved to
     /// \param bus The \ref EventBus where finished events can be published on
-    /// \param gateway (optional) The \ref GatewayT that is responsible for doing the requests from the API
+    TankerKoenigCollector(std::string apiKey, unsigned int postalCode, IFuelRepository& repo, EventBus& bus)
+        requires std::default_initializable<GatewayT>
+        : TankerKoenigCollector(std::move(apiKey), postalCode, repo, bus, GatewayT{})
+    {}
+
+    /// \brief Create a new \ref TankerKoenigCollector.
+    ///
+    /// \param apiKey The API key for the TankerKoenig API
+    /// \param postalCode The postalCode around which to gather the fuel prices
+    /// \param repo The \ref IFuelRepository where the fuel prices are saved to
+    /// \param bus The \ref EventBus where finished events can be published on
+    /// \param gateway The \ref GatewayT that is responsible for doing the requests from the API
     TankerKoenigCollector(
-        std::string apiKey, unsigned int postalCode, IFuelRepository& repo, EventBus& bus, GatewayT gateway = {}
+        std::string apiKey, unsigned int postalCode, IFuelRepository& repo, EventBus& bus, GatewayT gateway
     )
         : m_apiKey{ std::move(apiKey) }
         , m_postalCode{ postalCode }
