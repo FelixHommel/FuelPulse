@@ -2,6 +2,7 @@
 #define FUL_SRC_TEST_TEST_UTILITY_CONTROLLABLE_TANKER_KOENIG_GATEWAY_HPP
 
 #include <atomic>
+#include <memory>
 #include <string>
 
 namespace ful::testing
@@ -77,12 +78,12 @@ class ControllableTankerKoenigGateway
 {
 public:
     // NOLINTNEXTLINE(readability-named-parameter): Not needed for this dummy function
-    std::string fetchPrices(const std::string&, unsigned int) const
+    [[nodiscard]] std::string fetchPrices(const std::string&, unsigned int) const
     {
-        m_fetchStarted.store(true, std::memory_order_release);
-        m_fetchStarted.notify_all();
+        m_controller->fetchStarted.store(true, std::memory_order_release);
+        m_controller->fetchStarted.notify_all();
 
-        m_releaseGate.wait(false, std::memory_order_acquire);
+        m_controller->releaseGate.wait(false, std::memory_order_acquire);
 
         return SAMPLE_VALID_RESPONSE;
     }
@@ -90,15 +91,20 @@ public:
     /// \brief Tell \ref ControllableTankerKoenigGateway::fetchPrices() to proceed.
     void release()
     {
-        m_releaseGate.store(true, std::memory_order_release);
-        m_releaseGate.notify_all();
+        m_controller->releaseGate.store(true, std::memory_order_release);
+        m_controller->releaseGate.notify_all();
     }
     /// \brief Wait until \ref ControllableTankerKoenigGateway::fetchPrices() starts the collection.
-    void waitUnitilFetchStarted() const { m_fetchStarted.wait(false, std::memory_order_acquire); }
+    void waitUnitilFetchStarted() const { m_controller->fetchStarted.wait(false, std::memory_order_acquire); }
 
 private:
-    mutable std::atomic<bool> m_fetchStarted{ false };
-    mutable std::atomic<bool> m_releaseGate{ false };
+    struct Controller
+    {
+        std::atomic<bool> fetchStarted{ false };
+        std::atomic<bool> releaseGate{ false };
+    };
+
+    std::shared_ptr<Controller> m_controller{ std::make_shared<Controller>() };
 };
 
 } // namespace ful::testing
