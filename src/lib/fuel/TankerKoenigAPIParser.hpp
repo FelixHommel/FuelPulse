@@ -73,7 +73,7 @@ std::optional<PriceCents> parseFuelPrice(const nlohmann::json& station)
 
     if(!station.contains("fuels"))
     {
-        spdlog::warn("Station with id '{}' does not have fuel information", station["id"]);
+        spdlog::warn("Station with id '{}' does not have fuel information", station["id"].get<std::string>());
         return std::nullopt;
     }
 
