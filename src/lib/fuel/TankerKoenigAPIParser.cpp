@@ -4,10 +4,10 @@
 
 #include <nlohmann/json.hpp>
 #include <nlohmann/json_fwd.hpp>
+#include <spdlog/spdlog.h>
 
 #include <chrono>
 #include <sstream>
-#include <stdexcept>
 #include <string>
 #include <utility>
 #include <vector>
@@ -26,7 +26,10 @@ std::chrono::system_clock::time_point parseTimestamp(std::string timestamp)
     stream >> std::chrono::parse("%FT%T%Ez", result);
 
     if(stream.fail())
-        throw std::runtime_error(""); // TODO: Implement custom exception
+    {
+        spdlog::warn("Unable to find a timetamp in the API response. Using placeholder value");
+        return std::chrono::system_clock::time_point::min();
+    }
 
     return result;
 }
@@ -40,11 +43,14 @@ std::vector<Measurement> parseStationPrices(const std::string& jsonRaw)
     const auto json = nlohmann::json::parse(jsonRaw);
 
     if(!json.contains("stations"))
+    {
+        spdlog::warn("API Response did not include a stations field");
         return {};
-
-    std::vector<Measurement> result;
+    }
 
     const auto timestamp{ detail::parseTimestamp(json["timestamp"].get<std::string>()) };
+
+    std::vector<Measurement> result;
     for(const auto& s : json["stations"])
     {
         result.emplace_back(

@@ -4,6 +4,7 @@
 #include "fuel/Domain.hpp"
 
 #include <nlohmann/json.hpp>
+#include <spdlog/spdlog.h>
 
 #include <algorithm>
 #include <cctype>
@@ -11,7 +12,6 @@
 #include <cmath>
 #include <cstdint>
 #include <optional>
-#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -69,10 +69,13 @@ template<FuelType T>
 std::optional<PriceCents> parseFuelPrice(const nlohmann::json& station)
 {
     static constexpr auto TARGET_TYPE{ fuelTypeToString(T) };
-    static constexpr auto TO_CENTS_MOD{ 1000u };
+    static constexpr auto TO_CENTS{ 1000u };
 
     if(!station.contains("fuels"))
-        throw std::runtime_error(""); // TODO Implement custom exception
+    {
+        spdlog::warn("Station with id '{}' does not have fuel information", station["id"]);
+        return std::nullopt;
+    }
 
     for(const auto& fuelObj : station["fuels"])
     {
@@ -84,7 +87,7 @@ std::optional<PriceCents> parseFuelPrice(const nlohmann::json& station)
         if(!currentType.contains(TARGET_TYPE))
             continue;
 
-        return std::make_optional(static_cast<unsigned int>(std::round(fuelObj["price"].get<double>() * TO_CENTS_MOD)));
+        return std::make_optional(static_cast<unsigned int>(std::round(fuelObj["price"].get<double>() * TO_CENTS)));
     }
 
     return std::nullopt;
