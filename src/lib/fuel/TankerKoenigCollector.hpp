@@ -112,6 +112,7 @@ private:
     GatewayT m_gateway;
     std::binary_semaphore m_fetchGate{ 1 };
     std::mutex m_workersMutex;
+    std::mutex m_storeMutex;
     std::vector<WorkerSlot> m_workers;
     std::unique_ptr<spdlog::logger> m_logger;
 
@@ -128,9 +129,12 @@ private:
             guard.disarm();
             m_fetchGate.release();
 
-            // FIXME: This needs guarding to protect writing with multiple threads
-            for(const auto& m : parseStationPrices(json))
-                m_repo.store(m);
+            {
+                std::scoped_lock lock{ m_storeMutex };
+
+                for(const auto& m : parseStationPrices(json))
+                    m_repo.store(m);
+            }
 
             // NOTE: Possibly publish a CollectionFinished event here, if needed by anything else
         }
