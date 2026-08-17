@@ -163,4 +163,4 @@ private:
 
 } // namespace ful::fuel
 
-#endif //! FUL_SRC_LIB_FUEL_TANKER_KOENIG_COLLECTOR_HPP
+#endif // !FUL_SRC_LIB_FUEL_TANKER_KOENIG_COLLECTOR_HPP
