@@ -142,6 +142,10 @@ private:
         {
             m_logger->error("Collection failed: {}", e.what());
         }
+        catch(...)
+        {
+            m_logger->error("Collection failed for unknown reason");
+        }
 
         finished->store(true, std::memory_order_release);
     }
