@@ -13,6 +13,7 @@
 #include <cstdint>
 #include <optional>
 #include <string>
+#include <string_view>
 #include <vector>
 
 namespace ful::fuel
@@ -37,7 +38,7 @@ enum class FuelType : std::uint8_t
 /// \param t The \ref FuelType that is being converted
 ///
 /// \returns The \ref std::string representation of \p t
-[[nodiscard]] constexpr std::string fuelTypeToString(FuelType t)
+[[nodiscard]] constexpr std::string_view fuelTypeToString(FuelType t)
 {
     switch(t)
     {
