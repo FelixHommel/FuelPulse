@@ -14,6 +14,7 @@
 #include <optional>
 #include <string>
 #include <string_view>
+#include <utility>
 #include <vector>
 
 namespace ful::fuel
@@ -50,6 +51,8 @@ enum class FuelType : std::uint8_t
     case E5:
         return "e5";
     }
+
+    std::unreachable();
 }
 
 /// \brief Parse an ISO-8601 timestamp to \ref std::chrono::system_clock::time_point.

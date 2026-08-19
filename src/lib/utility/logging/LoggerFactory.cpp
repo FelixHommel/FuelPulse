@@ -48,6 +48,8 @@ std::vector<std::shared_ptr<spdlog::sinks::sink>> LoggerFactory::getSinksForProf
     case ConsoleAndFile:
         return { m_consoleSink, m_fileSink };
     }
+
+    std::unreachable();
 }
 
 } // namespace ful
