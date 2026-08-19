@@ -18,12 +18,17 @@ namespace ful::testing
 namespace
 {
 
+using TimePoint = std::chrono::system_clock::time_point;
+
 constexpr auto TEST_API_KEY{ "test-api-key" };
 constexpr auto TEST_POSTAL_CODE{ 70190u };
 constexpr auto MEMORY_DB{ ":memory:" };
 
 constexpr auto SHORT_SETTLE_DELAY{ std::chrono::milliseconds(50) };
 constexpr auto RELEASE_DELAY{ std::chrono::milliseconds(50) };
+
+constexpr auto WIDE_LOWER_BOUND{ TimePoint{} - std::chrono::hours(24 * 365 * 100) };
+constexpr auto WIDE_UPPER_BOUND{ TimePoint{} + std::chrono::hours(24 * 365 * 100) };
 
 } // namespace
 
@@ -48,9 +53,7 @@ protected:
 
     [[nodiscard]] std::vector<fuel::Measurement> getRepoContent()
     {
-        return m_repo.loadMeasurements(
-            std::chrono::system_clock::time_point::min(), std::chrono::system_clock::time_point::max()
-        );
+        return m_repo.loadMeasurements(WIDE_LOWER_BOUND, WIDE_UPPER_BOUND);
     }
 };
 
