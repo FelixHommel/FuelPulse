@@ -56,7 +56,7 @@ enum class FuelType : std::uint8_t
 /// \param timestamp The \ref std::string containing the timestamp in ISO-8601 format
 ///
 /// \returns A \ref std::chrono::system_clock::time_point from \p timestamp
-std::chrono::system_clock::time_point parseTimestamp(std::string timestamp);
+std::chrono::system_clock::time_point parseTimestamp(const std::string& timestamp);
 
 /// \brief Extract the fuel price for \p T from \p station.
 ///
