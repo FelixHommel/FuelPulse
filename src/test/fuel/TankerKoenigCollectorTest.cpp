@@ -46,12 +46,11 @@ protected:
     fuel::SQLiteFuelRepository m_repo{ MEMORY_DB };
     EventBus m_bus;
 
-    [[nodiscard]] std::vector<fuel::Measurement> getRepoContent(
-        std::chrono::system_clock::time_point from = std::chrono::system_clock::time_point::min(),
-        std::chrono::system_clock::time_point to = std::chrono::system_clock::time_point::max()
-    )
+    [[nodiscard]] std::vector<fuel::Measurement> getRepoContent()
     {
-        return m_repo.loadMeasurements(from, to);
+        return m_repo.loadMeasurements(
+            std::chrono::system_clock::time_point::min(), std::chrono::system_clock::time_point::max()
+        );
     }
 };
 
