@@ -14,6 +14,7 @@ add_executable(
     ./fuel/FuelPulseConfigTest.cpp
     ./fuel/SQLiteFuelRepositoryTest.cpp
     ./fuel/TankerKoenigAPIParserTest.cpp
+    ./fuel/TankerKoenigCollectorTest.cpp
     ./integration/CoreIntegrationTest.cpp
     ./utility/env/EnvironmentVariableHelperTest.cpp
     ./utility/exception/ConfigValidationExceptionTest.cpp
@@ -39,7 +40,7 @@ target_sources(
         FILE_SET HEADERS
             FILES
                 ./testUtility/ConcurrencyTest.hpp
-                ./testUtility/ControllableTankerKoenigGateway.hpp
+                ./testUtility/DummyTankerKoenigGateways.hpp
                 ./testUtility/EnvVarGuard.hpp
                 ./testUtility/ExceptionTestTraits.hpp
                 ./testUtility/RandomNumberGenerator.hpp
