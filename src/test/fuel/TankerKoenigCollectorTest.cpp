@@ -171,6 +171,8 @@ TEST_F(TankerKoenigCollectorExceptionSafetyTest, GatewayThrowingNonStdExceptionR
     EXPECT_NO_THROW(collector.collect());
     ASSERT_TRUE(waitOn([&gateway] { return gateway.callCount() == 1; }));
 
+    std::this_thread::sleep_for(SHORT_SETTLE_DELAY);
+
     EXPECT_NO_THROW(collector.collect());
     ASSERT_TRUE(waitOn([&gateway] { return gateway.callCount() == 2; }));
 
