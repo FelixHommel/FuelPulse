@@ -23,6 +23,7 @@ add_executable(
     ./utility/exception/FileIOExceptionTest.cpp
     ./utility/exception/SQLiteAccessExceptionTest.cpp
     ./utility/exception/SQLiteConnectionExceptionTest.cpp
+    ./utility/exception/WebRequestExceptionTest.cpp
     ./utility/file/FileIOTest.cpp
     ./utility/hash/HashCombineTest.cpp
     ./utility/threading/SemaphoreReleaseGuardTest.cpp

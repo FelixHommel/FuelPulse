@@ -16,6 +16,7 @@ add_library(
     ./utility/exception/FileIOException.cpp
     ./utility/exception/SQLiteAccessException.cpp
     ./utility/exception/SQLiteConnectionException.cpp
+    ./utility/exception/WebRequestException.cpp
     ./utility/file/FileIO.cpp
     ./utility/logging/LoggerFactory.cpp
     ./utility/sqlite/SQLiteConnection.cpp
@@ -44,6 +45,7 @@ target_sources(
                 ./report/IReport.hpp
                 ./utility/Assert.hpp
                 ./utility/StringOperations.hpp
+                ./utility/HttpErrorCodes.hpp
                 ./utility/env/EnvironmentVariableHelper.hpp
                 ./utility/exception/ConfigValidationException.hpp
                 ./utility/exception/Exception.hpp
@@ -51,6 +53,7 @@ target_sources(
                 ./utility/exception/SQLiteAccessException.hpp
                 ./utility/exception/SQLiteConnectionException.hpp
                 ./utility/exception/Stacktrace.hpp
+                ./utility/exception/WebRequestException.hpp
                 ./utility/file/FileIO.hpp
                 ./utility/hash/HashCombine.hpp
                 ./utility/logging/LoggerFactory.hpp

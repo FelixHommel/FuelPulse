@@ -1,12 +1,15 @@
 #ifndef FUL_SRC_LIB_FUEL_CPR_TANKER_KOENIG_GATEWAY_HPP
 #define FUL_SRC_LIB_FUEL_CPR_TANKER_KOENIG_GATEWAY_HPP
 
+#include "utility/HttpErrorCodes.hpp"
+#include "utility/exception/WebRequestException.hpp"
+
+#include <chrono>
 #include <cpr/api.h>
 #include <cpr/cprtypes.h>
 #include <cpr/parameters.h>
 #include <cpr/timeout.h>
 
-#include <stdexcept>
 #include <string>
 #include <utility>
 
@@ -17,13 +20,8 @@ namespace
 {
 
 constexpr auto HTTP_OK{ 200l };
-constexpr auto HTTP_BAD_REQUEST{ 400l };
-constexpr auto HTTP_UNAUTHORIZED{ 401l };
-constexpr auto HTTP_NOT_FOUND{ 404l };
-constexpr auto HTTP_INTERNAL_SERVER_ERROR{ 500l };
-constexpr auto HTTP_SERVICE_UNAVAILABLE{ 503l };
 
-constexpr auto TIMEOUT_MS{ 60000 };
+constexpr auto TIMEOUT{ std::chrono::minutes(1) };
 
 } // namespace
 
@@ -48,12 +46,12 @@ public:
             cpr::Get(
                 cpr::Url{ REQUEST_URL },
                 cpr::Parameters{ { "apikey", apiKey }, { "postalcode", std::to_string(postalCode) } },
-                cpr::Timeout{ TIMEOUT_MS }
+                cpr::Timeout{ TIMEOUT }
             )
         };
 
         if(curlResponse.status_code != HTTP_OK)
-            throw std::runtime_error(""); // TODO: Implement custom exception
+            throw WebRequestException::create(static_cast<http::HttpCode>(curlResponse.status_code));
 
         return std::move(curlResponse.text);
     }
