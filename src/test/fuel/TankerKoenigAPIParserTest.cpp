@@ -290,16 +290,16 @@ TEST(TankerKoenigAPIParserTest, InvalidJsonThrows)
 /// \brief Test that the parser can translate a valid ISO-8601 timestamp to \ref std::chrono::system_clock::time_point.
 TEST(TankerKoenigAPIParserTest, ValidIsoTimestampParsesCorrectly)
 {
-    // FIXME: Come up with alternative to std::chrono::parse() for the test since MacOS can't deal with that
+    const std::chrono::year_month_day ymd{ std::chrono::year{ 2020 }, std::chrono::month{ 1 }, std::chrono::day{ 4 } };
 
-    // std::istringstream stream{ "2020-01-04T22:14:06+01:00" };
-    //
-    // std::chrono::sys_time<std::chrono::seconds> timestamp;
-    // stream >> std::chrono::parse("%FT%T%Ez", timestamp);
-    //
-    // const auto results{ fuel::parseStationPrices(VALID_RESPONSE_SINGLE_STATION_ALL_FUELS) };
-    //
-    // EXPECT_EQ(results[0].timestamp, timestamp);
+    const auto expected{ std::chrono::time_point_cast<std::chrono::system_clock::duration>(
+        std::chrono::sys_days{ ymd } + std::chrono::hours{ 21 } + std::chrono::minutes{ 14 } + std::chrono::seconds{ 6 }
+    ) };
+
+    const auto results{ fuel::parseStationPrices(VALID_RESPONSE_SINGLE_STATION_ALL_FUELS) };
+
+    ASSERT_FALSE(results.empty());
+    EXPECT_EQ(results[0].timestamp, expected);
 }
 
 /// \brief Test that the parser uses the placeholder timestamp if the provided timestamp is not in ISO-8601 format.
