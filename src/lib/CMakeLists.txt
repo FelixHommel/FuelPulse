@@ -43,6 +43,7 @@ target_sources(
                 ./fuel/TankerKoenigCollector.hpp
                 ./report/IReport.hpp
                 ./utility/Assert.hpp
+                ./utility/StringOperations.hpp
                 ./utility/env/EnvironmentVariableHelper.hpp
                 ./utility/exception/ConfigValidationException.hpp
                 ./utility/exception/Exception.hpp
@@ -54,7 +55,6 @@ target_sources(
                 ./utility/hash/HashCombine.hpp
                 ./utility/logging/LoggerFactory.hpp
                 ./utility/sqlite/SQLiteConnection.hpp
-                ./utility/StringOperations.hpp
                 ./utility/threading/SemaphoreReleaseGuard.hpp
                 ./utility/threading/Threading.hpp
                 ./utility/threading/ThreadingDetail.hpp
