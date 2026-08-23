@@ -28,7 +28,7 @@ target_sources(
     PRIVATE
         FILE_SET HEADERS
             FILES
-                ./analysis/IAnalysis.hpp
+                ./analyzer/IAnalyzer.hpp
                 ./collection/ICollector.hpp
                 ./core/CommandInterpreter.hpp
                 ./core/CommandRegistry.hpp
