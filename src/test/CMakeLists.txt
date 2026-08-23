@@ -25,6 +25,7 @@ add_executable(
     ./utility/exception/SQLiteConnectionExceptionTest.cpp
     ./utility/file/FileIOTest.cpp
     ./utility/hash/HashCombineTest.cpp
+    ./utility/threading/SemaphoreReleaseGuardTest.cpp
     ./utility/threading/ThreadingTest.cpp
     ./utility/logging/LoggerFactoryTest.cpp
     ./utility/sqlite/SQLiteConnectionTest.cpp
