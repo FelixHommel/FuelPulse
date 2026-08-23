@@ -116,11 +116,11 @@ TEST(FileIOExceptionTest, CanBeCaughtAsStdException)
     ASSERT_TRUE((std::is_base_of_v<std::exception, FileIOException>));
     ASSERT_TRUE((std::is_base_of_v<Exception, FileIOException>));
     EXPECT_THAT(
-        [] { throw Exception{ MESSAGE }; },
+        [] { throw FileIOException::create(PATH, MESSAGE); },
         ::testing::ThrowsMessage<std::exception>(::testing::HasSubstr(std::string_view{ MESSAGE }))
     );
     EXPECT_THAT(
-        [] { throw Exception{ MESSAGE }; },
+        [] { throw FileIOException::create(PATH, MESSAGE); },
         ::testing::ThrowsMessage<Exception>(::testing::HasSubstr(std::string_view{ MESSAGE }))
     );
 }

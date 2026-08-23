@@ -189,11 +189,11 @@ TEST(SQLiteConnectionExceptionTest, CanBeCaughtAsStdException)
     ASSERT_TRUE((std::is_base_of_v<std::exception, SQLiteConnectionException>));
     ASSERT_TRUE((std::is_base_of_v<Exception, SQLiteConnectionException>));
     EXPECT_THAT(
-        [] { throw Exception{ MESSAGE }; },
+        [] { throw SQLiteConnectionException::create(MESSAGE); },
         ::testing::ThrowsMessage<std::exception>(::testing::HasSubstr(std::string_view{ MESSAGE }))
     );
     EXPECT_THAT(
-        [] { throw Exception{ MESSAGE }; },
+        [] { throw SQLiteConnectionException::create(MESSAGE); },
         ::testing::ThrowsMessage<Exception>(::testing::HasSubstr(std::string_view{ MESSAGE }))
     );
 }
