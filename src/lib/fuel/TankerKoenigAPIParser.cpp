@@ -1,6 +1,7 @@
 #include "TankerKoenigAPIParser.hpp"
 
 #include "fuel/Domain.hpp"
+#include "fuel/FuelType.hpp"
 
 #include <nlohmann/json.hpp>
 #include <nlohmann/json_fwd.hpp>

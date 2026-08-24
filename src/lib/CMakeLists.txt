@@ -38,6 +38,7 @@ target_sources(
                 ./fuel/CprTankerKoenigGateway.hpp
                 ./fuel/Domain.hpp
                 ./fuel/FuelPulseConfig.hpp
+                ./fuel/FuelType.hpp
                 ./fuel/IFuelRepository.hpp
                 ./fuel/SQLiteFuelRepository.hpp
                 ./fuel/TankerKoenigAPIParser.hpp
