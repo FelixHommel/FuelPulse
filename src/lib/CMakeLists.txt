@@ -7,6 +7,7 @@ add_library(
     ./core/CommandRegistry.cpp
     ./core/EventBus.cpp
     ./fuel/ConfigLoader.cpp
+    ./fuel/DailyAnalyzer.cpp
     ./fuel/FuelPulseConfig.cpp
     ./fuel/TankerKoenigAPIParser.cpp
     ./fuel/SQLiteFuelRepository.cpp
@@ -36,6 +37,7 @@ target_sources(
                 ./core/Scheduler.hpp
                 ./fuel/ConfigLoader.hpp
                 ./fuel/CprTankerKoenigGateway.hpp
+                ./fuel/DailyAnalyzer.hpp
                 ./fuel/Domain.hpp
                 ./fuel/FuelPulseConfig.hpp
                 ./fuel/FuelType.hpp
