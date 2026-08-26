@@ -12,36 +12,6 @@
 #include <string>
 #include <utility>
 
-namespace
-{
-
-template<typename T>
-struct PerFuel
-{
-    T e5;
-    T e10;
-    T diesel;
-
-    T& operator[](ful::fuel::FuelType t)
-    {
-        switch(t)
-        {
-            using enum ful::fuel::FuelType;
-        case E5:
-            return e5;
-        case E10:
-            return e10;
-        case Diesel:
-            return diesel;
-        };
-
-        std::unreachable();
-    }
-    const T& operator[](ful::fuel::FuelType t) const { return operator[](t); }
-};
-
-} // namespace
-
 namespace ful::fuel
 {
 
@@ -120,6 +90,37 @@ struct CheapestWindow
     PriceCents price{};
 };
 
+/// \brief Group one \p T instance per supported fuel type, indexable by \ref FuelType
+///
+/// \tparam T The type that is stored once per fuel
+///
+/// \author Felix Hommel
+/// \date 8/27/2026
+template<typename T>
+struct PerFuel
+{
+    T e5;
+    T e10;
+    T diesel;
+
+    T& operator[](FuelType t)
+    {
+        switch(t)
+        {
+            using enum FuelType;
+        case E5:
+            return e5;
+        case E10:
+            return e10;
+        case Diesel:
+            return diesel;
+        };
+
+        std::unreachable();
+    }
+    const T& operator[](FuelType t) const { return operator[](t); }
+};
+
 /// \brief Complete analysis of a single \ref Station.
 ///
 /// \author Felix Hommel
@@ -127,9 +128,9 @@ struct CheapestWindow
 struct StationAnalysis
 {
     std::string stationId;
-    ::PerFuel<BasicStats> basicStats;
-    ::PerFuel<AdvancedStats> advancedStats;
-    ::PerFuel<CheapestWindow> cheapestWindow;
+    PerFuel<BasicStats> basicStats;
+    PerFuel<AdvancedStats> advancedStats;
+    PerFuel<CheapestWindow> cheapestWindow;
 };
 
 } // namespace ful::fuel
