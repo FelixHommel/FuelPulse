@@ -11,6 +11,7 @@ add_library(
     ./fuel/FuelPulseConfig.cpp
     ./fuel/TankerKoenigAPIParser.cpp
     ./fuel/SQLiteFuelRepository.cpp
+    ./fuel/StatisticsUtility.cpp
     ./utility/env/EnvironmentVariableHelper.cpp
     ./utility/exception/ConfigValidationException.cpp
     ./utility/exception/Exception.cpp
@@ -43,6 +44,7 @@ target_sources(
                 ./fuel/FuelType.hpp
                 ./fuel/IFuelRepository.hpp
                 ./fuel/SQLiteFuelRepository.hpp
+                ./fuel/StatisticsUtility.hpp
                 ./fuel/TankerKoenigAPIParser.hpp
                 ./fuel/TankerKoenigCollector.hpp
                 ./report/IReport.hpp
