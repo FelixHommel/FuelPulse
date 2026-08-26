@@ -53,7 +53,7 @@ public:
     /// \returns \ref std::vector of \ref Measurement which lie between \p from and \p to (inclusive)
     ///
     /// \throws A \ref SQLiteConnectionException if the \ref SQLiteConnection is not open
-    std::vector<Measurement> loadMeasurements(TimePoint from, TimePoint to) override;
+    std::vector<Measurement> loadMeasurements(TimePoint from, TimePoint to) const override;
     /// \brief Load the stations.
     ///
     /// \returns \ref std::vector of \ref Station

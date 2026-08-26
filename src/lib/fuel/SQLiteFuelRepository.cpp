@@ -101,7 +101,7 @@ void SQLiteFuelRepository::storeStation(const Station& s)
     transaction.commit();
 }
 
-std::vector<Measurement> SQLiteFuelRepository::loadMeasurements(TimePoint from, TimePoint to)
+std::vector<Measurement> SQLiteFuelRepository::loadMeasurements(TimePoint from, TimePoint to) const
 {
     ensureConnectionOpen();
 

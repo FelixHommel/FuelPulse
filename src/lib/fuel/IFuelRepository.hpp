@@ -44,7 +44,7 @@ public:
     /// \param to Upper time bound
     ///
     /// \returns \ref std::vector of \ref Measurement that are between \p from and \p to
-    virtual std::vector<Measurement> loadMeasurements(TimePoint from, TimePoint to) = 0;
+    [[nodiscard]] virtual std::vector<Measurement> loadMeasurements(TimePoint from, TimePoint to) const = 0;
 };
 
 } // namespace ful::fuel
