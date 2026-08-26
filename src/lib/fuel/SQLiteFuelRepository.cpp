@@ -101,7 +101,7 @@ void SQLiteFuelRepository::storeStation(const Station& s)
     transaction.commit();
 }
 
-std::vector<Measurement> SQLiteFuelRepository::loadMeasurements(TimePoint from, TimePoint to) const
+[[nodiscard]] std::vector<Measurement> SQLiteFuelRepository::loadMeasurements(TimePoint from, TimePoint to) const
 {
     ensureConnectionOpen();
 
@@ -127,7 +127,7 @@ std::vector<Measurement> SQLiteFuelRepository::loadMeasurements(TimePoint from, 
     return result;
 }
 
-std::vector<Station> SQLiteFuelRepository::loadStations()
+[[nodiscard]] std::vector<Station> SQLiteFuelRepository::loadStations() const
 {
     ensureConnectionOpen();
 

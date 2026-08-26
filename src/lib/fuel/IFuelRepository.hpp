@@ -37,7 +37,7 @@ public:
     /// \brif Load all \ref Station.
     ///
     /// \returns \ref std::vector of \ref Station
-    virtual std::vector<Station> loadStations() = 0;
+    [[nodiscard]] virtual std::vector<Station> loadStations() const = 0;
     /// \brief Load all \ref Measurement that are between \p from and \p to.
     ///
     /// \param from Lower time bound
