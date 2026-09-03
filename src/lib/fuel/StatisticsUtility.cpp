@@ -121,7 +121,7 @@ namespace ful::fuel::stats
         return 0.0;
 
     const auto meanD{ static_cast<double>(stats.sum) / static_cast<double>(stats.count) };
-    const auto variance{ stats.sumSq / (static_cast<double>(stats.count) - (meanD * meanD)) };
+    const auto variance{ (stats.sumSq / static_cast<double>(stats.count)) - (meanD * meanD) };
 
     return std::sqrt(std::max(variance, 0.0));
 }
