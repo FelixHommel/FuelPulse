@@ -103,22 +103,24 @@ struct PerFuel
     T e10;
     T diesel;
 
-    T& operator[](FuelType t)
+    decltype(auto) operator[](this auto& self, FuelType type)
     {
-        switch(t)
+        // NOTE: Needs parenthesis around the return value. Without them the compiler will deduce T and not reference
+        //  types T& / const T& which are the desired return value.
+
+        switch(type)
         {
             using enum FuelType;
         case E5:
-            return e5;
+            return (self.e5);
         case E10:
-            return e10;
+            return (self.e10);
         case Diesel:
-            return diesel;
+            return (self.diesel);
         };
 
         std::unreachable();
     }
-    const T& operator[](FuelType t) const { return operator[](t); }
 };
 
 /// \brief Complete analysis of a single \ref Station.
