@@ -369,17 +369,19 @@ void assignPercentileRanks(std::vector<StationAnalysis>& results)
     if(results.size() < 2)
         return;
 
-    for(auto fuel : ALL_FUEL_TYPES)
+    for(FuelType fuel : ALL_FUEL_TYPES)
     {
         std::vector<PriceCents> means;
         means.reserve(results.size());
+
         for(const auto& r : results)
             means.push_back(r.basicStats[fuel].mean);
 
         for(auto& r : results)
         {
-            const auto mean{ r.basicStats[fuel].mean };
-            const auto rank{ std::ranges::count_if(means, [mean](PriceCents price) { return price <= mean; }) };
+            const auto rank{ std::ranges::count_if(means, [mean = r.basicStats[fuel].mean](PriceCents price) {
+                return price <= mean;
+            }) };
 
             r.advancedStats[fuel].percentileRankAmongStations = std::make_optional(
                 static_cast<double>(rank - 1) / static_cast<double>(means.size() - 1) * TO_PERCENT
