@@ -123,7 +123,7 @@ namespace ful::fuel::stats
     const auto meanD{ static_cast<double>(stats.sum) / static_cast<double>(stats.count) };
     const auto variance{ (stats.sumSq / static_cast<double>(stats.count)) - (meanD * meanD) };
 
-    return std::sqrt(std::max(variance, 0.0));
+    return variance > 0.0 ? std::sqrt(variance) : 0.0;
 }
 
 [[nodiscard]] PriceCents calculateTimeWeightAverage(std::span<const Measurement> measurements, FuelType type)
