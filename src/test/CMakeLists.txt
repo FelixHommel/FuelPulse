@@ -45,6 +45,7 @@ target_sources(
                 ./testUtility/DummyTankerKoenigGateways.hpp
                 ./testUtility/EnvVarGuard.hpp
                 ./testUtility/ExceptionTestTraits.hpp
+                ./testUtility/FakeFuelRepository.hpp
                 ./testUtility/RandomNumberGenerator.hpp
                 ./testUtility/TemporaryFile.hpp
 )
