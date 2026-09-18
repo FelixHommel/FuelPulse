@@ -13,6 +13,7 @@ add_executable(
     ./fuel/DomainHashTest.cpp
     ./fuel/FuelPulseConfigTest.cpp
     ./fuel/SQLiteFuelRepositoryTest.cpp
+    ./fuel/StatisticsUtilityTest.cpp
     ./fuel/TankerKoenigAPIParserTest.cpp
     ./fuel/TankerKoenigCollectorTest.cpp
     ./integration/CoreIntegrationTest.cpp
